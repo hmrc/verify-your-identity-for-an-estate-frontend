@@ -38,10 +38,16 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
   lazy val locationCanonicalList: String = configuration.get[String]("location.canonical.list.all")
   lazy val locationCanonicalListNonUK: String = configuration.get[String]("location.canonical.list.nonUK")
 
+  lazy val estatesRegistration: String = configuration.get[String]("urls.estatesRegistration")
   lazy val authUrl: String = configuration.get[Service]("auth").baseUrl
   lazy val loginUrl: String = configuration.get[String]("urls.login")
   lazy val loginContinueUrl: String = configuration.get[String]("urls.loginContinue")
   lazy val logoutUrl: String = configuration.get[String]("urls.logout")
+
+  lazy val estatesStoreUrl: String = configuration.get[Service]("microservice.services.estates-store").baseUrl + "/estates-store"
+
+  lazy val relationshipEstablishmentUrl : String =
+    configuration.get[Service]("microservice.services.relationship-establishment").baseUrl + "/relationship-establishment"
 
   lazy val languageTranslationEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.welsh-translation")
