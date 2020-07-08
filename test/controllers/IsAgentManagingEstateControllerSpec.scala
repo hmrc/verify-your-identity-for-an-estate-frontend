@@ -42,7 +42,7 @@ class IsAgentManagingEstateControllerSpec extends SpecBase with MockitoSugar {
   val form = formProvider()
   val utr = "0987654321"
 
-  lazy val isAgentManagingTrustRoute = controllers.routes.IsAgentManagingEstateController.onPageLoad(NormalMode).url
+  lazy val isAgentManagingEstateRoute = controllers.routes.IsAgentManagingEstateController.onPageLoad(NormalMode).url
 
   val fakeEstablishmentServiceFailing = new FakeRelationshipEstablishmentService(RelationshipNotFound)
 
@@ -59,7 +59,7 @@ class IsAgentManagingEstateControllerSpec extends SpecBase with MockitoSugar {
         userAnswers = Some(userAnswers),
         relationshipEstablishment = fakeEstablishmentServiceFailing ).build()
 
-      val request = FakeRequest(GET, isAgentManagingTrustRoute)
+      val request = FakeRequest(GET, isAgentManagingEstateRoute)
 
       val result = route(application, request).value
 
@@ -85,7 +85,7 @@ class IsAgentManagingEstateControllerSpec extends SpecBase with MockitoSugar {
         userAnswers = Some(userAnswers),
         relationshipEstablishment = fakeEstablishmentServiceFailing).build()
 
-      val request = FakeRequest(GET, isAgentManagingTrustRoute)
+      val request = FakeRequest(GET, isAgentManagingEstateRoute)
 
       val view = application.injector.instanceOf[IsAgentManagingEstateView]
 
@@ -114,7 +114,7 @@ class IsAgentManagingEstateControllerSpec extends SpecBase with MockitoSugar {
           .build()
 
       val request =
-        FakeRequest(POST, isAgentManagingTrustRoute)
+        FakeRequest(POST, isAgentManagingEstateRoute)
           .withFormUrlEncodedBody(("value", "true"))
 
       val result = route(application, request).value
@@ -138,7 +138,7 @@ class IsAgentManagingEstateControllerSpec extends SpecBase with MockitoSugar {
         .build()
 
       val request =
-        FakeRequest(POST, isAgentManagingTrustRoute)
+        FakeRequest(POST, isAgentManagingEstateRoute)
           .withFormUrlEncodedBody(("value", ""))
 
       val boundForm = form.bind(Map("value" -> ""))
@@ -159,7 +159,7 @@ class IsAgentManagingEstateControllerSpec extends SpecBase with MockitoSugar {
 
       val application = applicationBuilder(userAnswers = None, fakeEstablishmentServiceFailing).build()
 
-      val request = FakeRequest(GET, isAgentManagingTrustRoute)
+      val request = FakeRequest(GET, isAgentManagingEstateRoute)
 
       val result = route(application, request).value
 
@@ -175,7 +175,7 @@ class IsAgentManagingEstateControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = None, fakeEstablishmentServiceFailing).build()
 
       val request =
-        FakeRequest(POST, isAgentManagingTrustRoute)
+        FakeRequest(POST, isAgentManagingEstateRoute)
           .withFormUrlEncodedBody(("value", "true"))
 
       val result = route(application, request).value

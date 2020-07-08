@@ -55,16 +55,16 @@ class IvSuccessController @Inject()(
         def onRelationshipFound = {
 
 
-            val isAgentManagingTrust = request.userAnswers.get(IsAgentManagingEstatePage) match {
+            val isAgentManagingEstate = request.userAnswers.get(IsAgentManagingEstatePage) match {
               case None => false
               case Some(value) => value
             }
 
 
             if (config.playbackEnabled) {
-              Future.successful(Ok(withPlaybackView(isAgentManagingTrust, utr)))
+              Future.successful(Ok(withPlaybackView(isAgentManagingEstate, utr)))
             } else {
-              Future.successful(Ok(withoutPlaybackView(isAgentManagingTrust, utr)))
+              Future.successful(Ok(withoutPlaybackView(isAgentManagingEstate, utr)))
             }
         }
 
