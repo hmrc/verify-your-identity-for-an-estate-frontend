@@ -14,24 +14,32 @@
  * limitations under the License.
  */
 
-package navigation
+package forms
 
-import javax.inject.{Inject, Singleton}
+import forms.behaviours.BooleanFieldBehaviours
+import play.api.data.FormError
 
-import play.api.mvc.Call
-import controllers.routes
-import pages._
-import models._
+class IsAgentManagingEstateFormProviderSpec extends BooleanFieldBehaviours {
 
-@Singleton
-class Navigator @Inject()() {
+  val requiredKey = "isAgentManagingEstate.error.required"
+  val invalidKey = "error.boolean"
 
-  private val normalRoutes: Page => UserAnswers => Call = {
-    case IsAgentManagingEstatePage => _ => controllers.routes.BeforeYouContinueController.onPageLoad()
-  }
+  val form = new IsAgentManagingEstateFormProvider()()
 
-  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
-    case NormalMode =>
-      normalRoutes(page)(userAnswers)
+  ".value" must {
+
+    val fieldName = "value"
+
+    behave like booleanField(
+      form,
+      fieldName,
+      invalidError = FormError(fieldName, invalidKey)
+    )
+
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
   }
 }

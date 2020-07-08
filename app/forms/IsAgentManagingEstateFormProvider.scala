@@ -14,24 +14,16 @@
  * limitations under the License.
  */
 
-package navigation
+package forms
 
-import javax.inject.{Inject, Singleton}
+import forms.mappings.Mappings
+import javax.inject.Inject
+import play.api.data.Form
 
-import play.api.mvc.Call
-import controllers.routes
-import pages._
-import models._
+class IsAgentManagingEstateFormProvider @Inject() extends Mappings {
 
-@Singleton
-class Navigator @Inject()() {
-
-  private val normalRoutes: Page => UserAnswers => Call = {
-    case IsAgentManagingEstatePage => _ => controllers.routes.BeforeYouContinueController.onPageLoad()
-  }
-
-  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
-    case NormalMode =>
-      normalRoutes(page)(userAnswers)
-  }
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean("isAgentManagingEstate.error.required")
+    )
 }

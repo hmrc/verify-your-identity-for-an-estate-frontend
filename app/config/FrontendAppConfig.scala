@@ -21,12 +21,15 @@ import controllers.routes
 import play.api.Configuration
 import play.api.i18n.Lang
 import play.api.mvc.Call
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 @Singleton
-class FrontendAppConfig @Inject() (configuration: Configuration) {
+class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig: ServicesConfig) {
 
   private val contactHost = configuration.get[String]("contact-frontend.host")
   private val contactFormServiceIdentifier = "estates"
+
+  lazy val serviceName: String = configuration.get[String]("serviceName")
 
   val analyticsToken: String = configuration.get[String](s"google-analytics.token")
   val analyticsHost: String = configuration.get[String](s"google-analytics.host")
@@ -44,10 +47,55 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
   lazy val loginContinueUrl: String = configuration.get[String]("urls.loginContinue")
   lazy val logoutUrl: String = configuration.get[String]("urls.logout")
 
+  lazy val estatesContinueUrl: String = {
+    configuration.get[String]("urls.maintainContinue")
+  }
+
+  lazy val playbackEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.playback.enabled")
+
   lazy val estatesStoreUrl: String = configuration.get[Service]("microservice.services.estates-store").baseUrl + "/estates-store"
+
+  lazy val taxEnrolmentsUrl: String = configuration.get[Service]("microservice.services.tax-enrolments").baseUrl + "/tax-enrolments"
 
   lazy val relationshipEstablishmentUrl : String =
     configuration.get[Service]("microservice.services.relationship-establishment").baseUrl + "/relationship-establishment"
+
+  lazy val relationshipName : String =
+    configuration.get[String]("microservice.services.self.relationship-establishment.name")
+
+  lazy val relationshipIdentifier : String =
+    configuration.get[String]("microservice.services.self.relationship-establishment.identifier")
+
+  private def relationshipEstablishmentFrontendPath(utr: String) : String =
+    s"${configuration.get[String]("microservice.services.relationship-establishment-frontend.path")}/$utr"
+
+  private def relationshipEstablishmentFrontendHost : String =
+    configuration.get[String]("microservice.services.relationship-establishment-frontend.host")
+
+  private def stubbedRelationshipEstablishmentFrontendPath(utr: String) : String =
+    s"${configuration.get[String]("microservice.services.test.relationship-establishment-frontend.path")}/$utr"
+
+  private def stubbedRelationshipEstablishmentFrontendHost : String =
+    configuration.get[String]("microservice.services.test.relationship-establishment-frontend.host")
+
+  lazy val relationshipEstablishmentStubbed: Boolean =
+    configuration.get[Boolean]("microservice.services.features.stubRelationshipEstablishment")
+
+  def relationshipEstablishmentFrontendtUrl(utr: String) : String = {
+    if(relationshipEstablishmentStubbed) {
+      s"${stubbedRelationshipEstablishmentFrontendHost}/${stubbedRelationshipEstablishmentFrontendPath(utr)}"
+    } else {
+      s"${relationshipEstablishmentFrontendHost}/${relationshipEstablishmentFrontendPath(utr)}"
+    }
+  }
+
+  def relationshipEstablishmentBaseUrl : String = servicesConfig.baseUrl("test.relationship-establishment")
+
+  lazy val relationshipEstablishmentSuccessUrl : String =
+    configuration.get[String]("microservice.services.self.relationship-establishment.successUrl")
+
+  lazy val relationshipEstablishmentFailureUrl : String =
+    configuration.get[String]("microservice.services.self.relationship-establishment.failureUrl")
 
   lazy val languageTranslationEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.welsh-translation")

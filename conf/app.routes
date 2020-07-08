@@ -23,3 +23,15 @@ GET        /check-your-answers                          controllers.CheckYourAns
 GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
 GET        /logout                                      controllers.LogoutController.logout()
+
+GET        /verified                                     controllers.IvSuccessController.onPageLoad()
+
+GET        /save/:utr                                   controllers.SaveUTRController.save(utr: String)
+
+GET        /managed-by-agent                            controllers.IsAgentManagingEstateController.onPageLoad(mode: Mode = NormalMode)
+POST       /managed-by-agent                            controllers.IsAgentManagingEstateController.onSubmit(mode: Mode = NormalMode)
+GET        /change/managed-by-agent                     controllers.IsAgentManagingEstateController.onPageLoad(mode: Mode = CheckMode)
+POST       /change/managed-by-agent                     controllers.IsAgentManagingEstateController.onSubmit(mode: Mode = CheckMode)
+
+GET        /before-you-continue                         controllers.BeforeYouContinueController.onPageLoad()
+POST       /before-you-continue                         controllers.BeforeYouContinueController.onSubmit()

@@ -14,24 +14,21 @@
  * limitations under the License.
  */
 
-package navigation
+package views
 
-import javax.inject.{Inject, Singleton}
+import views.behaviours.ViewBehaviours
+import views.html.BeforeYouContinueView
 
-import play.api.mvc.Call
-import controllers.routes
-import pages._
-import models._
+class BeforeYouContinueViewSpec extends ViewBehaviours {
 
-@Singleton
-class Navigator @Inject()() {
+  "BeforeYouContinue view" must {
 
-  private val normalRoutes: Page => UserAnswers => Call = {
-    case IsAgentManagingEstatePage => _ => controllers.routes.BeforeYouContinueController.onPageLoad()
-  }
+    val view = viewFor[BeforeYouContinueView](Some(emptyUserAnswers))
 
-  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
-    case NormalMode =>
-      normalRoutes(page)(userAnswers)
+    val applyView = view("0987654321")(fakeRequest, messages)
+
+    behave like normalPage(applyView, "beforeYouContinue")
+
+    behave like pageWithBackLink(applyView)
   }
 }

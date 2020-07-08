@@ -14,24 +14,19 @@
  * limitations under the License.
  */
 
-package navigation
+package services
 
-import javax.inject.{Inject, Singleton}
+import controllers.actions.FakeAuthConnector
+import play.api.mvc.{AnyContent, Request}
+import uk.gov.hmrc.auth.core.AuthConnector
 
-import play.api.mvc.Call
-import controllers.routes
-import pages._
-import models._
+import scala.concurrent.Future
 
-@Singleton
-class Navigator @Inject()() {
+class FakeRelationshipEstablishmentService(response: RelationEstablishmentStatus = RelationshipFound) extends RelationshipEstablishment {
 
-  private val normalRoutes: Page => UserAnswers => Call = {
-    case IsAgentManagingEstatePage => _ => controllers.routes.BeforeYouContinueController.onPageLoad()
-  }
+  override def authConnector: AuthConnector = new FakeAuthConnector(Future.successful())
 
-  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
-    case NormalMode =>
-      normalRoutes(page)(userAnswers)
-  }
+  override def check(internalId: String, utr: String)
+                    (implicit request: Request[AnyContent]) = Future.successful(response)
+
 }

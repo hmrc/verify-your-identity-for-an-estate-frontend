@@ -44,6 +44,48 @@ site.sign_out = Sign out
 unauthorised.title = You can’t access this service with this account
 unauthorised.heading = You can’t access this service with this account
 
+isAgentManagingEstate.title = Is an agent managing the estate’s online register?
+isAgentManagingEstate.heading = Is an agent managing the estate’s online register?
+isAgentManagingEstate.subheading = This estate’s UTR: {0}
+isAgentManagingEstate.checkYourAnswersLabel = Is an agent managing the estate’s online register?
+isAgentManagingEstate.error.required = Select yes if an agent is managing the estate’s online register
+
+ivSuccess.subheading = The estate’s UTR: {0}
+ivSuccess.ifYouNeedHelp = If you need help using the service
+ivSuccess.contactLink =  contact the deceased estate helpline (opens in a new window or tab)
+
+ivSuccess.agent.title = You have successfully answered the estate’s security questions
+ivSuccess.agent.heading = You have successfully answered the estate’s security questions
+ivSuccess.agent.paragraph1 = If you need to authorise your agent to manage the estate, you need to contact them and ask for an authorisation link to be sent to you. You need to use this Government Gateway account to approve the link.
+ivSuccess.agent.paragraph2 = You can
+ivSuccess.agent.continueLink = continue into the service
+ivSuccess.agent.paragraph3 = if you want to view the register or do not have an agent.
+ivSuccess.agent.paragraph4 = If you need help using the service
+
+ivSuccess.no.agent.title = You have successfully answered the estate’s security questions
+ivSuccess.no.agent.heading = You have successfully answered the estate’s security questions
+ivSuccess.no.agent.paragraph1 = You are now able to change the information HMRC holds about the personal representative.
+ivSuccess.no.agent.paragraph2 = If you have an agent, they will neeed to send you an authorisation link for you to approve so they can maintain the estate online. If the estate has a tax liability, you need to declare every year through this service and Self Assessment for Estates that the information we have is up to date.
+ivSuccess.no.agent.paragraph3 = If you need help using the service
+ivSuccess.no.agent.contactLink =  contact the deceased estate helpline (opens in a new window or tab)
+
+ivSuccess.withoutplayback.title = Sorry, you cannot maintain this estate online
+ivSuccess.withoutplayback.heading = Sorry, you cannot maintain this estate online
+ivSuccess.withoutplayback.paragraph1 = We are currently updating the service so you can view the registered information about the estate.
+ivSuccess.withoutplayback.paragraph2 = This will be available in January 2020.
+ivSuccess.withoutplayback.paragraph3 = If you need to authorise your agent to manage the estate, you need to contact them and ask for an authorisation link to be sent to you.
+ivSuccess.withoutplayback.ifYouNeedHelp = If you need help using the service
+ivSuccess.withoutplayback.contactLink =  contact the deceased estate helpline (opens in a new window or tab)
+
+beforeYouContinue.title = Before you continue
+beforeYouContinue.heading = Before you continue
+beforeYouContinue.subheading = This estate’s UTR: {0}
+beforeYouContinue.p1 = You will be asked to answer several questions about the estate. This is so we can confirm you are authorised to view and amend the estate’s details.
+beforeYouContinue.p2 = Your answers must match the details provided to HMRC when the estate was registered or most recently updated online.
+beforeYouContinue.p3 = Do not enter any other details when answering these questions, even if someone from the estate wrote to HMRC to change them.
+beforeYouContinue.p4 = If you need help using the service
+beforeYouContinue.a = contact the deceased estate helpline (opens in a new window or tab)
+
 locked.title = Your answers do not match the details we hold about this estate
 locked.heading = Your answers do not match the details we hold about this estate
 locked.p1 = As you have had 3 unsuccessful tries at accessing this estate you will need to try again in 30 minutes.

@@ -14,24 +14,28 @@
  * limitations under the License.
  */
 
-package navigation
+package models
 
-import javax.inject.{Inject, Singleton}
+import play.api.libs.json.{Json, Writes}
 
-import play.api.mvc.Call
-import controllers.routes
-import pages._
-import models._
+final case class TaxEnrolmentsRequest(utr: String)
 
-@Singleton
-class Navigator @Inject()() {
+object TaxEnrolmentsRequest {
 
-  private val normalRoutes: Page => UserAnswers => Call = {
-    case IsAgentManagingEstatePage => _ => controllers.routes.BeforeYouContinueController.onPageLoad()
+  implicit val writes: Writes[TaxEnrolmentsRequest] = Writes { request =>
+    Json.obj(
+      "identifiers" -> Json.arr(
+        Json.obj(
+          "key" -> "SAUTR",
+          "value" -> request.utr
+        )),
+      "verifiers" -> Json.arr(
+        Json.obj(
+          "key" -> "SAUTR1",
+          "value" -> request.utr
+        )
+      )
+    )
   }
 
-  def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
-    case NormalMode =>
-      normalRoutes(page)(userAnswers)
-  }
 }
