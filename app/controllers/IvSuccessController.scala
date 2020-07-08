@@ -64,7 +64,7 @@ class IvSuccessController @Inject()(
             if (config.playbackEnabled) {
               Future.successful(Ok(withPlaybackView(isAgentManagingEstate, utr)))
             } else {
-              Future.successful(Ok(withoutPlaybackView(isAgentManagingEstate, utr)))
+              Future.successful(Ok(withoutPlaybackView(utr)))
             }
         }
 

@@ -33,7 +33,7 @@ class IvSuccessWithoutPlaybackViewSpec extends ViewBehaviours {
 
       val view = application.injector.instanceOf[IvSuccessWithoutPlaybackView]
 
-      val applyView = view.apply(isAgent = true, utr)(fakeRequest, messages)
+      val applyView = view.apply(utr)(fakeRequest, messages)
 
       behave like normalPage(applyView, "ivSuccess.withoutplayback", "paragraph1", "paragraph2", "paragraph3",
         "ifYouNeedHelp", "contactLink")
@@ -43,7 +43,7 @@ class IvSuccessWithoutPlaybackViewSpec extends ViewBehaviours {
 
       val view = viewFor[IvSuccessWithoutPlaybackView](Some(emptyUserAnswers))
 
-      val applyView = view.apply(isAgent = true, utr)(fakeRequest, messages)
+      val applyView = view.apply(utr)(fakeRequest, messages)
 
       val doc = asDocument(applyView)
       assertContainsText(doc, messages("ivSuccess.subheading", utr))
