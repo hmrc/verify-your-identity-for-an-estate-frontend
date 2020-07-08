@@ -28,6 +28,8 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
   private val contactHost = configuration.get[String]("contact-frontend.host")
   private val contactFormServiceIdentifier = "estates"
 
+  lazy val serviceName: String = configuration.get[String]("serviceName")
+
   val analyticsToken: String = configuration.get[String](s"google-analytics.token")
   val analyticsHost: String = configuration.get[String](s"google-analytics.host")
   val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
@@ -44,10 +46,24 @@ class FrontendAppConfig @Inject() (configuration: Configuration) {
   lazy val loginContinueUrl: String = configuration.get[String]("urls.loginContinue")
   lazy val logoutUrl: String = configuration.get[String]("urls.logout")
 
+  lazy val estatesContinueUrl: String = {
+    configuration.get[String]("urls.maintainContinue")
+  }
+
+  lazy val playbackEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.playback.enabled")
+
   lazy val estatesStoreUrl: String = configuration.get[Service]("microservice.services.estates-store").baseUrl + "/estates-store"
+
+  lazy val taxEnrolmentsUrl: String = configuration.get[Service]("microservice.services.tax-enrolments").baseUrl + "/tax-enrolments"
 
   lazy val relationshipEstablishmentUrl : String =
     configuration.get[Service]("microservice.services.relationship-establishment").baseUrl + "/relationship-establishment"
+
+  lazy val relationshipName : String =
+    configuration.get[String]("microservice.services.self.relationship-establishment.name")
+
+  lazy val relationshipIdentifier : String =
+    configuration.get[String]("microservice.services.self.relationship-establishment.identifier")
 
   lazy val languageTranslationEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.welsh-translation")
