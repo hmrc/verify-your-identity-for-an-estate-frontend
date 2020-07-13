@@ -89,8 +89,8 @@ class TestRelationshipEstablishmentController @Inject()(
 
       Logger.warn("[TestRelationshipEstablishmentController] EstateIV is using a test route, you don't want this in production.")
 
-      val succeedRegex = "(1\\d{9})".r
-      val failRegex = "(2\\d{9})".r
+      val succeedRegex = "(2\\d{9})".r
+      val failRegex = "(4\\d{9})".r
 
       utr match {
         case "4381028111" | "5000000000" =>
