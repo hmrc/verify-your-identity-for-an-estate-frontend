@@ -42,14 +42,13 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   lazy val locationCanonicalListNonUK: String = configuration.get[String]("location.canonical.list.nonUK")
 
   lazy val estatesRegistration: String = configuration.get[String]("urls.estatesRegistration")
+
   lazy val authUrl: String = configuration.get[Service]("auth").baseUrl
   lazy val loginUrl: String = configuration.get[String]("urls.login")
   lazy val loginContinueUrl: String = configuration.get[String]("urls.loginContinue")
   lazy val logoutUrl: String = configuration.get[String]("urls.logout")
 
-  lazy val estatesContinueUrl: String = {
-    configuration.get[String]("urls.maintainContinue")
-  }
+  lazy val estatesContinueUrl: String = configuration.get[String]("urls.maintainContinue")
 
   lazy val playbackEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.playback.enabled")
 
@@ -58,7 +57,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   lazy val taxEnrolmentsUrl: String = configuration.get[Service]("microservice.services.tax-enrolments").baseUrl + "/tax-enrolments"
 
   lazy val relationshipEstablishmentUrl : String =
-    configuration.get[Service]("microservice.services.relationship-establishment").baseUrl + "/relationship-establishment"
+    configuration.get[Service]("microservice.services.relationship-establishment").baseUrl
 
   lazy val relationshipName : String =
     configuration.get[String]("microservice.services.self.relationship-establishment.name")
@@ -66,36 +65,22 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   lazy val relationshipIdentifier : String =
     configuration.get[String]("microservice.services.self.relationship-establishment.identifier")
 
-  private def relationshipEstablishmentFrontendPath(utr: String) : String =
-    s"${configuration.get[String]("microservice.services.relationship-establishment-frontend.path")}/$utr"
-
-  private def relationshipEstablishmentFrontendHost : String =
-    configuration.get[String]("microservice.services.relationship-establishment-frontend.host")
-
-  private def stubbedRelationshipEstablishmentFrontendPath(utr: String) : String =
-    s"${configuration.get[String]("microservice.services.test.relationship-establishment-frontend.path")}/$utr"
-
-  private def stubbedRelationshipEstablishmentFrontendHost : String =
-    configuration.get[String]("microservice.services.test.relationship-establishment-frontend.host")
-
   lazy val relationshipEstablishmentStubbed: Boolean =
     configuration.get[Boolean]("microservice.services.features.stubRelationshipEstablishment")
 
-  def relationshipEstablishmentFrontendtUrl(utr: String) : String = {
+  def relationshipEstablishmentFrontendUrl(utr: String) : String = {
     if(relationshipEstablishmentStubbed) {
-      s"${stubbedRelationshipEstablishmentFrontendHost}/${stubbedRelationshipEstablishmentFrontendPath(utr)}"
+      s"${configuration.get[String]("urls.testOnly.estatesIV")}/$utr"
     } else {
-      s"${relationshipEstablishmentFrontendHost}/${relationshipEstablishmentFrontendPath(utr)}"
+      s"${configuration.get[String]("urls.estatesIV")}/$utr"
     }
   }
 
-  def relationshipEstablishmentBaseUrl : String = servicesConfig.baseUrl("test.relationship-establishment")
-
   lazy val relationshipEstablishmentSuccessUrl : String =
-    configuration.get[String]("microservice.services.self.relationship-establishment.successUrl")
+    configuration.get[String]("urls.successUrl")
 
   lazy val relationshipEstablishmentFailureUrl : String =
-    configuration.get[String]("microservice.services.self.relationship-establishment.failureUrl")
+    configuration.get[String]("urls.failureUrl")
 
   lazy val languageTranslationEnabled: Boolean =
     configuration.get[Boolean]("microservice.services.features.welsh-translation")

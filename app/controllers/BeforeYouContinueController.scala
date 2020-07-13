@@ -74,7 +74,7 @@ class BeforeYouContinueController @Inject()(
           val returningSuccessRedirect = config.relationshipEstablishmentSuccessUrl
           val returningFailureRedirect = config.relationshipEstablishmentFailureUrl
 
-          val host = config.relationshipEstablishmentFrontendtUrl(utr)
+          val host = config.relationshipEstablishmentFrontendUrl(utr)
 
           val queryString: Map[String, Seq[String]] = Map(
             "successUrl" -> Seq(returningSuccessRedirect),
