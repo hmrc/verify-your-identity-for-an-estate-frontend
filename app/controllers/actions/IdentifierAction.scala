@@ -17,11 +17,9 @@
 package controllers.actions
 
 import com.google.inject.Inject
-import config.FrontendAppConfig
 import models.requests.IdentifierRequest
 import play.api.Logger
 import play.api.mvc._
-import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
@@ -32,13 +30,9 @@ import scala.concurrent.{ExecutionContext, Future}
 trait IdentifierAction extends ActionBuilder[IdentifierRequest, AnyContent] with ActionFunction[Request, IdentifierRequest]
 
 class AuthenticatedIdentifierAction @Inject()(
-                                               override val authConnector: AuthConnector,
+                                               authFunctions: AuthPartialFunctions,
                                                val parser: BodyParsers.Default
-                                             )
-                                             (implicit val executionContext: ExecutionContext,
-                                              implicit val config: FrontendAppConfig)
-
-  extends IdentifierAction with AuthorisedFunctions with AuthPartialFunctions {
+                                             )(implicit val executionContext: ExecutionContext) extends IdentifierAction {
 
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
 
@@ -46,14 +40,12 @@ class AuthenticatedIdentifierAction @Inject()(
 
     Logger.info(s"[AuthenticatedIdentifierAction] identifying user")
 
-    authorised().retrieve(Retrievals.internalId and Retrievals.credentials) {
+    authFunctions.authorised().retrieve(Retrievals.internalId and Retrievals.credentials) {
       case Some(internalId) ~ Some(credentials) =>
           Logger.info(s"[AuthenticatedIdentifierAction] user authenticated and retrieved internalId")
           block(IdentifierRequest(request, internalId, credentials))
       case _ =>
         throw new UnauthorizedException("Unable to retrieve internal Id")
-    } recoverWith {
-      recoverFromException
-    }
+    } recover authFunctions.recoverFromAuthorisation
   }
 }

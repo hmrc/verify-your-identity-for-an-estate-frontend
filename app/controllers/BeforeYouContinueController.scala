@@ -40,7 +40,7 @@ class BeforeYouContinueController @Inject()(
                                        view: BeforeYouContinueView,
                                        connector: EstatesStoreConnector
                                      )(implicit ec: ExecutionContext,
-                                       config: FrontendAppConfig) extends FrontendBaseController with I18nSupport with AuthPartialFunctions {
+                                       config: FrontendAppConfig) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>

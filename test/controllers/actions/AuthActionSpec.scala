@@ -17,6 +17,7 @@
 package controllers.actions
 
 import base.SpecBase
+import config.FrontendAppConfig
 import controllers.routes
 import play.api.mvc.{BodyParsers, Results}
 import play.api.test.Helpers._
@@ -30,6 +31,9 @@ class AuthActionSpec extends SpecBase {
     def onPageLoad() = authAction { _ => Results.Ok }
   }
 
+  private val appConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
+  private def authFunctions(exception: Throwable) = new AuthPartialFunctions(new FakeFailingAuthConnector(exception), appConfig)
+
   "Auth Action" when {
 
     "the user hasn't logged in" must {
@@ -39,7 +43,7 @@ class AuthActionSpec extends SpecBase {
         val application = applicationBuilder(userAnswers = None).build()
 
         val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-        val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new MissingBearerToken), bodyParsers)
+        val authAction = new AuthenticatedIdentifierAction(authFunctions(new MissingBearerToken), bodyParsers)
         val controller = new Harness(authAction)
         val result = controller.onPageLoad()(fakeRequest)
 
@@ -56,7 +60,7 @@ class AuthActionSpec extends SpecBase {
         val application = applicationBuilder(userAnswers = None).build()
 
         val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-        val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new BearerTokenExpired), bodyParsers)
+        val authAction = new AuthenticatedIdentifierAction(authFunctions(new MissingBearerToken), bodyParsers)
         val controller = new Harness(authAction)
         val result = controller.onPageLoad()(fakeRequest)
 
@@ -73,7 +77,7 @@ class AuthActionSpec extends SpecBase {
         val application = applicationBuilder(userAnswers = None).build()
 
         val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-        val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new InsufficientEnrolments), bodyParsers)
+        val authAction = new AuthenticatedIdentifierAction(authFunctions(new InsufficientEnrolments), bodyParsers)
         val controller = new Harness(authAction)
         val result = controller.onPageLoad()(fakeRequest)
 
@@ -90,7 +94,7 @@ class AuthActionSpec extends SpecBase {
         val application = applicationBuilder(userAnswers = None).build()
 
         val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-        val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new InsufficientConfidenceLevel), bodyParsers)
+        val authAction = new AuthenticatedIdentifierAction(authFunctions(new InsufficientConfidenceLevel), bodyParsers)
         val controller = new Harness(authAction)
         val result = controller.onPageLoad()(fakeRequest)
 
@@ -107,7 +111,7 @@ class AuthActionSpec extends SpecBase {
         val application = applicationBuilder(userAnswers = None).build()
 
         val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-        val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedAuthProvider), bodyParsers)
+        val authAction = new AuthenticatedIdentifierAction(authFunctions(new UnsupportedAuthProvider), bodyParsers)
         val controller = new Harness(authAction)
         val result = controller.onPageLoad()(fakeRequest)
 
@@ -124,7 +128,7 @@ class AuthActionSpec extends SpecBase {
         val application = applicationBuilder(userAnswers = None).build()
 
         val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-        val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedAffinityGroup), bodyParsers)
+        val authAction = new AuthenticatedIdentifierAction(authFunctions(new UnsupportedAffinityGroup), bodyParsers)
         val controller = new Harness(authAction)
         val result = controller.onPageLoad()(fakeRequest)
 
@@ -141,7 +145,7 @@ class AuthActionSpec extends SpecBase {
         val application = applicationBuilder(userAnswers = None).build()
 
         val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-        val authAction = new AuthenticatedIdentifierAction(new FakeFailingAuthConnector(new UnsupportedCredentialRole),bodyParsers)
+        val authAction = new AuthenticatedIdentifierAction(authFunctions(new UnsupportedCredentialRole), bodyParsers)
         val controller = new Harness(authAction)
         val result = controller.onPageLoad()(fakeRequest)
 
