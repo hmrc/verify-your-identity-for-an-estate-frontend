@@ -24,10 +24,8 @@ import play.api.http.Status
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import utils.WireMockHelper
-
-import scala.concurrent.ExecutionContext.Implicits.global
 
 class EstatesStoreConnectorSpec extends AsyncWordSpec with MustMatchers with WireMockHelper with RecoverMethods
   with ScalaFutures {
@@ -106,13 +104,7 @@ class EstatesStoreConnectorSpec extends AsyncWordSpec with MustMatchers with Wir
           expectedResponse = response
         )
 
-        val f = connector.lock(request)
-
-        whenReady(f.failed) {
-          case UpstreamErrorResponse.Upstream4xxResponse(upstream) =>
-            upstream.statusCode mustBe BAD_REQUEST
-          case _ => fail()
-        }
+        recoverToSucceededIf[UpstreamErrorResponse](connector.lock(request))
 
       }
       "returns 500 INTERNAL_SERVER_ERROR" in {
@@ -131,13 +123,7 @@ class EstatesStoreConnectorSpec extends AsyncWordSpec with MustMatchers with Wir
           expectedResponse = response
         )
 
-        val f = connector.lock(request)
-
-        whenReady(f.failed) {
-          case UpstreamErrorResponse.Upstream5xxResponse(upstream) =>
-            upstream.statusCode mustBe INTERNAL_SERVER_ERROR
-          case _ => fail()
-        }
+        recoverToSucceededIf[UpstreamErrorResponse](connector.lock(request))
 
       }
 

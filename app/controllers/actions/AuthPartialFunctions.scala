@@ -16,23 +16,23 @@
 
 package controllers.actions
 
+import com.google.inject.Inject
 import config.FrontendAppConfig
 import play.api.Logger
 import play.api.mvc.Result
 import play.api.mvc.Results.Redirect
-import uk.gov.hmrc.auth.core.{AuthorisationException, NoActiveSession}
+import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisationException, AuthorisedFunctions, NoActiveSession}
 
-import scala.concurrent.{ExecutionContext, Future}
+class AuthPartialFunctions @Inject()(override val authConnector: AuthConnector, val config: FrontendAppConfig) extends AuthorisedFunctions {
 
-trait AuthPartialFunctions {
-
-  def recoverFromException()(implicit executor: ExecutionContext, config : FrontendAppConfig) : PartialFunction[Throwable, Future[Result]] = {
-    case _: NoActiveSession =>
-      Logger.info(s"[AuthenticatedIdentifierAction] no active session for user")
-      Future.successful(Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl))))
-    case _: AuthorisationException =>
-      Logger.info(s"[AuthenticatedIdentifierAction] exception thrown when authorising")
-      Future.successful(Redirect(controllers.routes.UnauthorisedController.onPageLoad()))
+  def recoverFromAuthorisation: PartialFunction[Throwable, Result] = {
+    case _: NoActiveSession => redirectToLogin
+    case e: AuthorisationException =>
+      Logger.error(s"Recovered error: $e")
+      Redirect(controllers.routes.UnauthorisedController.onPageLoad())
   }
 
+  def redirectToLogin: Result = {
+    Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl)))
+  }
 }

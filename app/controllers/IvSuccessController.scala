@@ -17,9 +17,7 @@
 package controllers
 
 import config.FrontendAppConfig
-import connectors.TaxEnrolmentsConnector
 import controllers.actions._
-import handlers.ErrorHandler
 import javax.inject.Inject
 import models.NormalMode
 import pages.{IsAgentManagingEstatePage, UtrPage}
@@ -38,14 +36,10 @@ class IvSuccessController @Inject()(
                                      requireData: DataRequiredAction,
                                      val controllerComponents: MessagesControllerComponents,
                                      relationshipEstablishment: RelationshipEstablishment,
-                                     taxEnrolmentsConnector: TaxEnrolmentsConnector,
                                      withPlaybackView: IvSuccessView,
-                                     withoutPlaybackView: IvSuccessWithoutPlaybackView,
-                                     errorHandler: ErrorHandler
-                                   )(implicit ec: ExecutionContext,
-                                     val config: FrontendAppConfig)
-  extends FrontendBaseController with I18nSupport
-                                    with AuthPartialFunctions {
+                                     withoutPlaybackView: IvSuccessWithoutPlaybackView
+                                   )(implicit ec: ExecutionContext, val config: FrontendAppConfig)
+  extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
@@ -54,12 +48,10 @@ class IvSuccessController @Inject()(
 
         def onRelationshipFound = {
 
-
             val isAgentManagingEstate = request.userAnswers.get(IsAgentManagingEstatePage) match {
               case None => false
               case Some(value) => value
             }
-
 
             if (config.playbackEnabled) {
               Future.successful(Ok(withPlaybackView(isAgentManagingEstate, utr)))

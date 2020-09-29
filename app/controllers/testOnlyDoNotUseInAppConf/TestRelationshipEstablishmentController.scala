@@ -23,7 +23,8 @@ import models.requests.IdentifierRequest
 import play.api.Logger
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
-import play.api.mvc.{AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
@@ -42,32 +43,35 @@ object Relationship {
   implicit val format = Json.format[Relationship]
 }
 
-case class RelationshipJson(relationship: Relationship, ttlSeconds:Int =1440)
+case class RelationshipJson(relationship: Relationship, ttlSeconds: Int = 1440)
 
 object RelationshipJson {
   implicit val format = Json.format[RelationshipJson]
 }
 
-class RelationshipEstablishmentConnector @Inject()(val httpClient: HttpClient,config: FrontendAppConfig)
-                                                  (implicit val ec : ExecutionContext) {
+class RelationshipEstablishmentConnector @Inject()(val httpClient: HttpClient, config: FrontendAppConfig)
+                                                  (implicit val ec: ExecutionContext) {
 
-  private val relationshipEstablishmentPostUrl: String = s"${config.relationshipEstablishmentUrl}/relationship-establishment/relationship/"
+  private val relationshipEstablishmentPostUrl: String =
+    s"${config.relationshipEstablishmentUrl}/relationship-establishment/relationship/"
 
-  private def relationshipEstablishmentGetUrl(credId :String): String = s"${config.relationshipEstablishmentUrl}/relationship-establishment/relationship/$credId"
+  private def relationshipEstablishmentGetUrl(credId: String): String =
+    s"${config.relationshipEstablishmentUrl}/relationship-establishment/relationship/$credId"
 
-  private def relationshipEstablishmentDeleteUrl(credId: String): String = s"${config.relationshipEstablishmentUrl}/test/relationship/$credId"
+  private def relationshipEstablishmentDeleteUrl(credId: String): String =
+    s"${config.relationshipEstablishmentUrl}/test/relationship/$credId"
 
   private def newRelationship(credId: String, utr: String): Relationship =
     Relationship(config.relationshipName, Set(BusinessKey(config.relationshipIdentifier, utr)), credId)
 
-  def createRelationship(credId: String, utr: String)(implicit headerCarrier: HeaderCarrier) =
-    httpClient.POST[RelationshipJson,HttpResponse](relationshipEstablishmentPostUrl,RelationshipJson(newRelationship(credId, utr)))
+  def createRelationship(credId: String, utr: String)(implicit headerCarrier: HeaderCarrier): Future[HttpResponse] =
+    httpClient.POST[RelationshipJson, HttpResponse](relationshipEstablishmentPostUrl, RelationshipJson(newRelationship(credId, utr)))
 
-  def getRelationship(credId: String)(implicit headerCarrier: HeaderCarrier) =
-    httpClient.GET(relationshipEstablishmentGetUrl(credId))
+  def getRelationship(credId: String)(implicit headerCarrier: HeaderCarrier): Future[HttpResponse] =
+    httpClient.GET[HttpResponse](relationshipEstablishmentGetUrl(credId))
 
-  def deleteRelationship(credId: String)(implicit headerCarrier: HeaderCarrier) =
-    httpClient.DELETE(relationshipEstablishmentDeleteUrl(credId))
+  def deleteRelationship(credId: String)(implicit headerCarrier: HeaderCarrier): Future[HttpResponse] =
+    httpClient.DELETE[HttpResponse](relationshipEstablishmentDeleteUrl(credId))
 
 }
 
@@ -80,11 +84,10 @@ class TestRelationshipEstablishmentController @Inject()(
                                                          val controllerComponents: MessagesControllerComponents,
                                                          relationshipEstablishmentConnector: RelationshipEstablishmentConnector,
                                                          identify: IdentifierAction
-                                                       )
-                                                       (implicit ec : ExecutionContext)
+                                                       )(implicit ec : ExecutionContext)
   extends FrontendBaseController {
 
-  def check(utr: String) = identify.async {
+  def check(utr: String): Action[AnyContent] = identify.async {
     implicit request =>
 
       Logger.warn("[TestRelationshipEstablishmentController] EstateIV is using a test route, you don't want this in production.")
