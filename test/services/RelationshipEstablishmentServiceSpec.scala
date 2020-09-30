@@ -71,7 +71,7 @@ class RelationshipEstablishmentServiceSpec extends SpecBase with ScalaFutures {
 
         "return RelationshipFound" in {
 
-          val auth = new FakeAuthConnector(Future.successful())
+          val auth = new FakeAuthConnector(Future.successful(()))
 
           val service = new RelationshipEstablishmentService(auth)
 
