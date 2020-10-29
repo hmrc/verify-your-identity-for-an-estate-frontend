@@ -20,13 +20,14 @@ import connectors.{EstatesStoreConnector, RelationshipEstablishmentConnector}
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import javax.inject.Inject
 import models.RelationshipEstablishmentStatus.{UnsupportedRelationshipStatus, UpstreamRelationshipError}
-import models.{RelationshipEstablishmentStatus, EstatesStoreRequest}
+import models.{EstatesStoreRequest, RelationshipEstablishmentStatus}
 import pages.{IsAgentManagingEstatePage, UtrPage}
 import play.api.Logger
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
+import utils.Session
 import views.html.{EstateLocked, EstateNotFound, EstateStillProcessing}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -43,22 +44,24 @@ class IvFailureController @Inject()(
                                      connector: EstatesStoreConnector
                                    )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
+  private val logger: Logger = Logger(getClass)
+
   private def renderFailureReason(utr: String, journeyId: String)(implicit hc : HeaderCarrier) = {
     relationshipEstablishmentConnector.journeyId(journeyId) map {
       case RelationshipEstablishmentStatus.Locked =>
-        Logger.info(s"[IvFailure][status] $utr is locked")
+        logger.info(s"[status][Session ID: ${Session.id(hc)}][UTR: $utr] UTR is locked")
         Redirect(routes.IvFailureController.estateLocked())
       case RelationshipEstablishmentStatus.NotFound =>
-        Logger.info(s"[IvFailure][status] $utr was not found")
+        logger.info(s"[status][Session ID: ${Session.id(hc)}][UTR: $utr] UTR was not found")
         Redirect(routes.IvFailureController.estateNotFound())
       case RelationshipEstablishmentStatus.InProcessing =>
-        Logger.info(s"[IvFailure][status] $utr is processing")
+        logger.info(s"[status][Session ID: ${Session.id(hc)}][UTR: $utr] UTR is processing")
         Redirect(routes.IvFailureController.estateStillProcessing())
       case UnsupportedRelationshipStatus(reason) =>
-        Logger.warn(s"[IvFailure][status] Unsupported IV failure reason: $reason")
+        logger.warn(s"[status][Session ID: ${Session.id(hc)}][UTR: $utr] Unsupported IV failure reason: $reason")
         Redirect(controllers.routes.FallbackFailureController.onPageLoad())
       case UpstreamRelationshipError(response) =>
-        Logger.warn(s"[IvFailure][status] HTTP response: $response")
+        logger.warn(s"[status][Session ID: ${Session.id(hc)}][UTR: $utr] HTTP response: $response")
         Redirect(controllers.routes.FallbackFailureController.onPageLoad())
     }
   }
@@ -71,14 +74,15 @@ class IvFailureController @Inject()(
           val queryString = request.getQueryString("journeyId")
 
           queryString.fold{
-            Logger.warn(s"[IVFailureController][onEstateIvFailure] unable to retrieve a journeyId to determine the reason")
+            logger.warn(s"[onEstateIvFailure][Session ID: ${Session.id(hc)}][UTR: $utr]" +
+              s" unable to retrieve a journeyId to determine the reason")
             Future.successful(Redirect(controllers.routes.FallbackFailureController.onPageLoad()))
           }{
             journeyId =>
               renderFailureReason(utr, journeyId)
           }
         case None =>
-          Logger.warn(s"[IVFailureController][onEstateIvFailure] unable to retrieve a UTR")
+          logger.warn(s"[onEstateIvFailure][Session ID: ${Session.id(hc)}] unable to retrieve a UTR")
           Future.successful(Redirect(controllers.routes.FallbackFailureController.onPageLoad()))
       }
   }
