@@ -25,10 +25,12 @@ import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisationException, AuthorisedF
 
 class AuthPartialFunctions @Inject()(override val authConnector: AuthConnector, val config: FrontendAppConfig) extends AuthorisedFunctions {
 
+  private val logger: Logger = Logger(getClass)
+  
   def recoverFromAuthorisation: PartialFunction[Throwable, Result] = {
     case _: NoActiveSession => redirectToLogin
     case e: AuthorisationException =>
-      Logger.error(s"Recovered error: $e")
+      logger.error(s"Recovered error: $e")
       Redirect(controllers.routes.UnauthorisedController.onPageLoad())
   }
 

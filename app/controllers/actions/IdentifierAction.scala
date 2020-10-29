@@ -24,6 +24,7 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
 import uk.gov.hmrc.play.HeaderCarrierConverter
+import utils.Session
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -33,16 +34,15 @@ class AuthenticatedIdentifierAction @Inject()(
                                                authFunctions: AuthPartialFunctions,
                                                val parser: BodyParsers.Default
                                              )(implicit val executionContext: ExecutionContext) extends IdentifierAction {
-
+  private val logger: Logger = Logger(getClass)
+  
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    Logger.info(s"[AuthenticatedIdentifierAction] identifying user")
-
     authFunctions.authorised().retrieve(Retrievals.internalId and Retrievals.credentials) {
       case Some(internalId) ~ Some(credentials) =>
-          Logger.info(s"[AuthenticatedIdentifierAction] user authenticated and retrieved internalId")
+          logger.info(s"[Session ID: ${Session.id(hc)}] user authenticated and retrieved internalId")
           block(IdentifierRequest(request, internalId, credentials))
       case _ =>
         throw new UnauthorizedException("Unable to retrieve internal Id")
