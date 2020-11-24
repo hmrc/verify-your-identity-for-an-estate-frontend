@@ -11,8 +11,7 @@ object AppDependencies {
     "uk.gov.hmrc"       %% "play-health"                    % "3.15.0-play-26",
     "uk.gov.hmrc"       %% "play-ui"                        % "8.11.0-play-26",
     "uk.gov.hmrc"       %% "play-conditional-form-mapping"  % "1.3.0-play-26",
-    "uk.gov.hmrc"       %% "bootstrap-play-26"              % "1.14.0",
-    "uk.gov.hmrc"       %% "play-whitelist-filter"          % "3.4.0-play-26"
+    "uk.gov.hmrc"       %% "bootstrap-play-26"              % "1.14.0"
   )
 
   val test = Seq(
