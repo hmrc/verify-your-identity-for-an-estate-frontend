@@ -18,7 +18,7 @@ package controllers.actions
 
 import com.google.inject.Inject
 import models.requests.IdentifierRequest
-import play.api.Logger
+import play.api.Logging
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.~
@@ -32,17 +32,17 @@ trait IdentifierAction extends ActionBuilder[IdentifierRequest, AnyContent] with
 class AuthenticatedIdentifierAction @Inject()(
                                                authFunctions: AuthPartialFunctions,
                                                val parser: BodyParsers.Default
-                                             )(implicit val executionContext: ExecutionContext) extends IdentifierAction {
+                                             )(implicit val executionContext: ExecutionContext) extends IdentifierAction with Logging {
 
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    Logger.info(s"[AuthenticatedIdentifierAction] identifying user")
+    logger.info(s"[AuthenticatedIdentifierAction] identifying user")
 
     authFunctions.authorised().retrieve(Retrievals.internalId and Retrievals.credentials) {
       case Some(internalId) ~ Some(credentials) =>
-          Logger.info(s"[AuthenticatedIdentifierAction] user authenticated and retrieved internalId")
+          logger.info(s"[AuthenticatedIdentifierAction] user authenticated and retrieved internalId")
           block(IdentifierRequest(request, internalId, credentials))
       case _ =>
         throw new UnauthorizedException("Unable to retrieve internal Id")

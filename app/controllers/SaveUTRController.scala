@@ -20,20 +20,20 @@ import controllers.actions.{DataRetrievalAction, IdentifierAction}
 import javax.inject.Inject
 import models.{NormalMode, UserAnswers}
 import pages.UtrPage
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import services.{RelationshipEstablishment, RelationshipFound, RelationshipNotFound}
-import uk.gov.hmrc.play.bootstrap.controller.BackendController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class SaveUTRController @Inject()(
                                    identify: IdentifierAction,
-                                   val cc: ControllerComponents,
+                                   val controllerComponents: MessagesControllerComponents,
                                    getData: DataRetrievalAction,
                                    sessionRepository: SessionRepository,
                                    relationship: RelationshipEstablishment
-                                 )(implicit ec: ExecutionContext) extends BackendController(cc) {
+                                 )(implicit ec: ExecutionContext) extends FrontendBaseController {
 
   def save(utr: String): Action[AnyContent] = (identify andThen getData).async {
     implicit request =>

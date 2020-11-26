@@ -20,33 +20,32 @@ import com.google.inject.Inject
 import config.FrontendAppConfig
 import controllers.actions.IdentifierAction
 import models.requests.IdentifierRequest
-import play.api.Logger
+import play.api.Logging
 import play.api.i18n.MessagesApi
-import play.api.libs.json.Json
+import play.api.libs.json.{Format, Json}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import scala.concurrent.{ExecutionContext, Future}
 
 case class BusinessKey(name: String,value: String)
 
 object BusinessKey {
-  implicit val format = Json.format[BusinessKey]
+  implicit val format: Format[BusinessKey] = Json.format[BusinessKey]
 }
 
 case class Relationship(relationshipName: String, businessKeys: Set[BusinessKey], credId: String)
 
 object Relationship {
-  implicit val format = Json.format[Relationship]
+  implicit val format: Format[Relationship] = Json.format[Relationship]
 }
 
 case class RelationshipJson(relationship: Relationship, ttlSeconds: Int = 1440)
 
 object RelationshipJson {
-  implicit val format = Json.format[RelationshipJson]
+  implicit val format: Format[RelationshipJson] = Json.format[RelationshipJson]
 }
 
 class RelationshipEstablishmentConnector @Inject()(val httpClient: HttpClient, config: FrontendAppConfig)
@@ -85,12 +84,12 @@ class TestRelationshipEstablishmentController @Inject()(
                                                          relationshipEstablishmentConnector: RelationshipEstablishmentConnector,
                                                          identify: IdentifierAction
                                                        )(implicit ec : ExecutionContext)
-  extends FrontendBaseController {
+  extends FrontendBaseController with Logging {
 
   def check(utr: String): Action[AnyContent] = identify.async {
     implicit request =>
 
-      Logger.warn("[TestRelationshipEstablishmentController] EstateIV is using a test route, you don't want this in production.")
+      logger.warn("[TestRelationshipEstablishmentController] EstateIV is using a test route, you don't want this in production.")
 
       val succeedRegex = "(2\\d{9})".r
       val failRegex = "(4\\d{9})".r
