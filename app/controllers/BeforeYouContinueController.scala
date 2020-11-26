@@ -25,37 +25,32 @@ import pages.{IsAgentManagingEstatePage, UtrPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.{RelationshipEstablishment, RelationshipFound, RelationshipNotFound}
-import uk.gov.hmrc.play.bootstrap.controller.FrontendBaseController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.BeforeYouContinueView
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class BeforeYouContinueController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       identify: IdentifierAction,
-                                       relationship: RelationshipEstablishment,
-                                       getData: DataRetrievalAction,
-                                       requireData: DataRequiredAction,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: BeforeYouContinueView,
-                                       connector: EstatesStoreConnector
-                                     )(implicit ec: ExecutionContext,
-                                       config: FrontendAppConfig) extends FrontendBaseController with I18nSupport {
+                                             override val messagesApi: MessagesApi,
+                                             identify: IdentifierAction,
+                                             relationship: RelationshipEstablishment,
+                                             getData: DataRetrievalAction,
+                                             requireData: DataRequiredAction,
+                                             val controllerComponents: MessagesControllerComponents,
+                                             view: BeforeYouContinueView,
+                                             connector: EstatesStoreConnector
+                                           )(implicit ec: ExecutionContext, config: FrontendAppConfig) extends FrontendBaseController with I18nSupport {
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
 
         request.userAnswers.get(UtrPage) map { utr =>
 
-        def body = {
-            Future.successful(Ok(view(utr)))
-        }
-
         relationship.check(request.internalId, utr) flatMap {
           case RelationshipFound =>
             Future.successful(Redirect(controllers.routes.IvSuccessController.onPageLoad()))
           case RelationshipNotFound =>
-            body
+            Future.successful(Ok(view(utr)))
         }
 
       } getOrElse Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad()))

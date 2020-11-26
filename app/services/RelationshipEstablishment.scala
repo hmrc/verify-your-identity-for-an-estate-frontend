@@ -18,7 +18,7 @@ package services
 
 import config.FrontendAppConfig
 import javax.inject.Inject
-import play.api.Logger
+import play.api.Logging
 import play.api.mvc._
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.http.HeaderCarrier
@@ -32,13 +32,9 @@ case object RelationshipFound extends RelationEstablishmentStatus
 case object RelationshipNotFound extends RelationEstablishmentStatus
 case class RelationshipError(reason : String) extends Exception(reason)
 
-class RelationshipEstablishmentService @Inject()(
-                                                  val authConnector: AuthConnector
-                                                )(
-                                                  implicit val config: FrontendAppConfig,
-                                                  implicit val executionContext: ExecutionContext
-                                                )
-  extends RelationshipEstablishment {
+class RelationshipEstablishmentService @Inject()(val authConnector: AuthConnector)
+                                                (implicit val config: FrontendAppConfig, val executionContext: ExecutionContext)
+  extends RelationshipEstablishment with Logging {
 
 
   def check(internalId: String, utr: String)(implicit request: Request[AnyContent]): Future[RelationEstablishmentStatus] = {
@@ -48,14 +44,14 @@ class RelationshipEstablishmentService @Inject()(
     def failedRelationshipPF: PartialFunction[Throwable, Future[RelationEstablishmentStatus]] = {
       case FailedRelationship(msg) =>
         // relationship does not exist
-        Logger.info(s"Relationship does not exist in Estates IV for user $internalId due to $msg")
+        logger.info(s"Relationship does not exist in Estates IV for user $internalId due to $msg")
         Future.successful(RelationshipNotFound)
       case e : Throwable =>
         throw RelationshipError(e.getMessage)
     }
 
     authorised(Relationship(config.relationshipName, Set(BusinessKey(config.relationshipIdentifier, utr)))) {
-      Logger.info(s"Relationship established in Estates IV for user $internalId")
+      logger.info(s"Relationship established in Estates IV for user $internalId")
         Future.successful(RelationshipFound)
     } recoverWith {
       failedRelationshipPF
