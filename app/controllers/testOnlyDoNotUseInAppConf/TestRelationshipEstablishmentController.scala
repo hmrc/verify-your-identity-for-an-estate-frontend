@@ -89,18 +89,15 @@ class TestRelationshipEstablishmentController @Inject()(
   def check(utr: String): Action[AnyContent] = identify.async {
     implicit request =>
 
-      logger.warn("[TestRelationshipEstablishmentController] EstateIV is using a test route, you don't want this in production.")
+      logger.warn("[TestRelationshipEstablishmentController] EstateIV is using a test route, you don't want this in production" +
+        "This stubs the IV process by always ensuring the relationship is created in relationship-establishment mongo collection. " +
+        "You will not be asked the questions and skips over the journey in estates-relationship-establishment-frontend.")
 
-      val succeedRegex = "(2\\d{9})".r
-      val failRegex = "(4\\d{9})".r
+      val succeedRegex = "(\\d{10})".r
 
       utr match {
-        case "4381028111" | "5000000000" =>
-          establishRelationshipForUtr(request, utr)
         case succeedRegex(_) =>
           establishRelationshipForUtr(request, utr)
-        case failRegex(_) =>
-          Future.successful(Redirect(controllers.routes.IvFailureController.onEstateIvFailure()))
         case _ =>
           Future.successful(Redirect(controllers.routes.IvFailureController.onEstateIvFailure()))
       }
