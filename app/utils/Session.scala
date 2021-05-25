@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package models.requests
+package utils
 
-import play.api.mvc.{Request, WrappedRequest}
-import uk.gov.hmrc.auth.core.AffinityGroup
-import uk.gov.hmrc.auth.core.retrieve.Credentials
+import uk.gov.hmrc.http.HeaderCarrier
 
-case class IdentifierRequest[A] (request: Request[A],
-                                 identifier: String,
-                                 affinityGroup: AffinityGroup,
-                                 credentials: Credentials) extends WrappedRequest[A](request)
+object Session {
+
+  def id(hc: HeaderCarrier): String = hc.sessionId.map(_.value).getOrElse("No Session ID available")
+
+}

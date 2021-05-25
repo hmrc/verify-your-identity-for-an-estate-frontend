@@ -20,6 +20,7 @@ import com.google.inject.Inject
 import models.requests.IdentifierRequest
 import play.api.Logging
 import play.api.mvc._
+import uk.gov.hmrc.auth.core.AffinityGroup
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
@@ -43,7 +44,7 @@ class AuthenticatedIdentifierAction @Inject()(
     authFunctions.authorised().retrieve(Retrievals.internalId and Retrievals.credentials) {
       case Some(internalId) ~ Some(credentials) =>
           logger.info(s"[AuthenticatedIdentifierAction] user authenticated and retrieved internalId")
-          block(IdentifierRequest(request, internalId, credentials))
+          block(IdentifierRequest(request, internalId, AffinityGroup.Organisation, credentials))
       case _ =>
         throw new UnauthorizedException("Unable to retrieve internal Id")
     } recover authFunctions.recoverFromAuthorisation
