@@ -20,7 +20,6 @@ import com.google.inject.Inject
 import models.requests.IdentifierRequest
 import play.api.Logging
 import play.api.mvc._
-import uk.gov.hmrc.auth.core.{AffinityGroup, AuthorisedFunctions}
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
@@ -31,22 +30,22 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait IdentifierAction extends ActionBuilder[IdentifierRequest, AnyContent] with ActionFunction[Request, IdentifierRequest]
 
-class AuthenticatedIdentifierAction @Inject()(authFunctions: AuthPartialFunctions,
-                                               val parser: BodyParsers.Default)
-                                             (implicit val executionContext: ExecutionContext) extends IdentifierAction with AuthorisedFunctions with AuthPartialFunctions with Logging {
+class AuthenticatedIdentifierAction @Inject()(
+                                               authFunctions: AuthPartialFunctions,
+                                               val parser: BodyParsers.Default
+                                             )(implicit val executionContext: ExecutionContext)
+  extends IdentifierAction with Logging {
 
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    authorised().retrieve(Retrievals.internalId and Retrievals.credentials and Retrievals.affinityGroup) {
+    authFunctions.authorised().retrieve(Retrievals.internalId and Retrievals.credentials and Retrievals.affinityGroup) {
       case Some(internalId) ~ Some(credentials) ~ Some(affinityGroup) =>
         block(IdentifierRequest(request, internalId, affinityGroup, credentials))
       case _ =>
         logger.error(s"[Session ID: ${Session.id(hc)}] user not authenticated. Unable to retrieve internal Id")
         throw new UnauthorizedException("Unable to retrieve internal Id")
-    } recoverWith {
-      recoverFromException()
-    }
+    } recover authFunctions.recoverFromAuthorisation
   }
 }

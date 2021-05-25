@@ -18,13 +18,10 @@ package controllers.actions
 
 import com.google.inject.Inject
 import config.FrontendAppConfig
-import controllers.routes
 import play.api.Logging
 import play.api.mvc.Result
 import play.api.mvc.Results.Redirect
 import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisationException, AuthorisedFunctions, NoActiveSession}
-
-import scala.concurrent.Future
 
 class AuthPartialFunctions @Inject()(override val authConnector: AuthConnector, val config: FrontendAppConfig) extends AuthorisedFunctions with Logging {
 
@@ -33,13 +30,6 @@ class AuthPartialFunctions @Inject()(override val authConnector: AuthConnector, 
     case e: AuthorisationException =>
       logger.error(s"Recovered error: $e")
       Redirect(controllers.routes.UnauthorisedController.onPageLoad())
-  }
-
-  def recoverFromException(): PartialFunction[Throwable, Future[Result]] = {
-    case _: NoActiveSession =>
-      Future.successful(Redirect(config.loginUrl, Map("continue" -> Seq(config.loginContinueUrl))))
-    case _: AuthorisationException =>
-      Future.successful(Redirect(routes.UnauthorisedController.onPageLoad()))
   }
 
   def redirectToLogin: Result = {
