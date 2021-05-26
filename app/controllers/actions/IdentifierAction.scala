@@ -24,6 +24,7 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
+import utils.Session
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -32,19 +33,18 @@ trait IdentifierAction extends ActionBuilder[IdentifierRequest, AnyContent] with
 class AuthenticatedIdentifierAction @Inject()(
                                                authFunctions: AuthPartialFunctions,
                                                val parser: BodyParsers.Default
-                                             )(implicit val executionContext: ExecutionContext) extends IdentifierAction with Logging {
+                                             )(implicit val executionContext: ExecutionContext)
+  extends IdentifierAction with Logging {
 
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    logger.info(s"[AuthenticatedIdentifierAction] identifying user")
-
-    authFunctions.authorised().retrieve(Retrievals.internalId and Retrievals.credentials) {
-      case Some(internalId) ~ Some(credentials) =>
-          logger.info(s"[AuthenticatedIdentifierAction] user authenticated and retrieved internalId")
-          block(IdentifierRequest(request, internalId, credentials))
+    authFunctions.authorised().retrieve(Retrievals.internalId and Retrievals.credentials and Retrievals.affinityGroup) {
+      case Some(internalId) ~ Some(credentials) ~ Some(affinityGroup) =>
+        block(IdentifierRequest(request, internalId, affinityGroup, credentials))
       case _ =>
+        logger.error(s"[Session ID: ${Session.id(hc)}] user not authenticated. Unable to retrieve internal Id")
         throw new UnauthorizedException("Unable to retrieve internal Id")
     } recover authFunctions.recoverFromAuthorisation
   }
