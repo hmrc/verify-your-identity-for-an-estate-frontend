@@ -34,11 +34,11 @@ object SectionFormatter {
     section.rows.zipWithIndex.map {
       case (row:AnswerRow, i: Int) =>
         SummaryListRow(
-          key = Key(classes = "govuk-!-width-two-thirds", content = Text(messages(row.label))),
+          key = Key(classes = "govuk-!-width-two-thirds", content = Text(messages(s"${row.label}"))),
           value = Value(HtmlContent(row.answer)),
           actions = Option(Actions(items = Seq(ActionItem(href=row.changeUrl,
             classes = s"change-link-$i",
-            visuallyHiddenText = Some(messages(row.label)),
+            visuallyHiddenText = Some(messages(s"${row.label}")),
             content = Text(messages("site.edit")))))
           )
         )
