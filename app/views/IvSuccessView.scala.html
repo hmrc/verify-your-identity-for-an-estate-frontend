@@ -15,10 +15,13 @@
  *@
 
 @import config.FrontendAppConfig
+@import views.html.components.{Link, Heading}
 
 @this(
- main_template: MainTemplate,
- config: FrontendAppConfig
+    main_template: MainTemplate,
+    config: FrontendAppConfig,
+    headingComp: Heading,
+    link: Link
 )
 
 @(isAgent: Boolean, utr: String)(implicit request: Request[_], messages: Messages)
@@ -29,17 +32,18 @@
 
     <span class="govuk-caption-xl">@messages("ivSuccess.subheading", utr)</span>
     @if(isAgent) {
-            @components.heading("ivSuccess.agent.heading", headingSize = "heading-large govuk-fieldset__heading")
-            <p>@messages("ivSuccess.agent.paragraph1")</p>
-            <p>@messages("ivSuccess.agent.paragraph2") <a href="@config.estatesContinueUrl">@messages("ivSuccess.agent.continueLink")</a> @messages("ivSuccess.agent.paragraph3")</p>
-            <p>@messages("ivSuccess.agent.paragraph4") <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/bereavement-and-deceased-estate" target="_blank">@messages("ivSuccess.contactLink")</a>.</p>
+        @headingComp("ivSuccess.agent.heading")
+
+        <p>@messages("ivSuccess.agent.paragraph1")</p>
+        <p>@messages("ivSuccess.agent.paragraph2") <a href="@config.estatesContinueUrl">@messages("ivSuccess.agent.continueLink")</a> @messages("ivSuccess.agent.paragraph3")</p>
+        <p>@messages("ivSuccess.agent.paragraph4") <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/bereavement-and-deceased-estate" target="_blank">@messages("ivSuccess.contactLink")</a>.</p>
     } else {
-            @components.heading("ivSuccess.no.agent.heading", headingSize = "heading-large govuk-fieldset__heading")
+        @headingComp("ivSuccess.no.agent.heading")
 
-            <p>@messages("ivSuccess.no.agent.paragraph1")</p>
-            <p>@messages("ivSuccess.no.agent.paragraph2") <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/bereavement-and-deceased-estate" target="_blank">@messages("ivSuccess.contactLink")</a>.</p>
+        <p>@messages("ivSuccess.no.agent.paragraph1")</p>
+        <p>@messages("ivSuccess.no.agent.paragraph2") <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/bereavement-and-deceased-estate" target="_blank">@messages("ivSuccess.contactLink")</a>.</p>
 
-            @components.button_link(messages("site.continue"), config.estatesContinueUrl)
+        @components.button_link(messages("site.continue"), config.estatesContinueUrl)
     }
 
 }

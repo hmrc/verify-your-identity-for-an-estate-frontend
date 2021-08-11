@@ -14,6 +14,18 @@
  * limitations under the License.
  *@
 
-@(headingKey: String, headingSize: String = "heading-xlarge")(implicit messages: Messages)
+@this(
+    button: GovukButton,
+)
 
-<h1 class="@headingSize">@messages(headingKey)</h1>
+@(overrideMessage: Option[String] = None, submitClass: Option[String] = None)(implicit messages: Messages)
+
+@button(Button(
+    attributes = Map("id"->"submit"),
+    classes = s"button ${submitClass.getOrElse("")}",
+    content = if(overrideMessage.isEmpty) {
+        Text(messages("site.continue"))
+    } else {
+        Text(messages(overrideMessage.get))
+    }
+))

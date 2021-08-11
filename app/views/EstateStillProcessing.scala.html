@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *@
+@import views.html.components.{Heading, Link}
 
 @this(
-main_template: MainTemplate
+main_template: MainTemplate,
+headingComp: Heading,
+link: Link
 )
 
 @(utr: String)(implicit request: Request[_], messages: Messages)
@@ -25,7 +28,7 @@ title = messages("stillProcessing.title")
 ) {
 
 <span class="govuk-caption-xl">@messages("stillProcessing.subheading", utr)</span>
-@components.heading("stillProcessing.heading", headingSize = "heading-large govuk-fieldset__heading")
+@headingComp("stillProcessing.heading")
 
 <p>@messages("stillProcessing.p2")</p>
 <p>@messages("stillProcessing.p3") <a target="_blank" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/bereavement-and-deceased-estate">@messages("stillProcessing.link1")</a>.</p>

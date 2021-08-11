@@ -15,10 +15,12 @@
  *@
 
 @import config.FrontendAppConfig
+@import views.html.components.{SubmitButton, Heading}
 
 @this(
     main_template: MainTemplate,
-    appConfig: FrontendAppConfig
+    appConfig: FrontendAppConfig,
+    headingComp: Heading
 )
 
 @()(implicit request: Request[_], messages: Messages)
@@ -29,7 +31,7 @@
     canSignOut = false
     ) {
 
-    @components.heading("session_expired.heading")
+    @headingComp("session_expired.heading")
 
     <p>@messages("session_expired.guidance")</p>
     <p>@messages("session_expired.guidance.2")</p>

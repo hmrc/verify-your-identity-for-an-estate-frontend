@@ -15,10 +15,12 @@
  *@
 
 @import config.FrontendAppConfig
+@import views.html.components.{Link, Heading}
 
 @this(
- main_template: MainTemplate,
- config: FrontendAppConfig
+    main_template: MainTemplate,
+    config: FrontendAppConfig,
+    headingComp: Heading
 )
 
 @(utr: String)(implicit request: Request[_], messages: Messages)
@@ -27,7 +29,7 @@
  title = messages("ivSuccess.withoutplayback.title")
 ) {
     <span class="govuk-caption-xl">@messages("ivSuccess.subheading", utr)</span>
-    @components.heading("ivSuccess.withoutplayback.heading", headingSize = "heading-large govuk-fieldset__heading")
+    @headingComp("ivSuccess.withoutplayback.heading")
     <p>@messages("ivSuccess.withoutplayback.paragraph1")</p>
     <p>@messages("ivSuccess.withoutplayback.paragraph2")</p>
     <p>@messages("ivSuccess.withoutplayback.paragraph3")</p>

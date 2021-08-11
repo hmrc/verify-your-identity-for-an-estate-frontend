@@ -15,10 +15,13 @@
  *@
 
 @import config.FrontendAppConfig
+@import views.html.components.{Heading, Link}
 
 @this(
   main_template: MainTemplate,
-  config: FrontendAppConfig
+  config: FrontendAppConfig,
+  headingComp: Heading,
+  link: Link
 )
 
 @(utr: String)(implicit request: Request[_], messages: Messages)
@@ -27,7 +30,7 @@
 title = messages("notFound.title")
 ) {
 
-@components.heading("notFound.heading", headingSize = "heading-large")
+@headingComp("notFound.heading")
 
 <p>@messages("notFound.p1")</p>
 <p>@messages("notFound.p2")</p>
