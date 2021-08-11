@@ -15,6 +15,7 @@
  *@
 
 @import config.FrontendAppConfig
+@import controllers.routes._
 @import views.html.components.{Link, Heading}
 
 @this(
@@ -43,7 +44,9 @@
         <p>@messages("ivSuccess.no.agent.paragraph1")</p>
         <p>@messages("ivSuccess.no.agent.paragraph2") <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/bereavement-and-deceased-estate" target="_blank">@messages("ivSuccess.contactLink")</a>.</p>
 
-        @components.button_link(messages("site.continue"), config.estatesContinueUrl)
+        @formHelper(action = controllers.routes.IvSuccessController.onSubmit(), 'autoComplete -> "off") {
+            @submitButton()
+        }
     }
 
 }

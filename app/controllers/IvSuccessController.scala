@@ -72,4 +72,9 @@ class IvSuccessController @Inject()(
       } getOrElse Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad()))
 
   }
+
+  def onSubmit: Action[AnyContent] = Action { _ =>
+    Redirect(config.estatesContinueUrl)
+  }
+
 }

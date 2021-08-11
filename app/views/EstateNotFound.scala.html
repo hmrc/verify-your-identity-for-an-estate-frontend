@@ -14,14 +14,16 @@
  * limitations under the License.
  *@
 
-@import config.FrontendAppConfig
+@import controllers.routes._
 @import views.html.components.{Heading, Link}
 
 @this(
-  main_template: MainTemplate,
-  config: FrontendAppConfig,
-  headingComp: Heading,
-  link: Link
+    main_template: MainTemplate,
+    config: FrontendAppConfig,
+    headingComp: Heading,
+    submitButton: SubmitButton,
+    formHelper: FormWithCSRF,
+    link: Link
 )
 
 @(utr: String)(implicit request: Request[_], messages: Messages)
@@ -32,8 +34,11 @@ title = messages("notFound.title")
 
 @headingComp("notFound.heading")
 
-<p>@messages("notFound.p1")</p>
-<p>@messages("notFound.p2")</p>
-<p>@messages("notFound.p3") <a target="_blank" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/bereavement-and-deceased-estate">@messages("notFound.link1")</a>.</p>
-@components.button_link("notFound.button", config.estatesRegistration)
+    <p>@messages("notFound.p1")</p>
+    <p>@messages("notFound.p2")</p>
+    <p>@messages("notFound.p3") @link("https://www.gov.uk/government/organisations/hm-revenue-customs/contact/bereavement-and-deceased-estate", "estate-contact", messages("notFound.link1"), openInNewWindow = true).</p>
+
+    @formHelper(action = controllers.routes.IvFailureController.onSubmit(), 'autoComplete -> "off") {
+        @submitButton(Some("notFound.button")
+    }
 }

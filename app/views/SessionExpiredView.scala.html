@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import config.FrontendAppConfig
+@import controllers.routes._
 @import views.html.components.{SubmitButton, Heading}
 
 @this(
@@ -36,8 +36,8 @@
     <p>@messages("session_expired.guidance")</p>
     <p>@messages("session_expired.guidance.2")</p>
 
-    @components.button_link(
-        messageKey = messages("site.sign_in"),
-        href = appConfig.loginUrl
-    )
+    @formHelper(action = controllers.routes.SessionExpiredController.onSubmit(), 'autoComplete -> "off") {
+        @submitButton(Some("site.sign_in")
+    }
+
 }

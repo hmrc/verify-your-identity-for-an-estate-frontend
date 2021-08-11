@@ -12,6 +12,7 @@ GET        /locked                                      controllers.IvFailureCon
 GET        /still-processing                            controllers.IvFailureController.estateStillProcessing
 
 GET        /not-found                                   controllers.IvFailureController.estateNotFound
+POST       /not-found                                   controllers.IvFailureController.onSubmit()
 
 GET        /something-went-wrong                        controllers.FallbackFailureController.onPageLoad
 
@@ -20,6 +21,7 @@ GET        /assets/*file                                controllers.Assets.versi
 GET        /language/:lang                              controllers.LanguageSwitchController.switchToLanguage(lang: String)
 
 GET        /this-service-has-been-reset                 controllers.SessionExpiredController.onPageLoad
+POST       /this-service-has-been-reset                 controllers.SessionExpiredController.onSubmit()
 
 GET        /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
@@ -29,7 +31,8 @@ GET        /timeout                                     controllers.SessionTimeo
 
 GET        /logout                                      controllers.LogoutController.logout()
 
-GET        /verified                                     controllers.IvSuccessController.onPageLoad()
+GET        /verified                                    controllers.IvSuccessController.onPageLoad()
+POST       /verified                                    controllers.IvSuccessController.onSubmit()
 
 GET        /save/:utr                                   controllers.SaveUTRController.save(utr: String)
 
