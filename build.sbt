@@ -49,7 +49,7 @@ lazy val root = (project in file("."))
     Concat.groups := Seq(
       "javascripts/verifyyouridentityforanestatefrontend-app.js" ->
         group(Seq(
-          "javascripts/isbacklink.js",
+          "javascripts/iebacklink.js",
           "javascripts/verifyyouridentityforanestatefrontend.js"
         ))
     ),
