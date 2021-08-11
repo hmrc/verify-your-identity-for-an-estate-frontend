@@ -16,10 +16,12 @@
 
 @import config.FrontendAppConfig
 @import controllers.routes._
-@import views.html.components.{Link, Heading}
+@import views.html.components.{Link, Heading, SubmitButton}
 
 @this(
     main_template: MainTemplate,
+    submitButton: SubmitButton,
+    formHelper: FormWithCSRF,
     config: FrontendAppConfig,
     headingComp: Heading,
     link: Link
