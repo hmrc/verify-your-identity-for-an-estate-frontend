@@ -22,8 +22,10 @@ lazy val root = (project in file("."))
     TwirlKeys.templateImports ++= Seq(
       "play.twirl.api.HtmlFormat",
       "play.twirl.api.HtmlFormat._",
-      "uk.gov.hmrc.play.views.html.helpers._",
-      "uk.gov.hmrc.play.views.html.layouts._",
+      "uk.gov.hmrc.govukfrontend.views.html.components._",
+      "uk.gov.hmrc.govukfrontend.views.html.helpers._",
+      "uk.gov.hmrc.hmrcfrontend.views.html.components._",
+      "uk.gov.hmrc.hmrcfrontend.views.html.helpers._",
       "views.ViewUtils._",
       "models.Mode",
       "controllers.routes._"
@@ -47,9 +49,8 @@ lazy val root = (project in file("."))
     Concat.groups := Seq(
       "javascripts/verifyyouridentityforanestatefrontend-app.js" ->
         group(Seq(
-          "javascripts/show-hide-content.js",
-          "javascripts/verifyyouridentityforanestatefrontend.js",
-          "javascripts/autocomplete/location-autocomplete.min.js"
+          "javascripts/iebacklink.js",
+          "javascripts/verifyyouridentityforanestatefrontend.js"
         ))
     ),
     // prevent removal of unused code which generates warning errors due to use of third-party libs

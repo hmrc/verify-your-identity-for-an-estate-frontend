@@ -16,6 +16,7 @@
 
 package controllers
 
+import config.FrontendAppConfig
 import connectors.{EstatesStoreConnector, RelationshipEstablishmentConnector}
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import javax.inject.Inject
@@ -40,7 +41,8 @@ class IvFailureController @Inject()(
                                      getData: DataRetrievalAction,
                                      requireData: DataRequiredAction,
                                      relationshipEstablishmentConnector: RelationshipEstablishmentConnector,
-                                     connector: EstatesStoreConnector
+                                     connector: EstatesStoreConnector,
+                                     appConfig: FrontendAppConfig
                                    )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
 
   private def renderFailureReason(utr: String, journeyId: String)(implicit hc : HeaderCarrier): Future[Result] = {
@@ -110,4 +112,9 @@ class IvFailureController @Inject()(
           Future.successful(Ok(stillProcessingView(utr)))
       } getOrElse Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad()))
   }
+
+  def onSubmit: Action[AnyContent] = Action { _ =>
+    Redirect(appConfig.estatesRegistration)
+  }
+
 }

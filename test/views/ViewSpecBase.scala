@@ -55,7 +55,7 @@ trait ViewSpecBase extends SpecBase {
 
   def assertContainsText(doc:Document, text: String) = assert(doc.toString.contains(text), "\n\ntext " + text + " was not rendered on the page.\n")
 
-  def assertContainsMessages(doc: Document, expectedMessageKeys: String*) = {
+  def assertContainsMessages(doc: Document, expectedMessageKeys: String*): Unit = {
     for (key <- expectedMessageKeys) assertContainsText(doc, messages(key))
   }
 
@@ -96,9 +96,10 @@ trait ViewSpecBase extends SpecBase {
     val radio = doc.getElementById(id)
     assert(radio.attr("name") == name, s"\n\nElement $id does not have name $name")
     assert(radio.attr("value") == value, s"\n\nElement $id does not have value $value")
-    isChecked match {
-      case true => assert(radio.attr("checked") == "checked", s"\n\nElement $id is not checked")
-      case _ => assert(!radio.hasAttr("checked") && radio.attr("checked") != "checked", s"\n\nElement $id is checked")
+    if (isChecked) {
+      assert(radio.attr("checked") == "checked", s"\n\nElement $id is not checked")
+    } else {
+      assert(!radio.hasAttr("checked") && radio.attr("checked") != "checked", s"\n\nElement $id is checked")
     }
   }
 }

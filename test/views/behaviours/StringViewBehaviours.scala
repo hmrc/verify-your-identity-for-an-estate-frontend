@@ -28,7 +28,7 @@ trait StringViewBehaviours extends QuestionViewBehaviours[String] {
                  createView: Form[String] => HtmlFormat.Appendable,
                  messageKeyPrefix: String,
                  expectedFormAction: String,
-                 expectedHintKey: Option[String] = None) = {
+                 expectedHintKey: Option[String] = None): Unit = {
 
     "behave like a page with a string value field" when {
 
@@ -62,13 +62,13 @@ trait StringViewBehaviours extends QuestionViewBehaviours[String] {
         "show an error summary" in {
 
           val doc = asDocument(createView(form.withError(error)))
-          assertRenderedById(doc, "error-summary-heading")
+          assertRenderedById(doc, "error-summary-title")
         }
 
         "show an error associated to the value field" in {
 
           val doc = asDocument(createView(form.withError(error)))
-          val errorSpan = doc.getElementsByClass("error-message").first
+          val errorSpan = doc.getElementsByClass("govuk-error-message").first
           errorSpan.text mustBe (messages("error.browser.title.prefix") + " " + messages(errorMessage))
         }
 

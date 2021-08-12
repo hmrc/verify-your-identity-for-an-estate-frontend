@@ -15,31 +15,33 @@
  *@
 
 @import models.Mode
+@import views.html.components.{ErrorSummary, SubmitButton, InputYesNo}
 
 @this(
     main_template: MainTemplate,
-    formHelper: FormWithCSRF
+    formHelper: FormWithCSRF,
+    errorSummary: ErrorSummary,
+    inputYesNo: InputYesNo,
+    submitButton: SubmitButton
 )
 
 @(form: Form[_], mode: Mode, utr: String)(implicit request: Request[_], messages: Messages)
 
 @main_template(
-    title = s"${errorPrefix(form)}${messages("isAgentManagingEstate.title")}"
+    title = s"${errorPrefix(form)}${messages("isAgentManagingEstate.title")}",
+    showBackLink = true
     ) {
 
     @formHelper(action = controllers.routes.IsAgentManagingEstateController.onSubmit(mode), 'autoComplete -> "off") {
 
-        @components.back_link()
+        @errorSummary(form.errors, isYesNo = true)
 
-        @components.error_summary(form.errors)
-
-        <span class="govuk-caption-xl">@messages("isAgentManagingEstate.subheading", utr)</span>
-
-        @components.input_yes_no(
+        @inputYesNo(
             field = form("value"),
-            label = messages("isAgentManagingEstate.heading")
+            label = messages("isAgentManagingEstate.heading"),
+            caption = Some(messages("isAgentManagingEstate.subheading", utr))
         )
 
-        @components.submit_button()
+        @submitButton()
     }
 }

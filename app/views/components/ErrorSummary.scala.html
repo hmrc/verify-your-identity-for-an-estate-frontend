@@ -14,17 +14,21 @@
  * limitations under the License.
  *@
 
-@import viewmodels.AnswerRow
+@import uk.gov.hmrc.govukfrontend.views.html.components.implicits._
+@import utils.DateErrorFormatter._
+@import viewmodels.RadioOption
 
-@(row: AnswerRow)(implicit messages: Messages)
+@this(
+    govUkErrorSummary: GovukErrorSummary
+)
 
-<li>
-    <div class="cya-question">@row.label</div>
-    <div class="cya-answer">@row.answer</div>
-    <div class="cya-change">
-        <a href='@row.changeUrl'>
-            <span aria-hidden="true">@messages("site.edit")</span>
-            <span class="visually-hidden">@messages("site.hidden-edit", row.label)</span>
-        </a>
-    </div>
-</li>
+@(errors: Seq[FormError], radioOptions: Seq[RadioOption] = Nil, isYesNo: Boolean = false)(implicit messages: Messages)
+
+@if(errors.nonEmpty) {
+    @govUkErrorSummary(ErrorSummary(
+        errorList = errors
+            .map(err => err.copy(key = errorHref(err, radioOptions, isYesNo), args = formatArgs(err.args)))
+            .asTextErrorLinks,
+        title = Text(messages("error.summary.title"))
+    ))
+}

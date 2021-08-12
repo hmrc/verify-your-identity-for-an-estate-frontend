@@ -14,8 +14,8 @@
  * limitations under the License.
  *@
 
-@()(implicit messages: Messages)
+@this()
 
-<div class="js-visible">
-  <p><a id="back-link" class="link-back" href="#">@messages("site.back")</a></p>
-</div>
+@(headingKey: String, optionalParam: Option[String] = None, headingSize: String = "govuk-heading-l")(implicit messages: Messages)
+
+<h1 class="@headingSize">@messages(headingKey, optionalParam.getOrElse(""))</h1>

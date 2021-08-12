@@ -14,11 +14,8 @@
  * limitations under the License.
  *@
 
-@(
-messageKey: String = "",
-inputType: String = "button"
-)(implicit messages: Messages)
+@this()
 
-<div class="section">
-    <input type="@inputType" class="button" value="@messages(messageKey)" />
-</div>
+@(href : String, id : String = "", key : String, openInNewWindow: Boolean = false)(implicit messages: Messages)
+
+<a class="govuk-link" id="@id" href="@href" @if(openInNewWindow) {target="_blank" rel="noreferrer noopener"}>@messages(key)</a>
