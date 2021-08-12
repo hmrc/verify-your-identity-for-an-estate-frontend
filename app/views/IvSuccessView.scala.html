@@ -38,13 +38,13 @@
         @headingComp("ivSuccess.agent.heading")
 
         <p>@messages("ivSuccess.agent.paragraph1")</p>
-        <p>@messages("ivSuccess.agent.paragraph2") <a href="@config.estatesContinueUrl">@messages("ivSuccess.agent.continueLink")</a> @messages("ivSuccess.agent.paragraph3")</p>
-        <p>@messages("ivSuccess.agent.paragraph4") <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/bereavement-and-deceased-estate" target="_blank">@messages("ivSuccess.contactLink")</a>.</p>
+        <p>@messages("ivSuccess.agent.paragraph2") @link(s"${config.estatesContinueUrl}", "agent-continue", messages("ivSuccess.agent.continueLink")) @messages("ivSuccess.agent.paragraph3")</p>
+        <p>@messages("ivSuccess.agent.paragraph4") @link("https://www.gov.uk/government/organisations/hm-revenue-customs/contact/bereavement-and-deceased-estate", "estate-contact", messages("ivSuccess.contactLink"), openInNewWindow = true).</p>
     } else {
         @headingComp("ivSuccess.no.agent.heading")
 
         <p>@messages("ivSuccess.no.agent.paragraph1")</p>
-        <p>@messages("ivSuccess.no.agent.paragraph2") <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/bereavement-and-deceased-estate" target="_blank">@messages("ivSuccess.contactLink")</a>.</p>
+        <p>@messages("ivSuccess.no.agent.paragraph2") @link("https://www.gov.uk/government/organisations/hm-revenue-customs/contact/bereavement-and-deceased-estate", "estate-contact", messages("ivSuccess.contactLink"), openInNewWindow = true).</p>
 
         @formHelper(action = controllers.routes.IvSuccessController.onSubmit(), 'autoComplete -> "off") {
             @submitButton()

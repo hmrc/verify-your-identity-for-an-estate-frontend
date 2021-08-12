@@ -40,8 +40,7 @@
         <p>@messages("beforeYouContinue.p2")</p>
         <p>@messages("beforeYouContinue.p3")</p>
         <p>
-            @messages("beforeYouContinue.p4")
-            <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/bereavement-and-deceased-estate" target="_blank">@messages("beforeYouContinue.a")</a>.
+            @messages("beforeYouContinue.p4") @link("https://www.gov.uk/government/organisations/hm-revenue-customs/contact/bereavement-and-deceased-estate", "estate-contact", messages("beforeYouContinue.a"), openInNewWindow = true).
         </p>
 
         @submitButton()
