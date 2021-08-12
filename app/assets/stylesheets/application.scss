@@ -28,6 +28,10 @@ a {
   @extend .govuk-link;
 }
 
+h1 {
+  @extend .govuk-heading-l;
+}
+
 h2 {
   @extend .govuk-heading-m;
 }
