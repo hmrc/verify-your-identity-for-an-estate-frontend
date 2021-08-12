@@ -43,7 +43,7 @@
                     s"""<span class="govuk-caption-l">${caption.get}</span>
                     |<h1>${messages(label)}</h1>""".stripMargin)
             } else Text(label),
-            isPageHeading = legendAsHeading,
+            isPageHeading = if (caption.isDefined) false else legendAsHeading,
             classes = legendClass.getOrElse("govuk-fieldset__legend--l")
         ))
     )),
