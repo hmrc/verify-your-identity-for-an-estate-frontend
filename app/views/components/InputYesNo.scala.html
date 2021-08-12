@@ -41,7 +41,7 @@
             content = if (caption.isDefined) {
                 HtmlContent(
                     s"""<span class="govuk-caption-l">${caption.get}</span>
-                       |${messages(label)}""".stripMargin)
+                    |<h1>${messages(label)}</h1>""".stripMargin)
             } else Text(label),
             isPageHeading = legendAsHeading,
             classes = legendClass.getOrElse("govuk-fieldset__legend--l")
