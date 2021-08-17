@@ -21,6 +21,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.twirl.api.Html
 import base.SpecBase
+import org.scalatest.Assertion
 
 import scala.reflect.ClassTag
 
@@ -85,6 +86,17 @@ trait ViewSpecBase extends SpecBase {
       assert(label.getElementsByClass("form-hint").first.text == expectedHintText.get,
         s"\n\nLabel for $forElement did not contain hint text $expectedHintText")
     }
+  }
+
+  def assertPageTitleWithCaptionEqualsMessages(doc: Document, expectedCaptionMessageKey: String, captionParam: String, expectedMessageKey: String): Assertion = {
+    val headers = doc.getElementsByTag("h1")
+    headers.size mustBe 1
+    val expectedSubheading =  messages(expectedCaptionMessageKey, captionParam).replaceAll("&nbsp;", " ")
+    val expectedHeading =  messages(expectedMessageKey).replaceAll("&nbsp;", " ")
+
+    val expected = s"$expectedSubheading $expectedHeading"
+
+    headers.first.text.replaceAll("\u00a0", " ") mustBe expected
   }
 
   def assertElementHasClass(doc: Document, id: String, expectedClass: String) = {

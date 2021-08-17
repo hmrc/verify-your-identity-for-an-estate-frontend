@@ -16,14 +16,14 @@
 
 @import config.FrontendAppConfig
 @import controllers.routes._
-@import views.html.components.{Link, Heading, SubmitButton}
+@import views.html.components.{Link, HeadingWithCaption, SubmitButton}
 
 @this(
     main_template: MainTemplate,
     submitButton: SubmitButton,
     formHelper: FormWithCSRF,
     config: FrontendAppConfig,
-    headingComp: Heading,
+    headingWithCaption: HeadingWithCaption,
     link: Link
 )
 
@@ -32,16 +32,22 @@
 @main_template(
  title = messages("ivSuccess.agent.title")
 ) {
-
-    <span class="govuk-caption-l">@messages("ivSuccess.subheading", utr)</span>
     @if(isAgent) {
-        @headingComp("ivSuccess.agent.heading")
+        @headingWithCaption(
+            headingPrefix = "ivSuccess.agent",
+            captionPrefix = "utr",
+            captionParam = Some(utr)
+        )
 
         <p>@messages("ivSuccess.agent.paragraph1")</p>
         <p>@messages("ivSuccess.agent.paragraph2") @link(s"${config.estatesContinueUrl}", "agent-continue", messages("ivSuccess.agent.continueLink")) @messages("ivSuccess.agent.paragraph3")</p>
         <p>@messages("ivSuccess.agent.paragraph4") @link("https://www.gov.uk/government/organisations/hm-revenue-customs/contact/bereavement-and-deceased-estate", "estate-contact", messages("ivSuccess.contactLink"), openInNewWindow = true).</p>
     } else {
-        @headingComp("ivSuccess.no.agent.heading")
+        @headingWithCaption(
+            headingPrefix = "ivSuccess.no.agent",
+            captionPrefix = "utr",
+            captionParam = Some(utr)
+        )
 
         <p>@messages("ivSuccess.no.agent.paragraph1")</p>
         <p>@messages("ivSuccess.no.agent.paragraph2") @link("https://www.gov.uk/government/organisations/hm-revenue-customs/contact/bereavement-and-deceased-estate", "estate-contact", messages("ivSuccess.contactLink"), openInNewWindow = true).</p>

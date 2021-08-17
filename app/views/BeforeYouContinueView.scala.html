@@ -14,12 +14,12 @@
  * limitations under the License.
  *@
 
-@import views.html.components.{Heading, Link, SubmitButton}
+@import views.html.components.{HeadingWithCaption, Link, SubmitButton}
 
 @this(
     main_template: MainTemplate,
     formHelper: FormWithCSRF,
-    headingComp: Heading,
+    headingWithCaption: HeadingWithCaption,
     submitButton: SubmitButton,
     link: Link
 )
@@ -33,8 +33,11 @@
 
     @formHelper(action = controllers.routes.BeforeYouContinueController.onSubmit(), 'autoComplete -> "off") {
 
-        <span class="govuk-caption-l">@messages("beforeYouContinue.subheading", utr)</span>
-        @headingComp("beforeYouContinue.heading")
+        @headingWithCaption(
+            headingPrefix = "beforeYouContinue",
+            captionPrefix = "utr",
+            captionParam = Some(utr)
+        )
 
         <p>@messages("beforeYouContinue.p1")</p>
         <p>@messages("beforeYouContinue.p2")</p>

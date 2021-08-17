@@ -8,6 +8,8 @@ date.day=Diwrnod
 date.month=Mis
 date.year=Blwyddyn
 
+utr.caption=UTR yr ystâd hon: {0}
+
 error.browser.title.prefix=Gwall:
 error.boolean=Rhowch ateb
 error.invalid_date=Rhowch ddyddiad cywir
@@ -53,11 +55,9 @@ unauthorised.heading=Ni allwch ddefnyddio’r gwasanaeth hwn gyda’r cyfrif hwn
 
 isAgentManagingEstate.title=A oes asiant yn rheoli cofrestr ar-lein yr ystâd?
 isAgentManagingEstate.heading=A oes asiant yn rheoli cofrestr ar-lein yr ystâd?
-isAgentManagingEstate.subheading=UTR yr ystâd hon: {0}
 isAgentManagingEstate.checkYourAnswersLabel=A oes asiant yn rheoli cofrestr ar-lein yr ystâd?
 isAgentManagingEstate.error.required=Dewiswch ‘Iawn’ os oes asiant yn rheoli cofrestr ar-lein yr ystâd
 
-ivSuccess.subheading=UTR yr ystâd hon: {0}
 ivSuccess.ifYouNeedHelp=Os oes angen help arnoch i ddefnyddio’r gwasanaeth,
 ivSuccess.contactLink=cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEM (yn agor ffenestr neu dab newydd)
 
@@ -85,7 +85,6 @@ ivSuccess.withoutplayback.contactLink=cysylltwch â Gwasanaeth Cwsmeriaid Cymrae
 
 beforeYouContinue.title=Cyn i chi fynd yn eich blaen
 beforeYouContinue.heading=Cyn i chi fynd yn eich blaen
-beforeYouContinue.subheading=UTR yr ystâd hon: {0}
 beforeYouContinue.p1=Gofynnir i chi ateb sawl cwestiwn am yr ystâd. Mae hyn er mwyn i ni allu cadarnhau eich bod wedi’ch awdurdodi i fwrw golwg dros fanylion yr ystâd a’u diwygio.
 beforeYouContinue.p2=Mae’n rhaid i’ch atebion gyd-fynd â’r manylion a roddwyd i CThEM pan gafodd yr ystâd ei chofrestru neu ei diweddaru ar-lein yn ddiweddaraf.
 beforeYouContinue.p3=Peidiwch â nodi unrhyw fanylion eraill wrth ateb y cwestiynau hyn, hyd yn oed os yw rhywun o’r ystâd wedi ysgrifennu at CThEM i’w newid.

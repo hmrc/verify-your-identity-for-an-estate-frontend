@@ -40,10 +40,12 @@
         legend = Some(Legend(
             content = if (caption.isDefined) {
                 HtmlContent(
-                    s"""<span class="govuk-caption-l">${caption.get}</span>
-                    |<h1>${messages(label)}</h1>""".stripMargin)
+                    s"""
+                    |<span class="govuk-caption-l">${caption.get}</span>
+                    |${messages(label)}
+                    |""".stripMargin)
             } else Text(label),
-            isPageHeading = if (caption.isDefined) false else legendAsHeading,
+            isPageHeading = legendAsHeading,
             classes = legendClass.getOrElse("govuk-fieldset__legend--l")
         ))
     )),

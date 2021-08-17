@@ -33,6 +33,8 @@ session_expired.heading = For your security, we signed you out
 session_expired.guidance = This is because you have been inactive on the service for 15 minutes.
 session_expired.guidance.2 = You will need to sign in to continue maintaining the estate.
 
+utr.caption = This estate’s UTR: {0}
+
 site.back = Back
 site.delete = Remove
 site.edit = Change
@@ -55,11 +57,9 @@ unauthorised.heading = You can’t access this service with this account
 
 isAgentManagingEstate.title = Is an agent managing the estate’s online register?
 isAgentManagingEstate.heading = Is an agent managing the estate’s online register?
-isAgentManagingEstate.subheading = This estate’s UTR: {0}
 isAgentManagingEstate.checkYourAnswersLabel = Is an agent managing the estate’s online register?
 isAgentManagingEstate.error.required = Select yes if an agent is managing the estate’s online register
 
-ivSuccess.subheading = This estate’s UTR: {0}
 ivSuccess.ifYouNeedHelp = If you need help using the service
 ivSuccess.contactLink =  contact the deceased estate helpline (opens in a new window or tab)
 
@@ -87,7 +87,6 @@ ivSuccess.withoutplayback.contactLink =  contact the deceased estate helpline (o
 
 beforeYouContinue.title = Before you continue
 beforeYouContinue.heading = Before you continue
-beforeYouContinue.subheading = This estate’s UTR: {0}
 beforeYouContinue.p1 = You will be asked to answer several questions about the estate. This is so we can confirm you are authorised to view and amend the estate’s details.
 beforeYouContinue.p2 = Your answers must match the details provided to HMRC when the estate was registered or most recently updated online.
 beforeYouContinue.p3 = Do not enter any other details when answering these questions, even if someone from the estate wrote to HMRC to change them.
