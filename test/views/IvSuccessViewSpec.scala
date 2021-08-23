@@ -38,7 +38,7 @@ class IvSuccessViewSpec extends ViewBehaviours {
       behave like normalPageTitleWithCaption(applyView,
         "ivSuccess.agent",
         "utr",
-        "",
+        utr,
         "paragraph1",
         "paragraph2",
         "continueLink",
@@ -56,7 +56,7 @@ class IvSuccessViewSpec extends ViewBehaviours {
     behave like normalPageTitleWithCaption(applyView,
       "ivSuccess.no.agent",
       "utr",
-      "",
+      utr,
       "paragraph1",
       "paragraph2",
       "contactLink")
