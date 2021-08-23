@@ -149,6 +149,26 @@ class IvSuccessControllerSpec extends SpecBase with BeforeAndAfterAll {
 
     }
 
+    "redirect to next page" when {
+
+      "clicking continue" in {
+
+        lazy val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+        lazy val request = FakeRequest(POST, controllers.routes.IvSuccessController.onSubmit().url)
+
+        lazy val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual "http://localhost:8828/maintain-an-estate/status"
+
+        application.stop()
+
+      }
+
+    }
+
     "redirect to Session Expired" when {
 
       "no existing data is found" in {
@@ -166,8 +186,6 @@ class IvSuccessControllerSpec extends SpecBase with BeforeAndAfterAll {
         application.stop()
 
       }
-
-
 
     }
 
