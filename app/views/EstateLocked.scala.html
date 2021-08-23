@@ -14,11 +14,11 @@
  * limitations under the License.
  *@
 
-@import views.html.components.{Heading, Link}
+@import views.html.components.{HeadingWithCaption, Link}
 
 @this(
     main_template: MainTemplate,
-    headingComp: Heading,
+    headingComp: HeadingWithCaption,
     link: Link
 )
 
@@ -28,8 +28,11 @@
     title = messages("locked.title")
 ) {
 
-    <span class="govuk-caption-l">@messages("locked.subheading", utr)</span>
-    @headingComp("locked.heading")
+    @headingComp(
+        headingPrefix = "locked",
+        captionPrefix = "utr",
+        captionParam = Some(utr)
+    )
 
     <p>@messages("locked.p1")</p>
     <p>@messages("locked.p2")</p>

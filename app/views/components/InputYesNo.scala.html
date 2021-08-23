@@ -32,7 +32,7 @@
     name = field.name,
     classes = "govuk-radios--inline",
     errorMessage = field.error match {
-        case Some(e) => Some(ErrorMessage(content = Text(messages(e.message, e.args: _*))))
+        case Some(e) => Some(ErrorMessage.errorMessageWithDefaultStringsTranslated(content = Text(messages(e.message, e.args: _*))))
         case None => None
     },
     hint = if(hint.isDefined) Some(Hint(content = Text(hint.get))) else None,
@@ -40,10 +40,12 @@
         legend = Some(Legend(
             content = if (caption.isDefined) {
                 HtmlContent(
-                    s"""<span class="govuk-caption-l">${caption.get}</span>
-                    |<h1>${messages(label)}</h1>""".stripMargin)
+                    s"""
+                    |<span class="govuk-caption-l">${caption.get}</span>
+                    |${messages(label)}
+                    |""".stripMargin)
             } else Text(label),
-            isPageHeading = if (caption.isDefined) false else legendAsHeading,
+            isPageHeading = legendAsHeading,
             classes = legendClass.getOrElse("govuk-fieldset__legend--l")
         ))
     )),

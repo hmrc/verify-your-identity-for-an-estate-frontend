@@ -23,11 +23,16 @@ class BeforeYouContinueViewSpec extends ViewBehaviours {
 
   "BeforeYouContinue view" must {
 
+    val utr = "0987654321"
+
     val view = viewFor[BeforeYouContinueView](Some(emptyUserAnswers))
 
-    val applyView = view("0987654321")(fakeRequest, messages)
+    val applyView = view(utr)(fakeRequest, messages)
 
-    behave like normalPage(applyView, "beforeYouContinue")
+    behave like normalPageTitleWithCaption(applyView,
+      "beforeYouContinue",
+      "utr",
+      utr)
 
     behave like pageWithBackLink(applyView)
   }
