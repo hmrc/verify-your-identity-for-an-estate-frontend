@@ -98,14 +98,12 @@ locked.p2=Mae angen i chi ateb y cwestiynau diogelwch yn gywir er mwyn i chi all
 locked.p3=Mae’n rhaid i’ch atebion gyd-fynd â’r manylion a roddwyd i CThEM pan gafodd yr ystâd ei chofrestru neu ei diweddaru ar-lein yn ddiweddaraf.
 locked.p4=Os oes angen help arnoch i ddefnyddio’r gwasanaeth,
 locked.link1=cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEM (yn agor ffenestr neu dab newydd)
-locked.subheading=UTR yr ystâd hon: {0}
 
 stillProcessing.title=Rydym yn prosesu’r newidiadau diweddaraf a wnaed i’r ystâd hon
 stillProcessing.heading=Rydym yn prosesu’r newidiadau diweddaraf a wnaed i’r ystâd hon
 stillProcessing.p2=Rhowch gynnig arall arni yn nes ymlaen.
 stillProcessing.p3=Os oes angen help arnoch gyda’r gwasanaeth,
 stillProcessing.link1=cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEM (yn agor ffenestr neu dab newydd)
-stillProcessing.subheading=UTR yr ystâd hon: {0}
 
 notFound.title=Nid yw’r Cyfeirnod Unigryw y Trethdalwr (UTR) a roesoch ar gyfer yr ystâd yn cyd-fynd â’n cofnodion
 notFound.heading=Nid yw’r Cyfeirnod Unigryw y Trethdalwr (UTR) a roesoch ar gyfer yr ystâd yn cyd-fynd â’n cofnodion

@@ -35,8 +35,14 @@ class IvSuccessWithoutPlaybackViewSpec extends ViewBehaviours {
 
       val applyView = view.apply(utr)(fakeRequest, messages)
 
-      behave like normalPage(applyView, "ivSuccess.withoutplayback", "paragraph1", "paragraph2", "paragraph3",
-        "ifYouNeedHelp", "contactLink")
+      behave like normalPageTitleWithCaption(applyView,
+        "ivSuccess.withoutplayback",
+        "utr",
+        utr,
+        "paragraph1",
+        "paragraph2",
+        "paragraph3", "ifYouNeedHelp", "contactLink"
+      )
     }
 
     "display the correct subheading" in {
@@ -46,7 +52,7 @@ class IvSuccessWithoutPlaybackViewSpec extends ViewBehaviours {
       val applyView = view.apply(utr)(fakeRequest, messages)
 
       val doc = asDocument(applyView)
-      assertContainsText(doc, messages("ivSuccess.subheading", utr))
+      assertContainsText(doc, messages("utr.caption", utr))
     }
   }
 }

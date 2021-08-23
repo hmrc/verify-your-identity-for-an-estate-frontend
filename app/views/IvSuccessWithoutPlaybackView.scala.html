@@ -15,12 +15,12 @@
  *@
 
 @import config.FrontendAppConfig
-@import views.html.components.{Link, Heading}
+@import views.html.components.{Link, HeadingWithCaption}
 
 @this(
     main_template: MainTemplate,
     config: FrontendAppConfig,
-    headingComp: Heading,
+    headingWithCaption: HeadingWithCaption,
     link: Link
 )
 
@@ -29,8 +29,13 @@
 @main_template(
  title = messages("ivSuccess.withoutplayback.title")
 ) {
-    <span class="govuk-caption-l">@messages("ivSuccess.subheading", utr)</span>
-    @headingComp("ivSuccess.withoutplayback.heading")
+
+    @headingWithCaption(
+    headingPrefix = "ivSuccess.withoutplayback",
+    captionPrefix = "utr",
+    captionParam = Some(utr)
+    )
+
     <p>@messages("ivSuccess.withoutplayback.paragraph1")</p>
     <p>@messages("ivSuccess.withoutplayback.paragraph2")</p>
     <p>@messages("ivSuccess.withoutplayback.paragraph3")</p>
