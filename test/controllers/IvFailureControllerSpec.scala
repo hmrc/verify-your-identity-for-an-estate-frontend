@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ class IvFailureControllerSpec extends SpecBase {
           .overrides(bind[Navigator].toInstance(fakeNavigator))
           .build()
 
-        val onIvFailureRoute = routes.IvFailureController.onEstateIvFailure().url
+        val onIvFailureRoute = routes.IvFailureController.onEstateIvFailure.url
 
         val request = FakeRequest(GET, s"$onIvFailureRoute")
 
@@ -61,7 +61,7 @@ class IvFailureControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.FallbackFailureController.onPageLoad().url
+        redirectLocation(result).value mustEqual routes.FallbackFailureController.onPageLoad.url
 
         application.stop()
       }
@@ -74,7 +74,7 @@ class IvFailureControllerSpec extends SpecBase {
 
         val fakeNavigator = new FakeNavigator(Call("GET", "/foo"))
 
-        val onIvFailureRoute = routes.IvFailureController.onEstateIvFailure().url
+        val onIvFailureRoute = routes.IvFailureController.onEstateIvFailure.url
 
         val application = applicationBuilder(userAnswers = Some(answers))
           .overrides(bind[RelationshipEstablishmentConnector].toInstance(connector))
@@ -90,7 +90,7 @@ class IvFailureControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.IvFailureController.estateLocked().url
+        redirectLocation(result).value mustEqual routes.IvFailureController.estateLocked.url
 
         application.stop()
       }
@@ -110,7 +110,7 @@ class IvFailureControllerSpec extends SpecBase {
         when(connector.journeyId(any[String])(any(), any()))
           .thenReturn(Future.successful(RelationshipEstablishmentStatus.NotFound))
 
-        val onIvFailureRoute = routes.IvFailureController.onEstateIvFailure().url
+        val onIvFailureRoute = routes.IvFailureController.onEstateIvFailure.url
 
         val request = FakeRequest(GET, s"$onIvFailureRoute?journeyId=47a8a543-6961-4221-86e8-d22e2c3c91de")
 
@@ -118,7 +118,7 @@ class IvFailureControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.IvFailureController.estateNotFound().url
+        redirectLocation(result).value mustEqual routes.IvFailureController.estateNotFound.url
 
         application.stop()
       }
@@ -138,7 +138,7 @@ class IvFailureControllerSpec extends SpecBase {
         when(connector.journeyId(any[String])(any(), any()))
           .thenReturn(Future.successful(RelationshipEstablishmentStatus.InProcessing))
 
-        val onIvFailureRoute = routes.IvFailureController.onEstateIvFailure().url
+        val onIvFailureRoute = routes.IvFailureController.onEstateIvFailure.url
 
         val request = FakeRequest(GET, s"$onIvFailureRoute?journeyId=47a8a543-6961-4221-86e8-d22e2c3c91de")
 
@@ -146,7 +146,7 @@ class IvFailureControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.IvFailureController.estateStillProcessing().url
+        redirectLocation(result).value mustEqual routes.IvFailureController.estateStillProcessing.url
 
         application.stop()
       }
@@ -158,7 +158,7 @@ class IvFailureControllerSpec extends SpecBase {
 
         val fakeNavigator = new FakeNavigator(Call("GET", "/foo"))
 
-        val onLockedRoute = routes.IvFailureController.estateLocked().url
+        val onLockedRoute = routes.IvFailureController.estateLocked.url
         val utr = "3000000001"
         val managedByAgent = true
         val estateLocked = true
@@ -192,7 +192,7 @@ class IvFailureControllerSpec extends SpecBase {
 
       "return OK and the correct view for a GET for not found route" in {
 
-        val onLockedRoute = routes.IvFailureController.estateNotFound().url
+        val onLockedRoute = routes.IvFailureController.estateNotFound.url
 
         val answers = emptyUserAnswers
           .set(UtrPage, "1234567890").success.value
@@ -212,7 +212,7 @@ class IvFailureControllerSpec extends SpecBase {
 
       "return OK and the correct view for a GET for still processing route" in {
 
-        val onLockedRoute = routes.IvFailureController.estateStillProcessing().url
+        val onLockedRoute = routes.IvFailureController.estateStillProcessing.url
 
         val answers = emptyUserAnswers
           .set(UtrPage, "1234567891").success.value
@@ -232,7 +232,7 @@ class IvFailureControllerSpec extends SpecBase {
 
         val application = applicationBuilder(userAnswers = None).build()
 
-        val onLockedRoute = routes.IvFailureController.estateLocked().url
+        val onLockedRoute = routes.IvFailureController.estateLocked.url
 
         val request = FakeRequest(GET, onLockedRoute)
 
@@ -240,7 +240,7 @@ class IvFailureControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
 
-        redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad().url
+        redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad.url
 
         application.stop()
       }

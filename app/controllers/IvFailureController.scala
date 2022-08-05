@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,19 +49,19 @@ class IvFailureController @Inject()(
     relationshipEstablishmentConnector.journeyId(journeyId) map {
       case RelationshipEstablishmentStatus.Locked =>
         logger.info(s"[IvFailure][status] $utr is locked")
-        Redirect(routes.IvFailureController.estateLocked())
+        Redirect(routes.IvFailureController.estateLocked)
       case RelationshipEstablishmentStatus.NotFound =>
         logger.info(s"[IvFailure][status] $utr was not found")
-        Redirect(routes.IvFailureController.estateNotFound())
+        Redirect(routes.IvFailureController.estateNotFound)
       case RelationshipEstablishmentStatus.InProcessing =>
         logger.info(s"[IvFailure][status] $utr is processing")
-        Redirect(routes.IvFailureController.estateStillProcessing())
+        Redirect(routes.IvFailureController.estateStillProcessing)
       case UnsupportedRelationshipStatus(reason) =>
         logger.warn(s"[IvFailure][status] Unsupported IV failure reason: $reason")
-        Redirect(controllers.routes.FallbackFailureController.onPageLoad())
+        Redirect(controllers.routes.FallbackFailureController.onPageLoad)
       case UpstreamRelationshipError(response) =>
         logger.warn(s"[IvFailure][status] HTTP response: $response")
-        Redirect(controllers.routes.FallbackFailureController.onPageLoad())
+        Redirect(controllers.routes.FallbackFailureController.onPageLoad)
     }
   }
 
@@ -74,14 +74,14 @@ class IvFailureController @Inject()(
 
           queryString.fold{
             logger.warn(s"[IVFailureController][onEstateIvFailure] unable to retrieve a journeyId to determine the reason")
-            Future.successful(Redirect(controllers.routes.FallbackFailureController.onPageLoad()))
+            Future.successful(Redirect(controllers.routes.FallbackFailureController.onPageLoad))
           }{
             journeyId =>
               renderFailureReason(utr, journeyId)
           }
         case None =>
           logger.warn(s"[IVFailureController][onEstateIvFailure] unable to retrieve a UTR")
-          Future.successful(Redirect(controllers.routes.FallbackFailureController.onPageLoad()))
+          Future.successful(Redirect(controllers.routes.FallbackFailureController.onPageLoad))
       }
   }
 
@@ -94,7 +94,7 @@ class IvFailureController @Inject()(
         connector.lock(EstatesStoreRequest(request.internalId, utr, isManagedByAgent, estateLocked = true)) map { _ =>
           Ok(lockedView(utr))
         }
-      }) getOrElse Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad()))
+      }) getOrElse Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad))
   }
 
   def estateNotFound() : Action[AnyContent] = (identify andThen getData andThen requireData).async {
@@ -102,7 +102,7 @@ class IvFailureController @Inject()(
       request.userAnswers.get(UtrPage) map {
         utr =>
           Future.successful(Ok(notFoundView(utr)))
-      } getOrElse Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad()))
+      } getOrElse Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad))
   }
 
   def estateStillProcessing() : Action[AnyContent] = (identify andThen getData andThen requireData).async {
@@ -110,7 +110,7 @@ class IvFailureController @Inject()(
       request.userAnswers.get(UtrPage) map {
         utr =>
           Future.successful(Ok(stillProcessingView(utr)))
-      } getOrElse Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad()))
+      } getOrElse Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad))
   }
 
   def onSubmit: Action[AnyContent] = Action { _ =>
