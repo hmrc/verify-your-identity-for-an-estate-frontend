@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ class AuthPartialFunctions @Inject()(override val authConnector: AuthConnector, 
     case _: NoActiveSession => redirectToLogin
     case e: AuthorisationException =>
       logger.error(s"Recovered error: $e")
-      Redirect(controllers.routes.UnauthorisedController.onPageLoad())
+      Redirect(controllers.routes.UnauthorisedController.onPageLoad)
   }
 
   def redirectToLogin: Result = {

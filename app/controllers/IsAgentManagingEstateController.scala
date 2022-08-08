@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,7 +67,7 @@ class IsAgentManagingEstateController @Inject()(
             body
         }
 
-      } getOrElse Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad()))
+      } getOrElse Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad))
 
   }
 
@@ -80,7 +80,7 @@ class IsAgentManagingEstateController @Inject()(
             utr <- request.userAnswers.get(UtrPage)
           } yield {
             Future.successful(BadRequest(view(formWithErrors, mode, utr)))
-          }) getOrElse Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad()))
+          }) getOrElse Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad))
         ,
         value =>
           for {
