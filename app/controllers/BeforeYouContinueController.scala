@@ -48,7 +48,7 @@ class BeforeYouContinueController @Inject()(
 
         relationship.check(request.internalId, utr) flatMap {
           case RelationshipFound =>
-            Future.successful(Redirect(controllers.routes.IvSuccessController.onPageLoad()))
+            Future.successful(Redirect(controllers.routes.IvSuccessController.onPageLoad))
           case RelationshipNotFound =>
             Future.successful(Ok(view(utr)))
         }
@@ -84,7 +84,7 @@ class BeforeYouContinueController @Inject()(
 
         relationship.check(request.internalId, utr) flatMap {
           case RelationshipFound =>
-            Future.successful(Redirect(controllers.routes.IvSuccessController.onPageLoad()))
+            Future.successful(Redirect(controllers.routes.IvSuccessController.onPageLoad))
           case RelationshipNotFound =>
             onRelationshipNotFound
         }

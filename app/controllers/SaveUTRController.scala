@@ -52,7 +52,7 @@ class SaveUTRController @Inject()(
 
       relationship.check(request.internalId, utr) flatMap {
         case RelationshipFound =>
-          Future.successful(Redirect(controllers.routes.IvSuccessController.onPageLoad()))
+          Future.successful(Redirect(controllers.routes.IvSuccessController.onPageLoad))
         case RelationshipNotFound =>
           body
       }
