@@ -20,9 +20,9 @@ import base.SpecBase
 import connectors.{EstatesStoreConnector, RelationshipEstablishmentConnector}
 import models.{EstatesStoreRequest, RelationshipEstablishmentStatus}
 import navigation.{FakeNavigator, Navigator}
-import org.mockito.Matchers.{any, eq => eqTo}
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito.{verify, when}
-import org.scalatestplus.mockito.MockitoSugar.mock
+import org.mockito.MockitoSugar.mock
 import pages.{IsAgentManagingEstatePage, UtrPage}
 import play.api.inject.bind
 import play.api.mvc.Call

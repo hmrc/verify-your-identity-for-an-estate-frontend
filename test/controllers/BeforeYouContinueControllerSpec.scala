@@ -20,9 +20,9 @@ import base.SpecBase
 import connectors.EstatesStoreConnector
 import models.EstatesStoreRequest
 import navigation.{FakeNavigator, Navigator}
-import org.mockito.Matchers.{eq => eqTo, _}
+import org.mockito.ArgumentMatchers.{eq => eqTo, _}
 import org.mockito.Mockito.{verify => verifyMock, _}
-import org.scalatestplus.mockito.MockitoSugar.mock
+import org.mockito.MockitoSugar.mock
 import pages.{IsAgentManagingEstatePage, UtrPage}
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -51,7 +51,7 @@ class BeforeYouContinueControllerSpec extends SpecBase {
 
       val application = applicationBuilder(userAnswers = Some(answers), fakeEstablishmentServiceFailing).build()
 
-      val request = FakeRequest(GET, controllers.routes.BeforeYouContinueController.onPageLoad().url)
+      val request = FakeRequest(GET, controllers.routes.BeforeYouContinueController.onPageLoad.url)
 
       val result = route(application, request).value
 
@@ -83,7 +83,7 @@ class BeforeYouContinueControllerSpec extends SpecBase {
         .overrides(bind[Navigator].toInstance(fakeNavigator))
         .build()
 
-      val request = FakeRequest(POST, controllers.routes.BeforeYouContinueController.onSubmit().url)
+      val request = FakeRequest(POST, controllers.routes.BeforeYouContinueController.onSubmit.url)
 
       val result = route(application, request).value
 

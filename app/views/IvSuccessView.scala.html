@@ -52,7 +52,7 @@
         <p>@messages("ivSuccess.no.agent.paragraph1")</p>
         <p>@messages("ivSuccess.no.agent.paragraph2") @link("https://www.gov.uk/government/organisations/hm-revenue-customs/contact/bereavement-and-deceased-estate", "estate-contact", messages("ivSuccess.contactLink"), openInNewWindow = true).</p>
 
-        @formHelper(action = controllers.routes.IvSuccessController.onSubmit(), 'autoComplete -> "off") {
+        @formHelper(action = controllers.routes.IvSuccessController.onSubmit, 'autoComplete -> "off") {
             @submitButton()
         }
     }
