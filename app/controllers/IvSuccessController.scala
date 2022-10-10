@@ -41,7 +41,7 @@ class IvSuccessController @Inject()(
                                    )(implicit ec: ExecutionContext, val config: FrontendAppConfig)
   extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
 
       request.userAnswers.get(UtrPage).map { utr =>

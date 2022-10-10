@@ -19,10 +19,10 @@ package controllers
 import base.SpecBase
 import connectors.TaxEnrolmentsConnector
 import models.UserAnswers
-import org.mockito.Matchers.{eq => eqTo, _}
+import org.mockito.ArgumentMatchers.{eq => eqTo, _}
 import org.mockito.Mockito.{verify => verifyMock, _}
 import org.scalatest.BeforeAndAfterAll
-import org.scalatestplus.mockito.MockitoSugar.mock
+import org.mockito.MockitoSugar.mock
 import pages.{IsAgentManagingEstatePage, UtrPage}
 import play.api.inject.bind
 import play.api.test.FakeRequest
@@ -53,7 +53,7 @@ class IvSuccessControllerSpec extends SpecBase with BeforeAndAfterAll {
         ).configure("microservice.services.features.playback.enabled" -> true)
         .build()
 
-      val request = FakeRequest(GET, controllers.routes.IvSuccessController.onPageLoad().url)
+      val request = FakeRequest(GET, controllers.routes.IvSuccessController.onPageLoad.url)
 
       val view = application.injector.instanceOf[IvSuccessView]
 
@@ -89,7 +89,7 @@ class IvSuccessControllerSpec extends SpecBase with BeforeAndAfterAll {
         ).configure("microservice.services.features.playback.enabled" -> false)
         .build()
 
-      val request = FakeRequest(GET, controllers.routes.IvSuccessController.onPageLoad().url)
+      val request = FakeRequest(GET, controllers.routes.IvSuccessController.onPageLoad.url)
 
       val view = application.injector.instanceOf[IvSuccessWithoutPlaybackView]
 
@@ -125,7 +125,7 @@ class IvSuccessControllerSpec extends SpecBase with BeforeAndAfterAll {
         ).configure("microservice.services.features.playback.enabled" -> true)
         .build()
 
-      val request = FakeRequest(GET, controllers.routes.IvSuccessController.onPageLoad().url)
+      val request = FakeRequest(GET, controllers.routes.IvSuccessController.onPageLoad.url)
 
       val view = application.injector.instanceOf[IvSuccessView]
 
@@ -155,7 +155,7 @@ class IvSuccessControllerSpec extends SpecBase with BeforeAndAfterAll {
 
         lazy val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
-        lazy val request = FakeRequest(POST, controllers.routes.IvSuccessController.onSubmit().url)
+        lazy val request = FakeRequest(POST, controllers.routes.IvSuccessController.onSubmit.url)
 
         lazy val result = route(application, request).value
 
@@ -175,7 +175,7 @@ class IvSuccessControllerSpec extends SpecBase with BeforeAndAfterAll {
 
         lazy val application = applicationBuilder(userAnswers = None).build()
 
-        lazy val request = FakeRequest(GET, controllers.routes.IvSuccessController.onPageLoad().url)
+        lazy val request = FakeRequest(GET, controllers.routes.IvSuccessController.onPageLoad.url)
 
         lazy val result = route(application, request).value
 

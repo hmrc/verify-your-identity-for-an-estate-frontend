@@ -41,14 +41,14 @@ class BeforeYouContinueController @Inject()(
                                              connector: EstatesStoreConnector
                                            )(implicit ec: ExecutionContext, config: FrontendAppConfig) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
 
         request.userAnswers.get(UtrPage) map { utr =>
 
         relationship.check(request.internalId, utr) flatMap {
           case RelationshipFound =>
-            Future.successful(Redirect(controllers.routes.IvSuccessController.onPageLoad()))
+            Future.successful(Redirect(controllers.routes.IvSuccessController.onPageLoad))
           case RelationshipNotFound =>
             Future.successful(Ok(view(utr)))
         }
@@ -56,7 +56,7 @@ class BeforeYouContinueController @Inject()(
       } getOrElse Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad))
   }
 
-  def onSubmit(): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit: Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
 
       (for {
@@ -84,7 +84,7 @@ class BeforeYouContinueController @Inject()(
 
         relationship.check(request.internalId, utr) flatMap {
           case RelationshipFound =>
-            Future.successful(Redirect(controllers.routes.IvSuccessController.onPageLoad()))
+            Future.successful(Redirect(controllers.routes.IvSuccessController.onPageLoad))
           case RelationshipNotFound =>
             onRelationshipNotFound
         }

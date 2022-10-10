@@ -106,7 +106,7 @@ class TestRelationshipEstablishmentController @Inject()(
   private def establishRelationshipForUtr(request: IdentifierRequest[AnyContent], utr: String)(implicit hc: HeaderCarrier) = {
     relationshipEstablishmentConnector.createRelationship(request.credentials.providerId, utr) map {
       _ =>
-        Redirect(controllers.routes.IvSuccessController.onPageLoad())
+        Redirect(controllers.routes.IvSuccessController.onPageLoad)
     }
   }
 }
