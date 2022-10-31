@@ -23,6 +23,7 @@ import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.MockitoSugar
 import pages.{IsAgentManagingEstatePage, UtrPage}
+import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -35,13 +36,13 @@ import scala.concurrent.Future
 
 class IsAgentManagingEstateControllerSpec extends SpecBase with MockitoSugar {
 
-  def onwardRoute = Call("GET", "/foo")
+  def onwardRoute: Call = Call("GET", "/foo")
 
   val formProvider = new IsAgentManagingEstateFormProvider()
-  val form = formProvider()
+  val form: Form[Boolean] = formProvider()
   val utr = "0987654321"
 
-  lazy val isAgentManagingEstateRoute = controllers.routes.IsAgentManagingEstateController.onPageLoad(NormalMode).url
+  lazy val isAgentManagingEstateRoute: String = controllers.routes.IsAgentManagingEstateController.onPageLoad(NormalMode).url
 
   val fakeEstablishmentServiceFailing = new FakeRelationshipEstablishmentService(RelationshipNotFound)
 

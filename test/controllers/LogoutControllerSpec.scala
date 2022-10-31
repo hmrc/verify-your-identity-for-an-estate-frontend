@@ -17,9 +17,8 @@
 package controllers
 
 import base.SpecBase
-import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.MockitoSugar
-import org.mockito.ArgumentMatchers.{eq => eqTo, _}
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._

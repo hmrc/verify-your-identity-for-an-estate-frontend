@@ -42,9 +42,10 @@ object Relationship {
   implicit val format: Format[Relationship] = Json.format[Relationship]
 }
 
-case class RelationshipJson(relationship: Relationship, ttlSeconds: Int = 1440)
+case class RelationshipJson(relationship: Relationship, ttlSeconds: Int = RelationshipJson.defaultTtlInSeconds)
 
 object RelationshipJson {
+  val defaultTtlInSeconds = 1440
   implicit val format: Format[RelationshipJson] = Json.format[RelationshipJson]
 }
 

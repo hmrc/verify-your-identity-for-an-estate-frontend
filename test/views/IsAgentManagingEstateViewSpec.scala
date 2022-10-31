@@ -45,14 +45,7 @@ class IsAgentManagingEstateViewSpec extends YesNoViewBehaviours {
 
     behave like pageWithBackLink(applyView(form))
 
-    behave like yesNoPage(
-      form,
-      applyView,
-      messageKeyPrefix,
-      captionMessageKey,
-      utr,
-      controllers.routes.IsAgentManagingEstateController.onSubmit(NormalMode).url
-    )
+    behave like yesNoPage(form, applyView, messageKeyPrefix, captionMessageKey, utr)
 
   }
 }

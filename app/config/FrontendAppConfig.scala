@@ -17,10 +17,8 @@
 package config
 
 import com.google.inject.{Inject, Singleton}
-import controllers.routes
 import play.api.Configuration
 import play.api.i18n.Lang
-import play.api.mvc.Call
 import uk.gov.hmrc.hmrcfrontend.config.ContactFrontendConfig
 
 @Singleton
@@ -89,7 +87,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration,
     "cymraeg" -> Lang("cy")
   )
 
-  def routeToSwitchLanguage: String => Call =
-    (lang: String) => routes.LanguageSwitchController.switchToLanguage(lang)
+  val cacheTtlSeconds: Long = configuration.get[Long]("mongodb.timeToLiveInSeconds")
+  val dropIndexes: Boolean = configuration.getOptional[Boolean]("microservice.services.features.mongo.dropIndexes").getOrElse(false)
 
 }

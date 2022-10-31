@@ -19,7 +19,6 @@ package utils.countryOptions
 import base.SpecBase
 import com.typesafe.config.ConfigException
 import org.mockito.MockitoSugar
-import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
 
 class CountryOptionsSpec extends SpecBase with MockitoSugar {
 
@@ -32,9 +31,6 @@ class CountryOptionsSpec extends SpecBase with MockitoSugar {
           "location.canonical.list.all" -> "countries-canonical-list-test.json"
         ))
         .build()
-
-      val messagesApi = app.injector.instanceOf[MessagesApi]
-      implicit val messages = MessagesImpl(lang = Lang("en"), messagesApi = messagesApi)
 
       val countryOption: CountryOptions = application.injector.instanceOf[AllCountryOptions]
       countryOption.options mustEqual Seq(InputOption("ES", "Spain"), InputOption("GB", "United Kingdom"))

@@ -17,8 +17,8 @@
 package navigation
 
 import base.SpecBase
-import pages._
 import models._
+import pages._
 
 class NavigatorSpec extends SpecBase {
 
