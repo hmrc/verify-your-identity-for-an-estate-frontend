@@ -18,10 +18,11 @@ package connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 import models.EstatesStoreRequest
-import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.RecoverMethods
-import org.scalatest.wordspec.AsyncWordSpec
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.must.Matchers
+import org.scalatest.wordspec.AsyncWordSpec
+import play.api.Application
 import play.api.http.Status
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
@@ -34,7 +35,7 @@ class EstatesStoreConnectorSpec extends AsyncWordSpec with Matchers with WireMoc
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
-  lazy val app = new GuiceApplicationBuilder()
+  lazy val app: Application = new GuiceApplicationBuilder()
     .configure(Seq(
       "microservice.services.estates-store.port" -> server.port(),
       "auditing.enabled" -> false): _*
@@ -49,7 +50,7 @@ class EstatesStoreConnectorSpec extends AsyncWordSpec with Matchers with WireMoc
   val internalId = "some-authenticated-internal-id"
   val managedByAgent = true
 
-  val request = EstatesStoreRequest(internalId, utr, managedByAgent, false)
+  val request: EstatesStoreRequest = EstatesStoreRequest(internalId, utr, managedByAgent, estateLocked = false)
 
   private def wiremock(payload: String, expectedStatus: Int, expectedResponse: String) =
     server.stubFor(

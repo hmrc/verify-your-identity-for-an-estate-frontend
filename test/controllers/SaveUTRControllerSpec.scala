@@ -42,7 +42,7 @@ class SaveUTRControllerSpec extends SpecBase {
 
       "user answers does not exist" in {
 
-        val captor = ArgumentCaptor.forClass(classOf[UserAnswers])
+        val captor: ArgumentCaptor[UserAnswers] = ArgumentCaptor.forClass(classOf[UserAnswers])
 
         val mockSessionRepository = mock[SessionRepository]
 
@@ -65,7 +65,7 @@ class SaveUTRControllerSpec extends SpecBase {
       }
       "user answers exists" in {
 
-        val captor = ArgumentCaptor.forClass(classOf[UserAnswers])
+        val captor: ArgumentCaptor[UserAnswers] = ArgumentCaptor.forClass(classOf[UserAnswers])
 
         val mockSessionRepository = mock[SessionRepository]
 

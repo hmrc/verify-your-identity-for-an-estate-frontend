@@ -19,7 +19,7 @@ package controllers.actions
 import base.SpecBase
 import config.FrontendAppConfig
 import controllers.routes
-import play.api.mvc.{BodyParsers, Results}
+import play.api.mvc.{Action, AnyContent, BodyParsers, Results}
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core._
 
@@ -28,7 +28,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class AuthActionSpec extends SpecBase {
 
   class Harness(authAction: IdentifierAction) {
-    def onPageLoad = authAction { _ => Results.Ok }
+    def onPageLoad: Action[AnyContent] = authAction { _ => Results.Ok }
   }
 
   private val appConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]

@@ -21,8 +21,8 @@ import connectors.TaxEnrolmentsConnector
 import models.UserAnswers
 import org.mockito.ArgumentMatchers.{eq => eqTo, _}
 import org.mockito.Mockito.{verify => verifyMock, _}
-import org.scalatest.BeforeAndAfterAll
 import org.mockito.MockitoSugar.mock
+import org.scalatest.BeforeAndAfterAll
 import pages.{IsAgentManagingEstatePage, UtrPage}
 import play.api.inject.bind
 import play.api.test.FakeRequest

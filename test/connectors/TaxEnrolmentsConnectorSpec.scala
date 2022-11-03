@@ -20,8 +20,9 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 import config.FrontendAppConfig
 import models.{EnrolmentCreated, TaxEnrolmentsRequest, UpstreamTaxEnrolmentsError}
 import org.scalatest.RecoverMethods
-import org.scalatest.wordspec.AsyncWordSpec
 import org.scalatest.matchers.must.Matchers
+import org.scalatest.wordspec.AsyncWordSpec
+import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.Helpers._
@@ -35,7 +36,7 @@ class TaxEnrolmentsConnectorSpec extends AsyncWordSpec with Matchers with WireMo
   lazy val config: FrontendAppConfig = app.injector.instanceOf[FrontendAppConfig]
   lazy val connector: TaxEnrolmentsConnector = app.injector.instanceOf[TaxEnrolmentsConnector]
 
-  lazy val app = new GuiceApplicationBuilder()
+  lazy val app: Application = new GuiceApplicationBuilder()
     .configure(Seq(
       "microservice.services.tax-enrolments.port" -> server.port(),
       "auditing.enabled" -> false): _*
@@ -46,7 +47,7 @@ class TaxEnrolmentsConnectorSpec extends AsyncWordSpec with Matchers with WireMo
 
   val utr = "1234567890"
 
-  val request = Json.stringify(Json.obj(
+  val request: String = Json.stringify(Json.obj(
     "identifiers" -> Json.arr(
       Json.obj(
         "key" -> "SAUTR",
@@ -61,7 +62,7 @@ class TaxEnrolmentsConnectorSpec extends AsyncWordSpec with Matchers with WireMo
   ))
 
 
-  private def wiremock(payload: String, expectedStatus: Int, expectedResponse: String) =
+  private def wiremock(payload: String, expectedStatus: Int): Any =
     server.stubFor(
       put(urlEqualTo(url))
         .withHeader(CONTENT_TYPE, containing("application/json"))
@@ -69,7 +70,7 @@ class TaxEnrolmentsConnectorSpec extends AsyncWordSpec with Matchers with WireMo
         .willReturn(
           aResponse()
             .withStatus(expectedStatus)
-            .withBody(expectedResponse)
+            .withBody("")
         )
     )
 
@@ -79,11 +80,7 @@ class TaxEnrolmentsConnectorSpec extends AsyncWordSpec with Matchers with WireMo
 
       "returns 204 NO_CONTENT" in {
 
-        wiremock(
-          payload = request,
-          expectedStatus = NO_CONTENT,
-          expectedResponse = ""
-        )
+        wiremock(payload = request, expectedStatus = NO_CONTENT)
 
         connector.enrol(TaxEnrolmentsRequest(utr)) map { response =>
           response mustBe EnrolmentCreated
@@ -93,22 +90,14 @@ class TaxEnrolmentsConnectorSpec extends AsyncWordSpec with Matchers with WireMo
 
       "returns 400 BAD_REQUEST" in {
 
-        wiremock(
-          payload = request,
-          expectedStatus = BAD_REQUEST,
-          expectedResponse = ""
-        )
+        wiremock(payload = request, expectedStatus = BAD_REQUEST)
 
         recoverToSucceededIf[UpstreamTaxEnrolmentsError](connector.enrol(TaxEnrolmentsRequest(utr)))
 
       }
       "returns 401 UNAUTHORIZED" in {
 
-        wiremock(
-          payload = request,
-          expectedStatus = UNAUTHORIZED,
-          expectedResponse = ""
-        )
+        wiremock(payload = request, expectedStatus = UNAUTHORIZED)
 
         recoverToSucceededIf[UpstreamTaxEnrolmentsError](connector.enrol(TaxEnrolmentsRequest(utr)))
 

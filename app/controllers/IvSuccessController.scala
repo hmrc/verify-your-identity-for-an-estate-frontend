@@ -68,7 +68,7 @@ class IvSuccessController @Inject()(
           case RelationshipNotFound =>
             onRelationshipNotFound
         }
-        
+
       } getOrElse Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad))
 
   }

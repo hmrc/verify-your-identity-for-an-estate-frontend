@@ -20,8 +20,8 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 import config.FrontendAppConfig
 import models.RelationshipEstablishmentStatus
 import org.scalatest.RecoverMethods
-import org.scalatest.wordspec.AsyncWordSpec
 import org.scalatest.matchers.must.Matchers
+import org.scalatest.wordspec.AsyncWordSpec
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.http.HeaderCarrier
