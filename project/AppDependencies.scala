@@ -5,20 +5,21 @@ object AppDependencies {
 
   private lazy val compile = Seq(
     play.sbt.PlayImport.ws,
-    "uk.gov.hmrc.mongo"       %% "hmrc-mongo-play-28"             % "0.73.0",
-    "uk.gov.hmrc"             %% "play-frontend-hmrc"             % "1.8.0-play-28",
+    "uk.gov.hmrc.mongo"       %% "hmrc-mongo-play-28"             % "0.74.0",
+    "uk.gov.hmrc"             %% "play-frontend-hmrc"             % "6.4.0-play-28",
     "uk.gov.hmrc"             %% "domain"                         % "8.1.0-play-28",
     "uk.gov.hmrc"             %% "play-conditional-form-mapping"  % "1.12.0-play-28",
-    "uk.gov.hmrc"             %% "bootstrap-frontend-play-28"     % "7.8.0"
+    "uk.gov.hmrc"             %% "bootstrap-frontend-play-28"     % "7.13.0"
   )
 
   private lazy val test: Seq[ModuleID] = Seq(
+    "uk.gov.hmrc"                 %% "bootstrap-test-play-28"   % "7.13.0",
     "com.typesafe.play"           %% "play-test"                % PlayVersion.current,
     "org.scalatestplus.play"      %% "scalatestplus-play"       % "5.1.0",
-    "uk.gov.hmrc.mongo"           %% "hmrc-mongo-test-play-28"  % "0.73.0",
+    "uk.gov.hmrc.mongo"           %% "hmrc-mongo-test-play-28"  % "0.74.0",
     "org.scalatestplus"           %% "scalatestplus-scalacheck" % "3.1.0.0-RC2",
     "org.jsoup"                   %  "jsoup"                    % "1.15.3",
-    "org.scalatest"               %% "scalatest"                % "3.2.14",
+    "org.scalatest"               %% "scalatest"                % "3.2.15",
     "org.mockito"                 %% "mockito-scala-scalatest"  % "1.17.12",
     "com.github.tomakehurst"      %  "wiremock-standalone"      % "2.27.2",
     "wolfendale"                  %% "scalacheck-gen-regexp"    % "0.1.2",
