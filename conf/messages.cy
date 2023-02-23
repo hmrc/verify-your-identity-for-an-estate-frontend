@@ -59,7 +59,7 @@ isAgentManagingEstate.checkYourAnswersLabel=A oes asiant yn rheoli cofrestr ar-l
 isAgentManagingEstate.error.required=Dewiswch ‘Iawn’ os oes asiant yn rheoli cofrestr ar-lein yr ystâd
 
 ivSuccess.ifYouNeedHelp=Os oes angen help arnoch i ddefnyddio’r gwasanaeth,
-ivSuccess.contactLink=cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEM (yn agor ffenestr neu dab newydd)
+ivSuccess.contactLink=cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEF (yn agor ffenestr neu dab newydd)
 
 ivSuccess.agent.title=Rydych wedi llwyddo i ateb cwestiynau diogelwch yr ystâd
 ivSuccess.agent.heading=Rydych wedi llwyddo i ateb cwestiynau diogelwch yr ystâd
@@ -71,9 +71,9 @@ ivSuccess.agent.paragraph4=Os oes angen help arnoch i ddefnyddio’r gwasanaeth
 
 ivSuccess.no.agent.title=Rydych wedi llwyddo i ateb cwestiynau diogelwch yr ystâd
 ivSuccess.no.agent.heading=Rydych wedi llwyddo i ateb cwestiynau diogelwch yr ystâd
-ivSuccess.no.agent.paragraph1=Rydych bellach yn gallu newid yr wybodaeth sydd gan CThEM am y cynrychiolydd personol.
+ivSuccess.no.agent.paragraph1=Rydych bellach yn gallu newid yr wybodaeth sydd gan CThEF am y cynrychiolydd personol.
 ivSuccess.no.agent.paragraph2=Os oes angen help arnoch i ddefnyddio’r gwasanaeth,
-ivSuccess.no.agent.contactLink=cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEM (yn agor ffenestr neu dab newydd)
+ivSuccess.no.agent.contactLink=cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEF (yn agor ffenestr neu dab newydd)
 
 ivSuccess.withoutplayback.title=Mae’n ddrwg gennym – ni allwch gynnal yr ystâd hon ar-lein
 ivSuccess.withoutplayback.heading=Mae’n ddrwg gennym – ni allwch gynnal yr ystâd hon ar-lein
@@ -81,35 +81,35 @@ ivSuccess.withoutplayback.paragraph1=Ar hyn o bryd, rydym yn diweddaru’r gwasa
 ivSuccess.withoutplayback.paragraph2=Bydd hyn ar gael ym mis Ionawr 2020.
 ivSuccess.withoutplayback.paragraph3=Os oes angen i chi awdurdodi’ch asiant i reoli’r ystâd, mae angen i chi gysylltu ag ef a gofyn iddo anfon cysylltiad awdurdodi atoch.
 ivSuccess.withoutplayback.ifYouNeedHelp=Os oes angen help arnoch i ddefnyddio’r gwasanaeth,
-ivSuccess.withoutplayback.contactLink=cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEM (yn agor ffenestr neu dab newydd)
+ivSuccess.withoutplayback.contactLink=cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEF (yn agor ffenestr neu dab newydd)
 
 beforeYouContinue.title=Cyn i chi fynd yn eich blaen
 beforeYouContinue.heading=Cyn i chi fynd yn eich blaen
 beforeYouContinue.p1=Gofynnir i chi ateb sawl cwestiwn am yr ystâd. Mae hyn er mwyn i ni allu cadarnhau eich bod wedi’ch awdurdodi i fwrw golwg dros fanylion yr ystâd a’u diwygio.
-beforeYouContinue.p2=Mae’n rhaid i’ch atebion gyd-fynd â’r manylion a roddwyd i CThEM pan gafodd yr ystâd ei chofrestru neu ei diweddaru ar-lein yn ddiweddaraf.
-beforeYouContinue.p3=Peidiwch â nodi unrhyw fanylion eraill wrth ateb y cwestiynau hyn, hyd yn oed os yw rhywun o’r ystâd wedi ysgrifennu at CThEM i’w newid.
+beforeYouContinue.p2=Mae’n rhaid i’ch atebion gyd-fynd â’r manylion a roddwyd i CThEF pan gafodd yr ystâd ei chofrestru neu ei diweddaru ar-lein yn ddiweddaraf.
+beforeYouContinue.p3=Peidiwch â nodi unrhyw fanylion eraill wrth ateb y cwestiynau hyn, hyd yn oed os yw rhywun o’r ystâd wedi ysgrifennu at CThEF i’w newid.
 beforeYouContinue.p4=Os oes angen help arnoch i ddefnyddio’r gwasanaeth,
-beforeYouContinue.a=cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEM (yn agor ffenestr neu dab newydd)
+beforeYouContinue.a=cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEF (yn agor ffenestr neu dab newydd)
 
 locked.title=Nid yw’ch atebion yn cyd-fynd â’r manylion sydd gennym am yr ystâd hon
 locked.heading=Nid yw’ch atebion yn cyd-fynd â’r manylion sydd gennym am yr ystâd hon
 locked.p1=Gan eich bod wedi gwneud tri chynnig aflwyddiannus i gael mynediad at yr ystâd hon, bydd angen i chi roi cynnig arall arni ymhen 30 munud.
 locked.p2=Mae angen i chi ateb y cwestiynau diogelwch yn gywir er mwyn i chi allu hawlio’r ystâd (sy’n cysylltu’ch cyfrif Porth y Llywodraeth â’ch ystâd gofrestredig).
-locked.p3=Mae’n rhaid i’ch atebion gyd-fynd â’r manylion a roddwyd i CThEM pan gafodd yr ystâd ei chofrestru neu ei diweddaru ar-lein yn ddiweddaraf.
+locked.p3=Mae’n rhaid i’ch atebion gyd-fynd â’r manylion a roddwyd i CThEF pan gafodd yr ystâd ei chofrestru neu ei diweddaru ar-lein yn ddiweddaraf.
 locked.p4=Os oes angen help arnoch i ddefnyddio’r gwasanaeth,
-locked.link1=cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEM (yn agor ffenestr neu dab newydd)
+locked.link1=cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEF (yn agor ffenestr neu dab newydd)
 
 stillProcessing.title=Rydym yn prosesu’r newidiadau diweddaraf a wnaed i’r ystâd hon
 stillProcessing.heading=Rydym yn prosesu’r newidiadau diweddaraf a wnaed i’r ystâd hon
 stillProcessing.p2=Rhowch gynnig arall arni yn nes ymlaen.
 stillProcessing.p3=Os oes angen help arnoch gyda’r gwasanaeth,
-stillProcessing.link1=cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEM (yn agor ffenestr neu dab newydd)
+stillProcessing.link1=cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEF (yn agor ffenestr neu dab newydd)
 
 notFound.title=Nid yw’r Cyfeirnod Unigryw y Trethdalwr (UTR) a roesoch ar gyfer yr ystâd yn cyd-fynd â’n cofnodion
 notFound.heading=Nid yw’r Cyfeirnod Unigryw y Trethdalwr (UTR) a roesoch ar gyfer yr ystâd yn cyd-fynd â’n cofnodion
 notFound.p1=Gwiriwch eich bod wedi nodi UTR ar gyfer yr ystâd yn gywir.
 notFound.p2=Os nad oes gennych UTR ar gyfer yr ystâd, bydd angen i chi gofrestru’r ystâd yn gyntaf.
 notFound.p3=Os oes angen help arnoch gyda’r gwasanaeth hwn,
-notFound.link1=cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEM (yn agor ffenestr neu dab newydd)
+notFound.link1=cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEF (yn agor ffenestr neu dab newydd)
 notFound.button=Rhowch gynnig arall arni
 
