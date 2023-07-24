@@ -37,7 +37,7 @@ title = messages("notFound.title")
     <p>@messages("notFound.p2")</p>
     <p>@messages("notFound.p3") @link("https://www.gov.uk/government/organisations/hm-revenue-customs/contact/bereavement-and-deceased-estate", "estate-contact", messages("notFound.link1"), openInNewWindow = true).</p>
 
-    @formHelper(action = controllers.routes.IvFailureController.onSubmit, 'autoComplete -> "off") {
+    @formHelper(action = controllers.routes.IvFailureController.onSubmit, Symbol("autoComplete") -> "off") {
         @submitButton(Some("notFound.button"))
     }
 }

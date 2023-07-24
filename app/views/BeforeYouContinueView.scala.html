@@ -31,7 +31,7 @@
     showBackLink = true
     ) {
 
-    @formHelper(action = controllers.routes.BeforeYouContinueController.onSubmit, 'autoComplete -> "off") {
+    @formHelper(action = controllers.routes.BeforeYouContinueController.onSubmit, Symbol("autoComplete") -> "off") {
 
         @headingWithCaption(
             headingPrefix = "beforeYouContinue",

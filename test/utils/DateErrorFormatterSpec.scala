@@ -22,10 +22,11 @@ import play.api.i18n.{Lang, MessagesImpl}
 class DateErrorFormatterSpec extends SpecBase {
 
   private val args: Seq[String] = Seq("day", "month", "year")
+  private val invalidArgs: Seq[String] = Seq("data", "luna", "anu")
 
   "Date Error Formatter" must {
 
-    "format error args" when {
+    "format error valid args" when {
 
       "language set to English" in {
 
@@ -33,7 +34,7 @@ class DateErrorFormatterSpec extends SpecBase {
 
         val result = DateErrorFormatter.formatArgs(args)(messages)
 
-        result mustEqual Seq("day", "month", "year")
+        result mustEqual args
       }
 
       "language set to Welsh" in {
@@ -43,6 +44,27 @@ class DateErrorFormatterSpec extends SpecBase {
         val result = DateErrorFormatter.formatArgs(args)(messages)
 
         result mustEqual Seq("diwrnod", "mis", "blwyddyn")
+      }
+    }
+
+    "format error invalid args" when {
+
+      "language set to English" in {
+
+        val messages: MessagesImpl = MessagesImpl(Lang("en"), messagesApi)
+
+        val result = DateErrorFormatter.formatArgs(invalidArgs)(messages)
+
+        result mustEqual invalidArgs
+      }
+
+      "language set to Welsh" in {
+
+        val messages: MessagesImpl = MessagesImpl(Lang("cy"), messagesApi)
+
+        val result = DateErrorFormatter.formatArgs(invalidArgs)(messages)
+
+        result mustEqual invalidArgs
       }
     }
   }
