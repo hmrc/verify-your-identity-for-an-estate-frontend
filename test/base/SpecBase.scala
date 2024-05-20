@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,12 @@ import services.{FakeRelationshipEstablishmentService, RelationshipEstablishment
 
 trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with TryValues with ScalaFutures with IntegrationPatience {
 
+  val defaultAppConfigurations: Map[String, Any] = Map(
+    "auditing.enabled"      -> false,
+    "metrics.enabled"       -> false,
+    "play.filters.disabled" -> List("play.filters.csrf.CSRFFilter", "play.filters.csp.CSPFilter")
+  )
+
   val userAnswersId = "id"
 
   val fakeInternalId = "internalId"
@@ -49,9 +55,10 @@ trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with TryValues with Sca
 
   implicit def messages: Messages = messagesApi.preferred(fakeRequest)
 
-  protected def applicationBuilder(userAnswers: Option[UserAnswers] = None,
-                                   relationshipEstablishment: RelationshipEstablishment = new FakeRelationshipEstablishmentService()
-                                  ): GuiceApplicationBuilder =
+  protected def applicationBuilder(
+    userAnswers: Option[UserAnswers] = None,
+    relationshipEstablishment: RelationshipEstablishment = new FakeRelationshipEstablishmentService()
+  ): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .overrides(
         bind[DataRequiredAction].to[DataRequiredActionImpl],
@@ -59,4 +66,5 @@ trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with TryValues with Sca
         bind[DataRetrievalAction].toInstance(new FakeDataRetrievalAction(userAnswers)),
         bind[RelationshipEstablishment].toInstance(relationshipEstablishment)
       )
+      .configure(defaultAppConfigurations)
 }

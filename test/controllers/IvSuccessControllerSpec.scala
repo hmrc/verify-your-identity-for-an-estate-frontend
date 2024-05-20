@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,9 @@ package controllers
 import base.SpecBase
 import connectors.TaxEnrolmentsConnector
 import models.UserAnswers
-import org.mockito.ArgumentMatchers.{eq => eqTo, _}
-import org.mockito.Mockito.{verify => verifyMock, _}
-import org.mockito.MockitoSugar.mock
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito
+import org.mockito.Mockito.{reset, when, verify => verifyMock}
 import org.scalatest.BeforeAndAfterAll
 import pages.{IsAgentManagingEstatePage, UtrPage}
 import play.api.inject.bind
@@ -36,22 +36,27 @@ class IvSuccessControllerSpec extends SpecBase with BeforeAndAfterAll {
 
   private val utr = "0987654321"
 
-  private val connector = mock[TaxEnrolmentsConnector]
-  private val mockRelationshipEstablishment = mock[RelationshipEstablishment]
+  private val connector: TaxEnrolmentsConnector                        = Mockito.mock(classOf[TaxEnrolmentsConnector])
+  private val mockRelationshipEstablishment: RelationshipEstablishment =
+    Mockito.mock(classOf[RelationshipEstablishment])
 
   "Returning IvSuccess Controller" must {
 
     "return OK and the correct view for a GET with no Agent" in {
 
       val userAnswers = UserAnswers(userAnswersId)
-        .set(IsAgentManagingEstatePage, false).success.value
-        .set(UtrPage, utr).success.value
+        .set(IsAgentManagingEstatePage, false)
+        .success
+        .value
+        .set(UtrPage, utr)
+        .success
+        .value
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers), relationshipEstablishment = mockRelationshipEstablishment)
-        .overrides(
-          bind(classOf[TaxEnrolmentsConnector]).toInstance(connector)
-        ).configure("microservice.services.features.playback.enabled" -> true)
-        .build()
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers), relationshipEstablishment = mockRelationshipEstablishment)
+          .overrides(bind(classOf[TaxEnrolmentsConnector]).toInstance(connector))
+          .configure("microservice.services.features.playback.enabled" -> true)
+          .build()
 
       val request = FakeRequest(GET, controllers.routes.IvSuccessController.onPageLoad.url)
 
@@ -80,14 +85,18 @@ class IvSuccessControllerSpec extends SpecBase with BeforeAndAfterAll {
     "return OK and the correct view for a GET when playback is disabled" in {
 
       val userAnswers = UserAnswers(userAnswersId)
-        .set(IsAgentManagingEstatePage, false).success.value
-        .set(UtrPage, utr).success.value
+        .set(IsAgentManagingEstatePage, false)
+        .success
+        .value
+        .set(UtrPage, utr)
+        .success
+        .value
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers), relationshipEstablishment = mockRelationshipEstablishment)
-        .overrides(
-          bind(classOf[TaxEnrolmentsConnector]).toInstance(connector)
-        ).configure("microservice.services.features.playback.enabled" -> false)
-        .build()
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers), relationshipEstablishment = mockRelationshipEstablishment)
+          .overrides(bind(classOf[TaxEnrolmentsConnector]).toInstance(connector))
+          .configure("microservice.services.features.playback.enabled" -> false)
+          .build()
 
       val request = FakeRequest(GET, controllers.routes.IvSuccessController.onPageLoad.url)
 
@@ -116,14 +125,18 @@ class IvSuccessControllerSpec extends SpecBase with BeforeAndAfterAll {
     "return OK and the correct view for a GET with Agent" in {
 
       val userAnswers = UserAnswers(userAnswersId)
-        .set(IsAgentManagingEstatePage, true).success.value
-        .set(UtrPage, utr).success.value
+        .set(IsAgentManagingEstatePage, true)
+        .success
+        .value
+        .set(UtrPage, utr)
+        .success
+        .value
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers), relationshipEstablishment = mockRelationshipEstablishment)
-        .overrides(
-          bind(classOf[TaxEnrolmentsConnector]).toInstance(connector)
-        ).configure("microservice.services.features.playback.enabled" -> true)
-        .build()
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers), relationshipEstablishment = mockRelationshipEstablishment)
+          .overrides(bind(classOf[TaxEnrolmentsConnector]).toInstance(connector))
+          .configure("microservice.services.features.playback.enabled" -> true)
+          .build()
 
       val request = FakeRequest(GET, controllers.routes.IvSuccessController.onPageLoad.url)
 

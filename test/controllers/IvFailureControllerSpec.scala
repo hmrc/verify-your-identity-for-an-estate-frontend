@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@ import connectors.{EstatesStoreConnector, RelationshipEstablishmentConnector}
 import models.{EstatesStoreRequest, RelationshipEstablishmentStatus}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito
 import org.mockito.Mockito.{verify, when}
-import org.mockito.MockitoSugar.mock
 import pages.{IsAgentManagingEstatePage, UtrPage}
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -34,7 +34,7 @@ import scala.concurrent.Future
 
 class IvFailureControllerSpec extends SpecBase {
 
-  lazy val connector: RelationshipEstablishmentConnector = mock[RelationshipEstablishmentConnector]
+  lazy val connector: RelationshipEstablishmentConnector = Mockito.mock(classOf[RelationshipEstablishmentConnector])
 
   "IvFailure Controller" must {
 
@@ -43,8 +43,12 @@ class IvFailureControllerSpec extends SpecBase {
       "redirect to IV FallbackFailure when no journeyId is provided" in {
 
         val answers = emptyUserAnswers
-          .set(UtrPage, "1234567890").success.value
-          .set(IsAgentManagingEstatePage, true).success.value
+          .set(UtrPage, "1234567890")
+          .success
+          .value
+          .set(IsAgentManagingEstatePage, true)
+          .success
+          .value
 
         val fakeNavigator = new FakeNavigator(Call("GET", "/foo"))
 
@@ -69,8 +73,12 @@ class IvFailureControllerSpec extends SpecBase {
       "redirect to estate locked page when user fails Estates IV after multiple attempts" in {
 
         val answers = emptyUserAnswers
-          .set(UtrPage, "1234567890").success.value
-          .set(IsAgentManagingEstatePage, true).success.value
+          .set(UtrPage, "1234567890")
+          .success
+          .value
+          .set(IsAgentManagingEstatePage, true)
+          .success
+          .value
 
         val fakeNavigator = new FakeNavigator(Call("GET", "/foo"))
 
@@ -98,8 +106,12 @@ class IvFailureControllerSpec extends SpecBase {
       "redirect to estate utr not found page when the utr isn't found" in {
 
         val answers = emptyUserAnswers
-          .set(UtrPage, "1234567890").success.value
-          .set(IsAgentManagingEstatePage, true).success.value
+          .set(UtrPage, "1234567890")
+          .success
+          .value
+          .set(IsAgentManagingEstatePage, true)
+          .success
+          .value
 
         val application = applicationBuilder(userAnswers = Some(answers))
           .overrides(
@@ -126,8 +138,12 @@ class IvFailureControllerSpec extends SpecBase {
       "redirect to estate utr in processing page when the utr is processing" in {
 
         val answers = emptyUserAnswers
-          .set(UtrPage, "1234567890").success.value
-          .set(IsAgentManagingEstatePage, true).success.value
+          .set(UtrPage, "1234567890")
+          .success
+          .value
+          .set(IsAgentManagingEstatePage, true)
+          .success
+          .value
 
         val application = applicationBuilder(userAnswers = Some(answers))
           .overrides(
@@ -158,19 +174,25 @@ class IvFailureControllerSpec extends SpecBase {
 
         val fakeNavigator = new FakeNavigator(Call("GET", "/foo"))
 
-        val onLockedRoute = routes.IvFailureController.estateLocked.url
-        val utr = "3000000001"
+        val onLockedRoute  = routes.IvFailureController.estateLocked.url
+        val utr            = "3000000001"
         val managedByAgent = true
-        val estateLocked = true
+        val estateLocked   = true
 
-        val connector = mock[EstatesStoreConnector]
+        val connector = Mockito.mock(classOf[EstatesStoreConnector])
 
-        when(connector.lock(eqTo(EstatesStoreRequest(userAnswersId, utr, managedByAgent, estateLocked)))(any(), any(), any()))
-          .thenReturn(Future.successful(HttpResponse(CREATED, "")))
+        when(
+          connector
+            .lock(eqTo(EstatesStoreRequest(userAnswersId, utr, managedByAgent, estateLocked)))(any(), any(), any())
+        ).thenReturn(Future.successful(HttpResponse(CREATED, "")))
 
         val answers = emptyUserAnswers
-          .set(UtrPage, utr).success.value
-          .set(IsAgentManagingEstatePage, true).success.value
+          .set(UtrPage, utr)
+          .success
+          .value
+          .set(IsAgentManagingEstatePage, true)
+          .success
+          .value
 
         val application = applicationBuilder(userAnswers = Some(answers))
           .overrides(bind[EstatesStoreConnector].toInstance(connector))
@@ -183,9 +205,12 @@ class IvFailureControllerSpec extends SpecBase {
 
         status(result) mustEqual OK
 
-        contentAsString(result) must include("As you have had 3 unsuccessful tries at accessing this estate you will need to try again in 30 minutes.")
+        contentAsString(result) must include(
+          "As you have had 3 unsuccessful tries at accessing this estate you will need to try again in 30 minutes."
+        )
 
-        verify(connector).lock(eqTo(EstatesStoreRequest(userAnswersId, utr, managedByAgent, estateLocked)))(any(), any(), any())
+        verify(connector)
+          .lock(eqTo(EstatesStoreRequest(userAnswersId, utr, managedByAgent, estateLocked)))(any(), any(), any())
 
         application.stop()
       }
@@ -195,7 +220,9 @@ class IvFailureControllerSpec extends SpecBase {
         val onLockedRoute = routes.IvFailureController.estateNotFound.url
 
         val answers = emptyUserAnswers
-          .set(UtrPage, "1234567890").success.value
+          .set(UtrPage, "1234567890")
+          .success
+          .value
 
         val application = applicationBuilder(userAnswers = Some(answers)).build()
 
@@ -205,7 +232,9 @@ class IvFailureControllerSpec extends SpecBase {
 
         status(result) mustEqual OK
 
-        contentAsString(result) must include("The Unique Taxpayer Reference (UTR) you gave for the estate does not match our records")
+        contentAsString(result) must include(
+          "The Unique Taxpayer Reference (UTR) you gave for the estate does not match our records"
+        )
 
         application.stop()
       }
@@ -215,7 +244,9 @@ class IvFailureControllerSpec extends SpecBase {
         val onLockedRoute = routes.IvFailureController.estateStillProcessing.url
 
         val answers = emptyUserAnswers
-          .set(UtrPage, "1234567891").success.value
+          .set(UtrPage, "1234567891")
+          .success
+          .value
 
         val application = applicationBuilder(userAnswers = Some(answers)).build()
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,21 +18,21 @@ package controllers
 
 import base.SpecBase
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
-import org.mockito.MockitoSugar
+import org.mockito.Mockito
+import org.mockito.Mockito.{never, verify}
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
-class LogoutControllerSpec extends SpecBase with MockitoSugar {
-
+class LogoutControllerSpec extends SpecBase {
 
   "LogoutController" when {
 
     "auditing enabled" must {
       "redirect to feedback and audit" in {
 
-        val mockAuditConnector = mock[AuditConnector]
+        val mockAuditConnector = Mockito.mock(classOf[AuditConnector])
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(bind[AuditConnector].toInstance(mockAuditConnector))
@@ -58,7 +58,7 @@ class LogoutControllerSpec extends SpecBase with MockitoSugar {
     "auditing disabled" must {
       "redirect to feedback and not audit" in {
 
-        val mockAuditConnector = mock[AuditConnector]
+        val mockAuditConnector = Mockito.mock(classOf[AuditConnector])
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(bind[AuditConnector].toInstance(mockAuditConnector))
@@ -73,7 +73,7 @@ class LogoutControllerSpec extends SpecBase with MockitoSugar {
 
         redirectLocation(result).value mustBe frontendAppConfig.logoutUrl
 
-        verify(mockAuditConnector, never)
+        verify(mockAuditConnector, never())
           .sendExplicitAudit(eqTo("estates"), any[Map[String, String]])(any(), any())
 
         application.stop()

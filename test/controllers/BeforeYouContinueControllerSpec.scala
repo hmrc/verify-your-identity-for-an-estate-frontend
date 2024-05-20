@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,9 @@ import base.SpecBase
 import connectors.EstatesStoreConnector
 import models.EstatesStoreRequest
 import navigation.{FakeNavigator, Navigator}
-import org.mockito.ArgumentMatchers.{eq => eqTo, _}
-import org.mockito.Mockito.{verify => verifyMock, _}
-import org.mockito.MockitoSugar.mock
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
+import org.mockito.Mockito
+import org.mockito.Mockito.{when, verify => verifyMock}
 import pages.{IsAgentManagingEstatePage, UtrPage}
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -36,9 +36,9 @@ import scala.concurrent.Future
 
 class BeforeYouContinueControllerSpec extends SpecBase {
 
-  val utr = "0987654321"
+  val utr            = "0987654321"
   val managedByAgent = true
-  val estateLocked = false
+  val estateLocked   = false
 
   val fakeEstablishmentServiceFailing = new FakeRelationshipEstablishmentService(RelationshipNotFound)
 
@@ -46,8 +46,7 @@ class BeforeYouContinueControllerSpec extends SpecBase {
 
     "return OK and the correct view for a GET" in {
 
-      val answers = emptyUserAnswers
-        .set(UtrPage, utr).success.value
+      val answers = emptyUserAnswers.set(UtrPage, utr).success.value
 
       val application = applicationBuilder(userAnswers = Some(answers), fakeEstablishmentServiceFailing).build()
 
@@ -69,14 +68,20 @@ class BeforeYouContinueControllerSpec extends SpecBase {
 
       val fakeNavigator = new FakeNavigator(Call("GET", "/foo"))
 
-      val connector = mock[EstatesStoreConnector]
+      val connector = Mockito.mock(classOf[EstatesStoreConnector])
 
-      when(connector.lock(eqTo(EstatesStoreRequest(userAnswersId, utr, managedByAgent, estateLocked)))(any(), any(), any()))
+      when(
+        connector.lock(eqTo(EstatesStoreRequest(userAnswersId, utr, managedByAgent, estateLocked)))(any(), any(), any())
+      )
         .thenReturn(Future.successful(HttpResponse(CREATED, "")))
 
       val answers = emptyUserAnswers
-        .set(UtrPage, "0987654321").success.value
-        .set(IsAgentManagingEstatePage, true).success.value
+        .set(UtrPage, "0987654321")
+        .success
+        .value
+        .set(IsAgentManagingEstatePage, true)
+        .success
+        .value
 
       val application = applicationBuilder(userAnswers = Some(answers), fakeEstablishmentServiceFailing)
         .overrides(bind[EstatesStoreConnector].toInstance(connector))
@@ -91,7 +96,8 @@ class BeforeYouContinueControllerSpec extends SpecBase {
 
       redirectLocation(result).value must include("0987654321")
 
-      verifyMock(connector).lock(eqTo(EstatesStoreRequest(userAnswersId, utr, managedByAgent, estateLocked)))(any(), any(), any())
+      verifyMock(connector)
+        .lock(eqTo(EstatesStoreRequest(userAnswersId, utr, managedByAgent, estateLocked)))(any(), any(), any())
 
       application.stop()
 
