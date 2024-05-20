@@ -18,9 +18,8 @@ package controllers
 
 import base.SpecBase
 import models.{NormalMode, UserAnswers}
-import org.mockito.ArgumentCaptor
+import org.mockito.{ArgumentCaptor, Mockito}
 import org.mockito.Mockito.when
-import org.mockito.MockitoSugar.mock
 import pages.UtrPage
 import play.api.inject.bind
 import play.api.test.FakeRequest
@@ -34,7 +33,9 @@ class SaveUTRControllerSpec extends SpecBase {
 
   val utr = "0987654321"
 
-  val fakeEstablishmentServiceFailing = new FakeRelationshipEstablishmentService(RelationshipNotFound)
+  val fakeEstablishmentServiceFailing: FakeRelationshipEstablishmentService = new FakeRelationshipEstablishmentService(
+    RelationshipNotFound
+  )
 
   "SaveUTRController" must {
 
@@ -44,10 +45,9 @@ class SaveUTRControllerSpec extends SpecBase {
 
         val captor: ArgumentCaptor[UserAnswers] = ArgumentCaptor.forClass(classOf[UserAnswers])
 
-        val mockSessionRepository = mock[SessionRepository]
+        val mockSessionRepository = Mockito.mock(classOf[SessionRepository])
 
-        when(mockSessionRepository.set(captor.capture()))
-          .thenReturn(Future.successful(true))
+        when(mockSessionRepository.set(captor.capture())).thenReturn(Future.successful(true))
 
         val application = applicationBuilder(userAnswers = None, fakeEstablishmentServiceFailing)
           .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
@@ -58,7 +58,9 @@ class SaveUTRControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustBe controllers.routes.IsAgentManagingEstateController.onPageLoad(NormalMode).url
+        redirectLocation(result).value mustBe controllers.routes.IsAgentManagingEstateController
+          .onPageLoad(NormalMode)
+          .url
 
         captor.getValue.get(UtrPage).value mustBe utr
 
@@ -67,10 +69,9 @@ class SaveUTRControllerSpec extends SpecBase {
 
         val captor: ArgumentCaptor[UserAnswers] = ArgumentCaptor.forClass(classOf[UserAnswers])
 
-        val mockSessionRepository = mock[SessionRepository]
+        val mockSessionRepository = Mockito.mock(classOf[SessionRepository])
 
-        when(mockSessionRepository.set(captor.capture()))
-          .thenReturn(Future.successful(true))
+        when(mockSessionRepository.set(captor.capture())).thenReturn(Future.successful(true))
 
         val application = applicationBuilder(userAnswers = Some(emptyUserAnswers), fakeEstablishmentServiceFailing)
           .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
@@ -81,7 +82,9 @@ class SaveUTRControllerSpec extends SpecBase {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustBe controllers.routes.IsAgentManagingEstateController.onPageLoad(NormalMode).url
+        redirectLocation(result).value mustBe controllers.routes.IsAgentManagingEstateController
+          .onPageLoad(NormalMode)
+          .url
 
         captor.getValue.get(UtrPage).value mustBe utr
 

@@ -18,9 +18,8 @@ package utils.countryOptions
 
 import base.SpecBase
 import com.typesafe.config.ConfigException
-import org.mockito.MockitoSugar
 
-class CountryOptionsNonUKSpec extends SpecBase with MockitoSugar {
+class CountryOptionsNonUKSpec extends SpecBase {
 
   "Country Options Non UK" must {
 
