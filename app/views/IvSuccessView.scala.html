@@ -27,7 +27,7 @@
     link: Link
 )
 
-@(isAgent: Boolean, utr: String)(implicit request: Request[_], messages: Messages)
+@(isAgent: Boolean, utr: String)(implicit request: RequestHeader, messages: Messages)
 
 @main_template(
  title = messages("ivSuccess.agent.title")

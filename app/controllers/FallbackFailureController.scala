@@ -16,19 +16,25 @@
 
 package controllers
 
+import com.ibm.icu.text.CaseMap.Title
 import handlers.ErrorHandler
-import javax.inject.Inject
+import play.api.Logging
 import play.api.i18n.I18nSupport
+import utils.Session
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-class FallbackFailureController @Inject()(
-                                        val controllerComponents: MessagesControllerComponents,
-                                        errorHandler: ErrorHandler
-                                      ) extends FrontendBaseController with I18nSupport {
+import javax.inject.Inject
+import scala.concurrent.ExecutionContext
 
-  def onPageLoad: Action[AnyContent] = Action {
-    implicit request =>
-      InternalServerError(errorHandler.internalServerErrorTemplate)
+class FallbackFailureController @Inject()(
+                                           val controllerComponents: MessagesControllerComponents,
+                                           errorHandler: ErrorHandler
+                                         )(implicit val ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging{
+
+  def onPageLoad: Action[AnyContent] = Action.async { implicit request =>
+    val errorMessage = s"[Verifying][Estates IV][Session ID: ${Session.id(hc)}] Estates IV encountered a problem that could not be recovered from"
+    logger.error(errorMessage)
+    errorHandler.internalServerErrorTemplate.map(html => (InternalServerError(html)))
+    }
   }
-}
