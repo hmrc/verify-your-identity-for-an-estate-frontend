@@ -66,20 +66,19 @@ class RelationshipEstablishmentConnector @Inject()(val httpClient: HttpClientV2,
     Relationship(config.relationshipName, Set(BusinessKey(config.relationshipIdentifier, utr)), credId)
 
   def createRelationship(credId: String, utr: String)(implicit headerCarrier: HeaderCarrier): Future[HttpResponse] =
-//    httpClient.POST[RelationshipJson, HttpResponse](relationshipEstablishmentPostUrl, RelationshipJson(newRelationship(credId, utr)))
     httpClient.post(url"$relationshipEstablishmentPostUrl")
       .withBody(Json.toJson(RelationshipJson(newRelationship(credId, utr))))
       .execute[HttpResponse]
 
-//  def getRelationship(credId: String)(implicit headerCarrier: HeaderCarrier): Future[HttpResponse] =
-////    httpClient.GET[HttpResponse](relationshipEstablishmentGetUrl(credId))
-//    httpClient.post(url"$relationshipEstablishmentGetUrl")
-//      .execute[HttpResponse]
+  def getRelationship(credId: String)(implicit headerCarrier: HeaderCarrier): Future[HttpResponse] =
+    httpClient
+      .get(url"${relationshipEstablishmentGetUrl(credId)}")
+      .execute[HttpResponse]
 
-//  def deleteRelationship(credId: String)(implicit headerCarrier: HeaderCarrier): Future[HttpResponse] =
-////    httpClient.DELETE[HttpResponse](relationshipEstablishmentDeleteUrl(credId))
-//    httpClient.post(url"$relationshipEstablishmentDeleteUrl")
-//    .execute[HttpResponse]
+  def deleteRelationship(credId: String)(implicit headerCarrier: HeaderCarrier): Future[HttpResponse] =
+    httpClient
+      .delete(url"${relationshipEstablishmentDeleteUrl(credId)}")
+      .execute[HttpResponse]
 
 }
 
