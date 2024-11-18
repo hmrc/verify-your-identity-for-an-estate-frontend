@@ -61,6 +61,15 @@ class IvSuccessViewSpec extends ViewBehaviours {
       "paragraph2",
       "contactLink")
 
-  }
+    "show the form" in {
+      val doc = asDocument(applyView)
+      assertRenderedByCssSelector(doc, "form")
+    }
 
+    "show the continue button" in {
+      val doc = asDocument(applyView)
+      assertRenderedByCssSelector(doc, ".govuk-button")
+      assertContainsText(doc, doc.select(".govuk-button").text())
+    }
+  }
 }
