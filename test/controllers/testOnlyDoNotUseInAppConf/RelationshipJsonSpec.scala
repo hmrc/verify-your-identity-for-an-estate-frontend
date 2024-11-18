@@ -28,7 +28,6 @@ class RelationshipJsonSpec extends PlaySpec with Matchers {
     "have the default TTL value set correctly" in {
       relationshipJson.ttlSeconds mustBe RelationshipJson.defaultTtlInSeconds
     }
-
   }
 
 }

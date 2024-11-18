@@ -22,7 +22,7 @@ import views.html.resources.Stylesheets
 class StylesheetsViewSpec extends ViewBehaviours {
   "noraml page view for stylesheet" should {
 
-    "render the link tag with a CSP nonce attribute" in {
+    "render the link tag and check for the attributes" in {
       val application = applicationBuilder().build()
 
       val view = application.injector.instanceOf[Stylesheets]
@@ -31,12 +31,8 @@ class StylesheetsViewSpec extends ViewBehaviours {
 
       val doc = asDocument(applyView)
 
-      println("==================")
-      println(applyView)
-      println("==================")
-
       val linkTag = doc.select("link")
-      linkTag.attr("href") must include("stylesheets/application.css")  // Ensure the URL points to the correct asset
+      linkTag.attr("href") must include("stylesheets/application.css")
       linkTag.attr("media") mustBe "all"
       linkTag.attr("rel") mustBe "stylesheet"
       linkTag.attr("type") mustBe "text/css"
