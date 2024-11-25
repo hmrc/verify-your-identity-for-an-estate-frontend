@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,11 +12,22 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import views.html.helper.CSPNonce
+package config
 
-@this()
+import org.scalatestplus.play.PlaySpec
 
-@()(implicit request: RequestHeader)
-<link @{CSPNonce.attr} href='@controllers.routes.Assets.versioned("stylesheets/application.css")' media="all" rel="stylesheet" type="text/css" />
+class ServiceSpec extends PlaySpec {
+  "Service" should {
+    "correctly generate baseUrl" in {
+      val service = Service("localhost", "8080", "http")
+      service.baseUrl mustBe "http://localhost:8080"
+    }
+
+    "correctly override toString" in {
+      val service = Service("localhost", "8080", "http")
+      service.toString mustBe "http://localhost:8080"
+    }
+  }
+}
