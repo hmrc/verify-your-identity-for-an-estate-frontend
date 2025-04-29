@@ -20,7 +20,7 @@ import config.FrontendAppConfig
 
 import javax.inject.Inject
 import models.{EnrolmentResponse, TaxEnrolmentsRequest}
-import play.api.libs.json.{JsValue, Json, Writes}
+import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import uk.gov.hmrc.http.client.HttpClientV2
 

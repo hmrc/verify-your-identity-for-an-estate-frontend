@@ -16,7 +16,6 @@
 
 package controllers
 
-import com.ibm.icu.text.CaseMap.Title
 import handlers.ErrorHandler
 import play.api.Logging
 import play.api.i18n.I18nSupport
