@@ -1,4 +1,4 @@
-service.name=Cofrestru Ystâd a’i Chynnal
+service.name=Rheoli ystâd
 
 checkYourAnswers.title=Gwirio’ch Atebion
 checkYourAnswers.heading=Gwirio’ch Atebion
