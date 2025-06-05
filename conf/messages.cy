@@ -75,8 +75,8 @@ ivSuccess.no.agent.paragraph1=Rydych bellach yn gallu newid yr wybodaeth sydd ga
 ivSuccess.no.agent.paragraph2=Os oes angen help arnoch i ddefnyddio’r gwasanaeth,
 ivSuccess.no.agent.contactLink=cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEF (yn agor ffenestr neu dab newydd)
 
-ivSuccess.withoutplayback.title=Mae’n ddrwg gennym, ni allwch reoli’r ystâd hon ar-lein
-ivSuccess.withoutplayback.heading=Mae’n ddrwg gennym, ni allwch reoli’r ystâd hon ar-lein
+ivSuccess.withoutplayback.title=Mae’n ddrwg gennym – ni allwch reoli’r ystâd hon ar-lein
+ivSuccess.withoutplayback.heading=Mae’n ddrwg gennym – ni allwch reoli’r ystâd hon ar-lein
 ivSuccess.withoutplayback.paragraph1=Ar hyn o bryd, rydym yn diweddaru’r gwasanaeth fel y gallwch fwrw golwg dros yr wybodaeth gofrestredig am yr ystâd.
 ivSuccess.withoutplayback.paragraph2=Bydd hyn ar gael ym mis Ionawr 2020.
 ivSuccess.withoutplayback.paragraph3=Os oes angen i chi awdurdodi’ch asiant i reoli’r ystâd, mae angen i chi gysylltu ag ef a gofyn iddo anfon cysylltiad awdurdodi atoch.
