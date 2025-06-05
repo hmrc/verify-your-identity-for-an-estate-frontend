@@ -32,7 +32,7 @@ index.guidance=Croeso i’ch pen blaen newydd. Gweler y ffeil README am arweinia
 session_expired.title=Er eich diogelwch, mae’r gwasanaeth hwn wedi’i ailosod
 session_expired.heading=Er eich diogelwch, mae’r gwasanaeth hwn wedi’i ailosod
 session_expired.guidance=Mae’r manylion a roddwyd gennych wedi’u dileu gan nad ydych wedi mynd yn eich blaen â’r gwasanaeth ers 15 munud.
-session_expired.guidance.2=Bydd angen i chi fewngofnodi i barhau i gynnal yr ystâd.
+session_expired.guidance.2=Bydd angen i chi fewngofnodi er mwyn parhau i reoli’r ystâd.
 
 site.back=Yn ôl
 site.delete=Tynnu
@@ -75,8 +75,8 @@ ivSuccess.no.agent.paragraph1=Rydych bellach yn gallu newid yr wybodaeth sydd ga
 ivSuccess.no.agent.paragraph2=Os oes angen help arnoch i ddefnyddio’r gwasanaeth,
 ivSuccess.no.agent.contactLink=cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEF (yn agor ffenestr neu dab newydd)
 
-ivSuccess.withoutplayback.title=Mae’n ddrwg gennym – ni allwch gynnal yr ystâd hon ar-lein
-ivSuccess.withoutplayback.heading=Mae’n ddrwg gennym – ni allwch gynnal yr ystâd hon ar-lein
+ivSuccess.withoutplayback.title=Mae’n ddrwg gennym, ni allwch reoli’r ystâd hon ar-lein
+ivSuccess.withoutplayback.heading=Mae’n ddrwg gennym, ni allwch reoli’r ystâd hon ar-lein
 ivSuccess.withoutplayback.paragraph1=Ar hyn o bryd, rydym yn diweddaru’r gwasanaeth fel y gallwch fwrw golwg dros yr wybodaeth gofrestredig am yr ystâd.
 ivSuccess.withoutplayback.paragraph2=Bydd hyn ar gael ym mis Ionawr 2020.
 ivSuccess.withoutplayback.paragraph3=Os oes angen i chi awdurdodi’ch asiant i reoli’r ystâd, mae angen i chi gysylltu ag ef a gofyn iddo anfon cysylltiad awdurdodi atoch.
