@@ -34,4 +34,3 @@ lazy val microservice = Project(appName, file("."))
     pipelineStages := Seq(digest)
   )
 
-addCommandAlias("scalastyleAll", "all scalastyle Test/scalastyle")
