@@ -24,7 +24,6 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.data.validation.{Invalid, Valid}
 
 import java.time.LocalDate
-
 class ConstraintsSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyChecks with Generators  with Constraints {
 
 
@@ -186,6 +185,34 @@ class ConstraintsSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyC
           val result = minDate(min, "error.past", "foo")(date)
           result mustEqual Invalid("error.past", "foo")
       }
+    }
+  }
+
+  "nonEmptySet" must {
+
+    "return invalid for an empty Set" in {
+      val result = nonEmptySet("error.invalid")(Set.empty[String])
+      result mustEqual Invalid("error.invalid")
+    }
+
+    "return valid for valid Set" in {
+      val result = nonEmptySet("error.invalid")(Set(1))
+      result mustEqual Valid
+    }
+
+  }
+
+  "inRange" must {
+
+    "return Valid when value is within range" in {
+      val result = inRange[Int](1, 5, "error.range")(implicitly)(3)
+      result mustEqual Valid
+    }
+
+
+    "return Invalid when value is above maximum" in {
+      val result = inRange[Int](1, 5, "error.range")(implicitly)(6)
+      result mustEqual Invalid("error.range", 1, 5)
     }
   }
 }
