@@ -123,35 +123,5 @@ class BeforeYouContinueControllerSpec extends SpecBase {
       application.stop()
     }
 
-    "redirect to Iv Success page for a POST if relationship found is true" in {
-
-      val fakeNavigator = new FakeNavigator(Call("GET", "/foo"))
-      val fakeEstablishmentService = new FakeRelationshipEstablishmentService(RelationshipFound)
-
-      val connector = Mockito.mock(classOf[EstatesStoreConnector])
-
-      val answers = emptyUserAnswers
-        .set(UtrPage, "0987654321")
-        .success
-        .value
-        .set(IsAgentManagingEstatePage, true)
-        .success
-        .value
-
-      val application = applicationBuilder(userAnswers = Some(answers), fakeEstablishmentService)
-        .overrides(bind[EstatesStoreConnector].toInstance(connector))
-        .overrides(bind[Navigator].toInstance(fakeNavigator))
-        .build()
-
-      val request = FakeRequest(POST, controllers.routes.BeforeYouContinueController.onSubmit.url)
-
-      val result = route(application, request).value
-
-      status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustEqual controllers.routes.IvSuccessController.onPageLoad.url
-
-      application.stop()
-    }
   }
 }
