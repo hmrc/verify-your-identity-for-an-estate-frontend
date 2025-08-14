@@ -27,7 +27,7 @@ import pages.{IsAgentManagingEstatePage, UtrPage}
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.{RelationshipEstablishment, RelationshipFound}
+import services.{RelationshipEstablishment, RelationshipFound, RelationshipNotFound}
 import views.html.{IvSuccessView, IvSuccessWithoutPlaybackView}
 
 import scala.concurrent.Future
@@ -202,5 +202,37 @@ class IvSuccessControllerSpec extends SpecBase with BeforeAndAfterAll {
 
     }
 
+    "redirect to agent managing page" when {
+
+      "no relationship found" in {
+        
+        val userAnswers = UserAnswers(userAnswersId)
+          .set(UtrPage, utr)
+          .success
+          .value
+
+        val application =
+          applicationBuilder(userAnswers = Some(userAnswers), relationshipEstablishment = mockRelationshipEstablishment)
+            .overrides(bind(classOf[TaxEnrolmentsConnector]).toInstance(connector))
+            .configure("microservice.services.features.playback.enabled" -> true)
+            .build()
+
+        val request = FakeRequest(GET, controllers.routes.IvSuccessController.onPageLoad.url)
+
+        when(mockRelationshipEstablishment.check(eqTo("id"), eqTo(utr))(any()))
+          .thenReturn(Future.successful(RelationshipNotFound))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        verifyMock(mockRelationshipEstablishment).check(eqTo("id"), eqTo(utr))(any())
+
+        reset(connector)
+        reset(mockRelationshipEstablishment)
+
+        application.stop()
+      }
+    }
   }
 }

@@ -19,8 +19,9 @@ package models
 import org.scalatest.OptionValues
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import play.api.libs.json.Json
+import play.api.libs.json.{JsError, JsResult, JsSuccess, Json}
 
+import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalDateTime}
 
 class MongoDateTimeFormatsSpec extends AnyFreeSpec with Matchers with OptionValues with MongoDateTimeFormats {
@@ -48,6 +49,33 @@ class MongoDateTimeFormatsSpec extends AnyFreeSpec with Matchers with OptionValu
     "must serialise/deserialise to the same value" in {
       val result = Json.toJson(date).as[LocalDateTime]
       result mustEqual date
+    }
+  }
+
+  "return a LocalDateTime when parsed a Json object containing" - {
+    val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+    val expectedDate = LocalDateTime.parse("2020-05-18 14:10:30.000", formatter)
+
+    "string date which contains a 'Z' character" in {
+
+      val json = Json.obj(("$date", "2020-05-18T14:10:30.000Z"))
+      val result: JsResult[LocalDateTime] = json.validate[LocalDateTime]
+      result mustEqual JsSuccess(expectedDate)
+    }
+  }
+
+  "throw a JsError when parsed a" - {
+
+    "string without a 'Z'" in {
+      val json = Json.obj(("$date", "NOT A DATE"))
+      val result: JsResult[LocalDateTime] = json.validate[LocalDateTime]
+      result mustEqual JsError("Unexpected LocalDateTime Format")
+    }
+
+    "Json Object with no $date field" in {
+      val json = Json.obj()
+      val result: JsResult[LocalDateTime] = json.validate[LocalDateTime]
+      result mustEqual JsError("Unexpected LocalDateTime Format")
     }
   }
 }

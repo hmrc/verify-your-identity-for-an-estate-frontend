@@ -1,4 +1,4 @@
-import scoverage.ScoverageKeys
+
 
 ThisBuild / scalaVersion := "2.13.16"
 ThisBuild / majorVersion := 0
@@ -21,10 +21,6 @@ lazy val microservice = Project(appName, file("."))
       "controllers.routes._"
     ),
     PlayKeys.playDefaultPort := 8831,
-    ScoverageKeys.coverageExcludedFiles := ".*Routes.*;.*handlers.*;.*components.*;.*Routes.*;.*Mode.*;.*Page.*",
-    ScoverageKeys.coverageMinimumStmtTotal := 81,
-    ScoverageKeys.coverageFailOnMinimum := true,
-    ScoverageKeys.coverageHighlighting := true,
     scalacOptions ++= Seq(
       "-feature",
       "-Wconf:src=routes/.*:s",
@@ -32,5 +28,5 @@ lazy val microservice = Project(appName, file("."))
     ),
     libraryDependencies ++= AppDependencies(),
     pipelineStages := Seq(digest)
-  )
+  ).settings(CodeCoverageSettings())
 
