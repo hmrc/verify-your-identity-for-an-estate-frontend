@@ -174,10 +174,10 @@ class IvFailureControllerSpec extends SpecBase {
 
         val fakeNavigator = new FakeNavigator(Call("GET", "/foo"))
 
-        val onLockedRoute  = routes.IvFailureController.estateLocked.url
-        val utr            = "3000000001"
+        val onLockedRoute = routes.IvFailureController.estateLocked.url
+        val utr = "3000000001"
         val managedByAgent = true
-        val estateLocked   = true
+        val estateLocked = true
 
         val connector = Mockito.mock(classOf[EstatesStoreConnector])
 
@@ -278,5 +278,25 @@ class IvFailureControllerSpec extends SpecBase {
 
     }
 
+
+    "redirect to next page" when {
+
+      "clicking continue" in {
+
+        lazy val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+        lazy val request = FakeRequest(POST, controllers.routes.IvFailureController.onSubmit.url)
+
+        lazy val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+
+        redirectLocation(result).value mustEqual "http://localhost:8822/register-an-estate"
+
+        application.stop()
+
+      }
+
+    }
   }
 }

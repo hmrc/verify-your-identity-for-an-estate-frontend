@@ -20,10 +20,12 @@ import com.google.inject.{Inject, Singleton}
 import play.api.Configuration
 import play.api.i18n.Lang
 import uk.gov.hmrc.hmrcfrontend.config.ContactFrontendConfig
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 @Singleton
 class FrontendAppConfig @Inject() (configuration: Configuration,
-                                   contactFrontendConfig: ContactFrontendConfig) {
+                                   contactFrontendConfig: ContactFrontendConfig,
+                                   servicesConfig : ServicesConfig) {
 
   lazy val serviceName: String = configuration.get[String]("serviceName")
 
@@ -34,7 +36,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration,
 
   lazy val estatesRegistration: String = configuration.get[String]("urls.estatesRegistration")
 
-  lazy val authUrl: String = configuration.get[Service]("auth").baseUrl
+  lazy val authUrl: String = servicesConfig.baseUrl("auth")
   lazy val loginUrl: String = configuration.get[String]("urls.login")
   lazy val loginContinueUrl: String = configuration.get[String]("urls.loginContinue")
   lazy val logoutUrl: String = configuration.get[String]("urls.logout")
@@ -49,12 +51,10 @@ class FrontendAppConfig @Inject() (configuration: Configuration,
 
   lazy val playbackEnabled: Boolean = configuration.get[Boolean]("microservice.services.features.playback.enabled")
 
-  lazy val estatesStoreUrl: String = configuration.get[Service]("microservice.services.estates-store").baseUrl + "/estates-store"
+  lazy val estatesStoreUrl: String = servicesConfig.baseUrl("estates-store") + "/estates-store"
+  lazy val taxEnrolmentsUrl: String = servicesConfig.baseUrl("tax-enrolments") + "/tax-enrolments"
 
-  lazy val taxEnrolmentsUrl: String = configuration.get[Service]("microservice.services.tax-enrolments").baseUrl + "/tax-enrolments"
-
-  lazy val relationshipEstablishmentUrl : String =
-    configuration.get[Service]("microservice.services.relationship-establishment").baseUrl
+  lazy val relationshipEstablishmentUrl : String = servicesConfig.baseUrl("relationship-establishment")
 
   lazy val relationshipName : String =
     configuration.get[String]("microservice.services.self.relationship-establishment.name")

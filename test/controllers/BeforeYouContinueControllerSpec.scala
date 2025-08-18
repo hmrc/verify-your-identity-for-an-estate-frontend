@@ -28,7 +28,7 @@ import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.{FakeRelationshipEstablishmentService, RelationshipNotFound}
+import services.{FakeRelationshipEstablishmentService, RelationshipFound, RelationshipNotFound}
 import uk.gov.hmrc.http.HttpResponse
 import views.html.BeforeYouContinueView
 
@@ -102,5 +102,26 @@ class BeforeYouContinueControllerSpec extends SpecBase {
       application.stop()
 
     }
+
+    "redirect to Iv Success page for a GET" in {
+
+      val answers = emptyUserAnswers.set(UtrPage, utr).success.value
+
+      val fakeEstablishmentService = new FakeRelationshipEstablishmentService(RelationshipFound)
+
+
+      val application = applicationBuilder(userAnswers = Some(answers), fakeEstablishmentService).build()
+
+      val request = FakeRequest(GET, controllers.routes.BeforeYouContinueController.onPageLoad.url)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual controllers.routes.IvSuccessController.onPageLoad.url
+
+      application.stop()
+    }
+
   }
 }

@@ -25,7 +25,7 @@ import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
-import services.{FakeRelationshipEstablishmentService, RelationshipNotFound}
+import services.{FakeRelationshipEstablishmentService, RelationshipFound, RelationshipNotFound}
 
 import scala.concurrent.Future
 
@@ -33,12 +33,11 @@ class SaveUTRControllerSpec extends SpecBase {
 
   val utr = "0987654321"
 
-  val fakeEstablishmentServiceFailing: FakeRelationshipEstablishmentService = new FakeRelationshipEstablishmentService(
-    RelationshipNotFound
-  )
-
   "SaveUTRController" must {
 
+    val fakeEstablishmentServiceFailing: FakeRelationshipEstablishmentService = new FakeRelationshipEstablishmentService(
+      RelationshipNotFound
+    )
     "send UTR to session repo" when {
 
       "user answers does not exist" in {
@@ -92,4 +91,28 @@ class SaveUTRControllerSpec extends SpecBase {
     }
   }
 
+  "send UTR to IV success controller repo" when {
+
+    val fakeEstablishmentService: FakeRelationshipEstablishmentService = new FakeRelationshipEstablishmentService(
+      RelationshipFound
+    )
+
+    "relationship check returns success" in {
+      val mockSessionRepository = Mockito.mock(classOf[SessionRepository])
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers), fakeEstablishmentService)
+        .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
+        .build()
+
+      val request = FakeRequest(GET, controllers.routes.SaveUTRController.save(utr).url)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustBe controllers.routes.IvSuccessController
+        .onPageLoad
+        .url
+    }
+  }
 }
