@@ -26,9 +26,11 @@ class CountryOptionsNonUKSpec extends SpecBase {
     "build correctly the InputOptions with non-UK country list and country code" in {
 
       val application = applicationBuilder()
-        .configure(Map(
-          "location.canonical.list.nonUK" -> "non-uk-countries-canonical-list-test.json"
-        ))
+        .configure(
+          Map(
+            "location.canonical.list.nonUK" -> "non-uk-countries-canonical-list-test.json"
+          )
+        )
         .build()
 
       val countryOption: CountryOptions = application.injector.instanceOf[CountryOptionsNonUK]
@@ -40,9 +42,11 @@ class CountryOptionsNonUKSpec extends SpecBase {
     "throw the error if the country json does not exist" in {
 
       val application = applicationBuilder()
-        .configure(Map(
-          "location.canonical.list.all" -> "countries-canonical-test.json"
-        ))
+        .configure(
+          Map(
+            "location.canonical.list.all" -> "countries-canonical-test.json"
+          )
+        )
         .build()
 
       an[ConfigException.BadValue] shouldBe thrownBy {
@@ -52,7 +56,5 @@ class CountryOptionsNonUKSpec extends SpecBase {
       application.stop()
     }
   }
+
 }
-
-
-

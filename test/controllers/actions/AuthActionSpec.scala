@@ -28,11 +28,13 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class AuthActionSpec extends SpecBase {
 
   class Harness(authAction: IdentifierAction) {
-    def onPageLoad: Action[AnyContent] = authAction { _ => Results.Ok }
+    def onPageLoad: Action[AnyContent] = authAction(_ => Results.Ok)
   }
 
-  private val appConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
-  private def authFunctions(exception: Throwable) = new AuthPartialFunctions(new FakeFailingAuthConnector(exception), appConfig)
+  private val appConfig: FrontendAppConfig        = injector.instanceOf[FrontendAppConfig]
+
+  private def authFunctions(exception: Throwable) =
+    new AuthPartialFunctions(new FakeFailingAuthConnector(exception), appConfig)
 
   "Auth Action" when {
 
@@ -43,9 +45,9 @@ class AuthActionSpec extends SpecBase {
         val application = applicationBuilder(userAnswers = None).build()
 
         val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-        val authAction = new AuthenticatedIdentifierAction(authFunctions(new MissingBearerToken), bodyParsers)
-        val controller = new Harness(authAction)
-        val result = controller.onPageLoad(fakeRequest)
+        val authAction  = new AuthenticatedIdentifierAction(authFunctions(new MissingBearerToken), bodyParsers)
+        val controller  = new Harness(authAction)
+        val result      = controller.onPageLoad(fakeRequest)
 
         status(result) mustBe SEE_OTHER
 
@@ -60,9 +62,9 @@ class AuthActionSpec extends SpecBase {
         val application = applicationBuilder(userAnswers = None).build()
 
         val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-        val authAction = new AuthenticatedIdentifierAction(authFunctions(new MissingBearerToken), bodyParsers)
-        val controller = new Harness(authAction)
-        val result = controller.onPageLoad(fakeRequest)
+        val authAction  = new AuthenticatedIdentifierAction(authFunctions(new MissingBearerToken), bodyParsers)
+        val controller  = new Harness(authAction)
+        val result      = controller.onPageLoad(fakeRequest)
 
         status(result) mustBe SEE_OTHER
 
@@ -77,9 +79,9 @@ class AuthActionSpec extends SpecBase {
         val application = applicationBuilder(userAnswers = None).build()
 
         val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-        val authAction = new AuthenticatedIdentifierAction(authFunctions(new InsufficientEnrolments), bodyParsers)
-        val controller = new Harness(authAction)
-        val result = controller.onPageLoad(fakeRequest)
+        val authAction  = new AuthenticatedIdentifierAction(authFunctions(new InsufficientEnrolments), bodyParsers)
+        val controller  = new Harness(authAction)
+        val result      = controller.onPageLoad(fakeRequest)
 
         status(result) mustBe SEE_OTHER
 
@@ -94,9 +96,9 @@ class AuthActionSpec extends SpecBase {
         val application = applicationBuilder(userAnswers = None).build()
 
         val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-        val authAction = new AuthenticatedIdentifierAction(authFunctions(new InsufficientConfidenceLevel), bodyParsers)
-        val controller = new Harness(authAction)
-        val result = controller.onPageLoad(fakeRequest)
+        val authAction  = new AuthenticatedIdentifierAction(authFunctions(new InsufficientConfidenceLevel), bodyParsers)
+        val controller  = new Harness(authAction)
+        val result      = controller.onPageLoad(fakeRequest)
 
         status(result) mustBe SEE_OTHER
 
@@ -111,9 +113,9 @@ class AuthActionSpec extends SpecBase {
         val application = applicationBuilder(userAnswers = None).build()
 
         val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-        val authAction = new AuthenticatedIdentifierAction(authFunctions(new UnsupportedAuthProvider), bodyParsers)
-        val controller = new Harness(authAction)
-        val result = controller.onPageLoad(fakeRequest)
+        val authAction  = new AuthenticatedIdentifierAction(authFunctions(new UnsupportedAuthProvider), bodyParsers)
+        val controller  = new Harness(authAction)
+        val result      = controller.onPageLoad(fakeRequest)
 
         status(result) mustBe SEE_OTHER
 
@@ -128,9 +130,9 @@ class AuthActionSpec extends SpecBase {
         val application = applicationBuilder(userAnswers = None).build()
 
         val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-        val authAction = new AuthenticatedIdentifierAction(authFunctions(new UnsupportedAffinityGroup), bodyParsers)
-        val controller = new Harness(authAction)
-        val result = controller.onPageLoad(fakeRequest)
+        val authAction  = new AuthenticatedIdentifierAction(authFunctions(new UnsupportedAffinityGroup), bodyParsers)
+        val controller  = new Harness(authAction)
+        val result      = controller.onPageLoad(fakeRequest)
 
         status(result) mustBe SEE_OTHER
 
@@ -145,9 +147,9 @@ class AuthActionSpec extends SpecBase {
         val application = applicationBuilder(userAnswers = None).build()
 
         val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-        val authAction = new AuthenticatedIdentifierAction(authFunctions(new UnsupportedCredentialRole), bodyParsers)
-        val controller = new Harness(authAction)
-        val result = controller.onPageLoad(fakeRequest)
+        val authAction  = new AuthenticatedIdentifierAction(authFunctions(new UnsupportedCredentialRole), bodyParsers)
+        val controller  = new Harness(authAction)
+        val result      = controller.onPageLoad(fakeRequest)
 
         status(result) mustBe SEE_OTHER
 
@@ -155,4 +157,5 @@ class AuthActionSpec extends SpecBase {
       }
     }
   }
+
 }

@@ -21,8 +21,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.Environment
 
 @Singleton
-class AllCountryOptions @Inject()(environment: Environment, config: FrontendAppConfig)
-  extends CountryOptions {
+class AllCountryOptions @Inject() (environment: Environment, config: FrontendAppConfig) extends CountryOptions {
 
   override def options: Seq[InputOption] = getCountries(environment, config.locationCanonicalList)
 

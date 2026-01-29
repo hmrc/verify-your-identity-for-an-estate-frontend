@@ -24,18 +24,19 @@ trait CountryOptions {
 
   def options: Seq[InputOption]
 
-  def getCountries(environment: Environment, fileName: String): Seq[InputOption] = {
-    environment.resourceAsStream(fileName).flatMap {
-      in =>
+  def getCountries(environment: Environment, fileName: String): Seq[InputOption] =
+    environment
+      .resourceAsStream(fileName)
+      .flatMap { in =>
         val locationJsValue = Json.parse(in)
         Json.fromJson[Seq[Seq[String]]](locationJsValue).asOpt.map {
           _.map { countryList =>
             InputOption(countryList(1).replaceAll("country:", ""), countryList.head)
           }.sortBy(x => x.label.toLowerCase)
         }
-    }.getOrElse {
-      throw new ConfigException.BadValue(fileName, "country json does not exist")
-    }
-  }
+      }
+      .getOrElse {
+        throw new ConfigException.BadValue(fileName, "country json does not exist")
+      }
 
 }

@@ -31,37 +31,36 @@ import views.html.IsAgentManagingEstateView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class IsAgentManagingEstateController @Inject()(
-                                                override val messagesApi: MessagesApi,
-                                                sessionRepository: SessionRepository,
-                                                navigator: Navigator,
-                                                identify: IdentifierAction,
-                                                getData: DataRetrievalAction,
-                                                requireData: DataRequiredAction,
-                                                formProvider: IsAgentManagingEstateFormProvider,
-                                                val controllerComponents: MessagesControllerComponents,
-                                                view: IsAgentManagingEstateView,
-                                                relationship: RelationshipEstablishment
-                                 )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class IsAgentManagingEstateController @Inject() (
+  override val messagesApi: MessagesApi,
+  sessionRepository: SessionRepository,
+  navigator: Navigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: IsAgentManagingEstateFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: IsAgentManagingEstateView,
+  relationship: RelationshipEstablishment
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport {
 
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-
       request.userAnswers.get(UtrPage) map { utr =>
-
         lazy val body = {
-            val preparedForm = request.userAnswers.get(IsAgentManagingEstatePage) match {
-              case None => form
-              case Some(value) => form.fill(value)
-            }
+          val preparedForm = request.userAnswers.get(IsAgentManagingEstatePage) match {
+            case None        => form
+            case Some(value) => form.fill(value)
+          }
 
-            Future.successful(Ok(view(preparedForm, mode, utr)))
+          Future.successful(Ok(view(preparedForm, mode, utr)))
         }
 
         relationship.check(request.internalId, utr) flatMap {
-          case RelationshipFound =>
+          case RelationshipFound    =>
             Future.successful(Redirect(controllers.routes.IvSuccessController.onPageLoad))
           case RelationshipNotFound =>
             body
@@ -73,20 +72,20 @@ class IsAgentManagingEstateController @Inject()(
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          (for {
-            utr <- request.userAnswers.get(UtrPage)
-          } yield {
-            Future.successful(BadRequest(view(formWithErrors, mode, utr)))
-          }) getOrElse Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad))
-        ,
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(IsAgentManagingEstatePage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(IsAgentManagingEstatePage, mode, updatedAnswers))
-      )
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors =>
+            (for {
+              utr <- request.userAnswers.get(UtrPage)
+            } yield Future.successful(BadRequest(view(formWithErrors, mode, utr)))) getOrElse Future
+              .successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad)),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(IsAgentManagingEstatePage, value))
+              _              <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(IsAgentManagingEstatePage, mode, updatedAnswers))
+        )
   }
+
 }

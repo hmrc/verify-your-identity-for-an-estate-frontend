@@ -28,13 +28,14 @@ import utils.Session
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait IdentifierAction extends ActionBuilder[IdentifierRequest, AnyContent] with ActionFunction[Request, IdentifierRequest]
+trait IdentifierAction
+    extends ActionBuilder[IdentifierRequest, AnyContent] with ActionFunction[Request, IdentifierRequest]
 
-class AuthenticatedIdentifierAction @Inject()(
-                                               authFunctions: AuthPartialFunctions,
-                                               val parser: BodyParsers.Default
-                                             )(implicit val executionContext: ExecutionContext)
-  extends IdentifierAction with Logging {
+class AuthenticatedIdentifierAction @Inject() (
+  authFunctions: AuthPartialFunctions,
+  val parser: BodyParsers.Default
+)(implicit val executionContext: ExecutionContext)
+    extends IdentifierAction with Logging {
 
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
 
@@ -43,9 +44,10 @@ class AuthenticatedIdentifierAction @Inject()(
     authFunctions.authorised().retrieve(Retrievals.internalId and Retrievals.credentials and Retrievals.affinityGroup) {
       case Some(internalId) ~ Some(credentials) ~ Some(affinityGroup) =>
         block(IdentifierRequest(request, internalId, affinityGroup, credentials))
-      case _ =>
+      case _                                                          =>
         logger.error(s"[Session ID: ${Session.id(hc)}] user not authenticated. Unable to retrieve internal Id")
         throw new UnauthorizedException("Unable to retrieve internal Id")
     } recover authFunctions.recoverFromAuthorisation
   }
+
 }

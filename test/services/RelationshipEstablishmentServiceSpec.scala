@@ -48,23 +48,22 @@ class RelationshipEstablishmentServiceSpec extends SpecBase with ScalaFutures {
 
     "the user has logged in" when {
 
-        "where no relationship exists" must {
+      "where no relationship exists" must {
 
-          "return RelationshipNotFound" in {
+        "return RelationshipNotFound" in {
 
-            val auth = new FakeFailingAuthConnector(FailedRelationship())
+          val auth = new FakeFailingAuthConnector(FailedRelationship())
 
-            val service = new RelationshipEstablishmentService(auth)
+          val service = new RelationshipEstablishmentService(auth)
 
-            val result = service.check(fakeInternalId, utr)
+          val result = service.check(fakeInternalId, utr)
 
-            whenReady(result) {
-              s =>
-                s mustBe RelationshipNotFound
-            }
+          whenReady(result) { s =>
+            s mustBe RelationshipNotFound
           }
-
         }
+
+      }
 
       "where a relationship exists" must {
 
@@ -76,9 +75,8 @@ class RelationshipEstablishmentServiceSpec extends SpecBase with ScalaFutures {
 
           val result = service.check(fakeInternalId, utr)
 
-          whenReady(result) {
-            s =>
-              s mustBe RelationshipFound
+          whenReady(result) { s =>
+            s mustBe RelationshipFound
           }
 
         }

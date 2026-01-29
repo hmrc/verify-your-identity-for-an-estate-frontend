@@ -21,7 +21,7 @@ import connectors.TaxEnrolmentsConnector
 import models.UserAnswers
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito
-import org.mockito.Mockito.{reset, when, verify => verifyMock}
+import org.mockito.Mockito.{reset, verify => verifyMock, when}
 import org.scalatest.BeforeAndAfterAll
 import pages.{IsAgentManagingEstatePage, UtrPage}
 import play.api.inject.bind
@@ -37,6 +37,7 @@ class IvSuccessControllerSpec extends SpecBase with BeforeAndAfterAll {
   private val utr = "0987654321"
 
   private val connector: TaxEnrolmentsConnector                        = Mockito.mock(classOf[TaxEnrolmentsConnector])
+
   private val mockRelationshipEstablishment: RelationshipEstablishment =
     Mockito.mock(classOf[RelationshipEstablishment])
 
@@ -205,7 +206,7 @@ class IvSuccessControllerSpec extends SpecBase with BeforeAndAfterAll {
     "redirect to agent managing page" when {
 
       "no relationship found" in {
-        
+
         val userAnswers = UserAnswers(userAnswersId)
           .set(UtrPage, utr)
           .success
@@ -235,4 +236,5 @@ class IvSuccessControllerSpec extends SpecBase with BeforeAndAfterAll {
       }
     }
   }
+
 }

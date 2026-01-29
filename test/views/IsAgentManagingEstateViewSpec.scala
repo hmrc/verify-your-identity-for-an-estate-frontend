@@ -25,9 +25,9 @@ import views.html.IsAgentManagingEstateView
 
 class IsAgentManagingEstateViewSpec extends YesNoViewBehaviours {
 
-  val messageKeyPrefix = "isAgentManagingEstate"
+  val messageKeyPrefix  = "isAgentManagingEstate"
   val captionMessageKey = "utr.caption"
-  val form = new IsAgentManagingEstateFormProvider()()
+  val form              = new IsAgentManagingEstateFormProvider()()
 
   val utr = "0987654321"
 
@@ -38,14 +38,12 @@ class IsAgentManagingEstateViewSpec extends YesNoViewBehaviours {
     def applyView(form: Form[_]): HtmlFormat.Appendable =
       view.apply(form, NormalMode, utr)(fakeRequest, messages)
 
-    behave like normalPageTitleWithCaption(applyView(form),
-      messageKeyPrefix,
-      "utr",
-      utr)
+    behave like normalPageTitleWithCaption(applyView(form), messageKeyPrefix, "utr", utr)
 
     behave like pageWithBackLink(applyView(form))
 
     behave like yesNoPage(form, applyView, messageKeyPrefix, captionMessageKey, utr)
 
   }
+
 }

@@ -54,11 +54,11 @@ class MongoDateTimeFormatsSpec extends AnyFreeSpec with Matchers with OptionValu
 
   "return a LocalDateTime when parsed a Json object containing" - {
     val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
-    val expectedDate = LocalDateTime.parse("2020-05-18 14:10:30.000", formatter)
+    val expectedDate                 = LocalDateTime.parse("2020-05-18 14:10:30.000", formatter)
 
     "string date which contains a 'Z' character" in {
 
-      val json = Json.obj(("$date", "2020-05-18T14:10:30.000Z"))
+      val json                            = Json.obj(("$date", "2020-05-18T14:10:30.000Z"))
       val result: JsResult[LocalDateTime] = json.validate[LocalDateTime]
       result mustEqual JsSuccess(expectedDate)
     }
@@ -67,15 +67,16 @@ class MongoDateTimeFormatsSpec extends AnyFreeSpec with Matchers with OptionValu
   "throw a JsError when parsed a" - {
 
     "string without a 'Z'" in {
-      val json = Json.obj(("$date", "NOT A DATE"))
+      val json                            = Json.obj(("$date", "NOT A DATE"))
       val result: JsResult[LocalDateTime] = json.validate[LocalDateTime]
       result mustEqual JsError("Unexpected LocalDateTime Format")
     }
 
     "Json Object with no $date field" in {
-      val json = Json.obj()
+      val json                            = Json.obj()
       val result: JsResult[LocalDateTime] = json.validate[LocalDateTime]
       result mustEqual JsError("Unexpected LocalDateTime Format")
     }
   }
+
 }

@@ -20,6 +20,7 @@ import views.behaviours.ViewBehaviours
 import views.html.resources.Stylesheets
 
 class StylesheetsViewSpec extends ViewBehaviours {
+
   "noraml page view for stylesheet" should {
 
     "render the link tag and check for the attributes" in {
@@ -32,11 +33,12 @@ class StylesheetsViewSpec extends ViewBehaviours {
       val doc = asDocument(applyView)
 
       val linkTag = doc.select("link")
-      linkTag.attr("href") must include("stylesheets/application.css")
+      linkTag.attr("href")    must include("stylesheets/application.css")
       linkTag.attr("media") mustBe "all"
-      linkTag.attr("rel") mustBe "stylesheet"
-      linkTag.attr("type") mustBe "text/css"
+      linkTag.attr("rel")   mustBe "stylesheet"
+      linkTag.attr("type")  mustBe "text/css"
 
     }
   }
+
 }

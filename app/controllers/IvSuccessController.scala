@@ -29,47 +29,45 @@ import views.html.{IvSuccessView, IvSuccessWithoutPlaybackView}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class IvSuccessController @Inject()(
-                                     override val messagesApi: MessagesApi,
-                                     identify: IdentifierAction,
-                                     getData: DataRetrievalAction,
-                                     requireData: DataRequiredAction,
-                                     val controllerComponents: MessagesControllerComponents,
-                                     relationshipEstablishment: RelationshipEstablishment,
-                                     withPlaybackView: IvSuccessView,
-                                     withoutPlaybackView: IvSuccessWithoutPlaybackView
-                                   )(implicit ec: ExecutionContext, val config: FrontendAppConfig)
-  extends FrontendBaseController with I18nSupport {
+class IvSuccessController @Inject() (
+  override val messagesApi: MessagesApi,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  val controllerComponents: MessagesControllerComponents,
+  relationshipEstablishment: RelationshipEstablishment,
+  withPlaybackView: IvSuccessView,
+  withoutPlaybackView: IvSuccessWithoutPlaybackView
+)(implicit ec: ExecutionContext, val config: FrontendAppConfig)
+    extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    request.userAnswers.get(UtrPage).map { utr =>
+      def onRelationshipFound = {
 
-      request.userAnswers.get(UtrPage).map { utr =>
-
-        def onRelationshipFound = {
-
-            val isAgentManagingEstate = request.userAnswers.get(IsAgentManagingEstatePage) match {
-              case None => false
-              case Some(value) => value
-            }
-
-            if (config.playbackEnabled) {
-              Future.successful(Ok(withPlaybackView(isAgentManagingEstate, utr)))
-            } else {
-              Future.successful(Ok(withoutPlaybackView(utr)))
-            }
+        val isAgentManagingEstate = request.userAnswers.get(IsAgentManagingEstatePage) match {
+          case None        => false
+          case Some(value) => value
         }
 
-        lazy val onRelationshipNotFound = Future.successful(Redirect(controllers.routes.IsAgentManagingEstateController.onPageLoad(NormalMode)))
-
-        relationshipEstablishment.check(request.internalId, utr) flatMap {
-          case RelationshipFound =>
-            onRelationshipFound
-          case RelationshipNotFound =>
-            onRelationshipNotFound
+        if (config.playbackEnabled) {
+          Future.successful(Ok(withPlaybackView(isAgentManagingEstate, utr)))
+        } else {
+          Future.successful(Ok(withoutPlaybackView(utr)))
         }
+      }
 
-      } getOrElse Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad))
+      lazy val onRelationshipNotFound =
+        Future.successful(Redirect(controllers.routes.IsAgentManagingEstateController.onPageLoad(NormalMode)))
+
+      relationshipEstablishment.check(request.internalId, utr) flatMap {
+        case RelationshipFound    =>
+          onRelationshipFound
+        case RelationshipNotFound =>
+          onRelationshipNotFound
+      }
+
+    } getOrElse Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad))
 
   }
 

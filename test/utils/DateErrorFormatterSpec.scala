@@ -21,7 +21,7 @@ import play.api.i18n.{Lang, MessagesImpl}
 
 class DateErrorFormatterSpec extends SpecBase {
 
-  private val args: Seq[String] = Seq("day", "month", "year")
+  private val args: Seq[String]        = Seq("day", "month", "year")
   private val invalidArgs: Seq[String] = Seq("data", "luna", "anu")
 
   "Date Error Formatter" must {

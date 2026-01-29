@@ -187,4 +187,5 @@ class IsAgentManagingEstateControllerSpec extends SpecBase {
       application.stop()
     }
   }
+
 }

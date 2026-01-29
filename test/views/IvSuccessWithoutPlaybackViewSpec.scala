@@ -35,13 +35,16 @@ class IvSuccessWithoutPlaybackViewSpec extends ViewBehaviours {
 
       val applyView = view.apply(utr)(fakeRequest, messages)
 
-      behave like normalPageTitleWithCaption(applyView,
+      behave like normalPageTitleWithCaption(
+        applyView,
         "ivSuccess.withoutplayback",
         "utr",
         utr,
         "paragraph1",
         "paragraph2",
-        "paragraph3", "ifYouNeedHelp", "contactLink"
+        "paragraph3",
+        "ifYouNeedHelp",
+        "contactLink"
       )
     }
 
@@ -55,4 +58,5 @@ class IvSuccessWithoutPlaybackViewSpec extends ViewBehaviours {
       assertContainsText(doc, messages("utr.caption", utr))
     }
   }
+
 }

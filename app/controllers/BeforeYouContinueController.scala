@@ -30,64 +30,61 @@ import views.html.BeforeYouContinueView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class BeforeYouContinueController @Inject()(
-                                             override val messagesApi: MessagesApi,
-                                             identify: IdentifierAction,
-                                             relationship: RelationshipEstablishment,
-                                             getData: DataRetrievalAction,
-                                             requireData: DataRequiredAction,
-                                             val controllerComponents: MessagesControllerComponents,
-                                             view: BeforeYouContinueView,
-                                             connector: EstatesStoreConnector
-                                           )(implicit ec: ExecutionContext, config: FrontendAppConfig) extends FrontendBaseController with I18nSupport {
+class BeforeYouContinueController @Inject() (
+  override val messagesApi: MessagesApi,
+  identify: IdentifierAction,
+  relationship: RelationshipEstablishment,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  val controllerComponents: MessagesControllerComponents,
+  view: BeforeYouContinueView,
+  connector: EstatesStoreConnector
+)(implicit ec: ExecutionContext, config: FrontendAppConfig)
+    extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    request.userAnswers.get(UtrPage) map { utr =>
+      relationship.check(request.internalId, utr) flatMap {
+        case RelationshipFound    =>
+          Future.successful(Redirect(controllers.routes.IvSuccessController.onPageLoad))
+        case RelationshipNotFound =>
+          Future.successful(Ok(view(utr)))
+      }
 
-        request.userAnswers.get(UtrPage) map { utr =>
-
-        relationship.check(request.internalId, utr) flatMap {
-          case RelationshipFound =>
-            Future.successful(Redirect(controllers.routes.IvSuccessController.onPageLoad))
-          case RelationshipNotFound =>
-            Future.successful(Ok(view(utr)))
-        }
-
-      } getOrElse Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad))
+    } getOrElse Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad))
   }
 
-  def onSubmit: Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit: Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    (for {
+      utr              <- request.userAnswers.get(UtrPage)
+      isManagedByAgent <- request.userAnswers.get(IsAgentManagingEstatePage)
+    } yield {
 
-      (for {
-        utr <- request.userAnswers.get(UtrPage)
-        isManagedByAgent <- request.userAnswers.get(IsAgentManagingEstatePage)
-      } yield {
+      def onRelationshipNotFound = {
 
-        def onRelationshipNotFound =  {
+        val returningSuccessRedirect = config.relationshipEstablishmentSuccessUrl
+        val returningFailureRedirect = config.relationshipEstablishmentFailureUrl
 
-          val returningSuccessRedirect = config.relationshipEstablishmentSuccessUrl
-          val returningFailureRedirect = config.relationshipEstablishmentFailureUrl
+        val host = config.relationshipEstablishmentFrontendUrl(utr)
 
-          val host = config.relationshipEstablishmentFrontendUrl(utr)
+        val queryString: Map[String, Seq[String]] = Map(
+          "successUrl" -> Seq(returningSuccessRedirect),
+          "failureUrl" -> Seq(returningFailureRedirect)
+        )
 
-          val queryString: Map[String, Seq[String]] = Map(
-            "successUrl" -> Seq(returningSuccessRedirect),
-            "failureUrl" -> Seq(returningFailureRedirect)
-          )
-
-          connector.lock(EstatesStoreRequest(request.internalId, utr, isManagedByAgent, estateLocked = false)) map { _ =>
-            Redirect(host, queryString)
-          }
-
+        connector.lock(EstatesStoreRequest(request.internalId, utr, isManagedByAgent, estateLocked = false)) map { _ =>
+          Redirect(host, queryString)
         }
 
-        relationship.check(request.internalId, utr) flatMap {
-          case RelationshipFound =>
-            Future.successful(Redirect(controllers.routes.IvSuccessController.onPageLoad))
-          case RelationshipNotFound =>
-            onRelationshipNotFound
-        }
-      }) getOrElse Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad))
+      }
+
+      relationship.check(request.internalId, utr) flatMap {
+        case RelationshipFound    =>
+          Future.successful(Redirect(controllers.routes.IvSuccessController.onPageLoad))
+        case RelationshipNotFound =>
+          onRelationshipNotFound
+      }
+    }) getOrElse Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad))
   }
+
 }

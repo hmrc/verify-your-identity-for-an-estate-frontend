@@ -22,10 +22,10 @@ import javax.inject.Singleton
 import play.api.Environment
 
 @Singleton
-class CountryOptionsNonUK @Inject()(
-                                     environment: Environment,
-                                     config: FrontendAppConfig
-                                   ) extends CountryOptions {
+class CountryOptionsNonUK @Inject() (
+  environment: Environment,
+  config: FrontendAppConfig
+) extends CountryOptions {
 
   override def options: Seq[InputOption] = getCountries(environment, config.locationCanonicalListNonUK)
 }

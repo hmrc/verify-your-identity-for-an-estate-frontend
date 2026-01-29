@@ -35,7 +35,8 @@ class IvSuccessViewSpec extends ViewBehaviours {
 
       val applyView = view.apply(isAgent = true, utr)(fakeRequest, messages)
 
-      behave like normalPageTitleWithCaption(applyView,
+      behave like normalPageTitleWithCaption(
+        applyView,
         "ivSuccess.agent",
         "utr",
         utr,
@@ -43,7 +44,8 @@ class IvSuccessViewSpec extends ViewBehaviours {
         "paragraph2",
         "continueLink",
         "paragraph3",
-        "paragraph4")
+        "paragraph4"
+      )
     }
   }
 
@@ -53,13 +55,15 @@ class IvSuccessViewSpec extends ViewBehaviours {
 
     val applyView = view.apply(isAgent = false, utr)(fakeRequest, messages)
 
-    behave like normalPageTitleWithCaption(applyView,
+    behave like normalPageTitleWithCaption(
+      applyView,
       "ivSuccess.no.agent",
       "utr",
       utr,
       "paragraph1",
       "paragraph2",
-      "contactLink")
+      "contactLink"
+    )
 
     "show the form" in {
       val doc = asDocument(applyView)
@@ -72,4 +76,5 @@ class IvSuccessViewSpec extends ViewBehaviours {
       assertContainsText(doc, doc.select(".govuk-button").text())
     }
   }
+
 }

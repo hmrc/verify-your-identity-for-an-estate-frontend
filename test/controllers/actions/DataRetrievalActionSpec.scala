@@ -75,4 +75,5 @@ class DataRetrievalActionSpec extends SpecBase with ScalaFutures {
       }
     }
   }
+
 }

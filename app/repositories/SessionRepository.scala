@@ -21,7 +21,6 @@ import models.UserAnswers
 
 import scala.concurrent.Future
 
-
 @ImplementedBy(classOf[DefaultSessionRepository])
 trait SessionRepository {
 

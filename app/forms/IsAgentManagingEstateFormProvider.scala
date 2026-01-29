@@ -26,4 +26,5 @@ class IsAgentManagingEstateFormProvider @Inject() extends Mappings {
     Form(
       "value" -> boolean("isAgentManagingEstate.error.required")
     )
+
 }

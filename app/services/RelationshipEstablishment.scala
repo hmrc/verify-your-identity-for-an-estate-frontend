@@ -30,14 +30,16 @@ sealed trait RelationEstablishmentStatus
 
 case object RelationshipFound extends RelationEstablishmentStatus
 case object RelationshipNotFound extends RelationEstablishmentStatus
-case class RelationshipError(reason : String) extends Exception(reason)
+case class RelationshipError(reason: String) extends Exception(reason)
 
-class RelationshipEstablishmentService @Inject()(val authConnector: AuthConnector)
-                                                (implicit val config: FrontendAppConfig, val executionContext: ExecutionContext)
-  extends RelationshipEstablishment with Logging {
+class RelationshipEstablishmentService @Inject() (val authConnector: AuthConnector)(implicit
+  val config: FrontendAppConfig,
+  val executionContext: ExecutionContext
+) extends RelationshipEstablishment with Logging {
 
-
-  def check(internalId: String, utr: String)(implicit request: Request[AnyContent]): Future[RelationEstablishmentStatus] = {
+  def check(internalId: String, utr: String)(implicit
+    request: Request[AnyContent]
+  ): Future[RelationEstablishmentStatus] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
@@ -46,16 +48,15 @@ class RelationshipEstablishmentService @Inject()(val authConnector: AuthConnecto
         // relationship does not exist
         logger.info(s"Relationship does not exist in Estates IV for user $internalId due to $msg")
         Future.successful(RelationshipNotFound)
-      case e : Throwable =>
+      case e: Throwable            =>
         throw RelationshipError(e.getMessage)
     }
 
     authorised(Relationship(config.relationshipName, Set(BusinessKey(config.relationshipIdentifier, utr)))) {
       logger.info(s"Relationship established in Estates IV for user $internalId")
-        Future.successful(RelationshipFound)
-    } recoverWith {
+      Future.successful(RelationshipFound)
+    } recoverWith
       failedRelationshipPF
-    }
   }
 
 }

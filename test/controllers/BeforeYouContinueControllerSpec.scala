@@ -22,7 +22,7 @@ import models.EstatesStoreRequest
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito
-import org.mockito.Mockito.{when, verify => verifyMock}
+import org.mockito.Mockito.{verify => verifyMock, when}
 import pages.{IsAgentManagingEstatePage, UtrPage}
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -109,7 +109,6 @@ class BeforeYouContinueControllerSpec extends SpecBase {
 
       val fakeEstablishmentService = new FakeRelationshipEstablishmentService(RelationshipFound)
 
-
       val application = applicationBuilder(userAnswers = Some(answers), fakeEstablishmentService).build()
 
       val request = FakeRequest(GET, controllers.routes.BeforeYouContinueController.onPageLoad.url)
@@ -124,4 +123,5 @@ class BeforeYouContinueControllerSpec extends SpecBase {
     }
 
   }
+
 }
