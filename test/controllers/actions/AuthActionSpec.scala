@@ -31,7 +31,7 @@ class AuthActionSpec extends SpecBase {
     def onPageLoad: Action[AnyContent] = authAction(_ => Results.Ok)
   }
 
-  private val appConfig: FrontendAppConfig        = injector.instanceOf[FrontendAppConfig]
+  private val appConfig: FrontendAppConfig = injector.instanceOf[FrontendAppConfig]
 
   private def authFunctions(exception: Throwable) =
     new AuthPartialFunctions(new FakeFailingAuthConnector(exception), appConfig)

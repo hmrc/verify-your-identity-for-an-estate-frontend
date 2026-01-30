@@ -36,7 +36,7 @@ class IvSuccessControllerSpec extends SpecBase with BeforeAndAfterAll {
 
   private val utr = "0987654321"
 
-  private val connector: TaxEnrolmentsConnector                        = Mockito.mock(classOf[TaxEnrolmentsConnector])
+  private val connector: TaxEnrolmentsConnector = Mockito.mock(classOf[TaxEnrolmentsConnector])
 
   private val mockRelationshipEstablishment: RelationshipEstablishment =
     Mockito.mock(classOf[RelationshipEstablishment])
