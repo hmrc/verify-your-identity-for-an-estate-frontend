@@ -22,25 +22,22 @@ import viewmodels.RadioOption
 
 object ViewUtils {
 
-  def errorPrefix(form: Form[_])(implicit messages: Messages): String = {
+  def errorPrefix(form: Form[_])(implicit messages: Messages): String =
     if (form.hasErrors || form.hasGlobalErrors) s"${messages("error.browser.title.prefix")} " else ""
-  }
 
-  def breadcrumbTitle(title: String)(implicit messages: Messages): String = {
+  def breadcrumbTitle(title: String)(implicit messages: Messages): String =
     s"$title - ${messages("service.name")} - GOV.UK"
-  }
 
-  def errorHref(error: FormError, radioOptions: Seq[RadioOption] = Nil, isYesNo: Boolean = false): String = {
+  def errorHref(error: FormError, radioOptions: Seq[RadioOption] = Nil, isYesNo: Boolean = false): String =
     error.args match {
       case x if x.contains("day") || x.contains("month") || x.contains("year") =>
         s"${error.key}.${error.args.head}"
-      case _ if isYesNo =>
+      case _ if isYesNo                                                        =>
         s"${error.key}-yes"
-      case _ if radioOptions.nonEmpty =>
+      case _ if radioOptions.nonEmpty                                          =>
         radioOptions.head.id
-      case _ =>
-          s"${error.key}"
+      case _                                                                   =>
+        s"${error.key}"
     }
-  }
 
 }

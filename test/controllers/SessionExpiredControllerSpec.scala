@@ -55,8 +55,8 @@ class SessionExpiredControllerSpec extends SpecBase {
 
       redirectLocation(result).value mustEqual "http://localhost:9949/auth-login-stub/gg-sign-in"
 
-
       application.stop()
     }
   }
+
 }

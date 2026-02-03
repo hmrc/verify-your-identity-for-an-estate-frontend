@@ -31,7 +31,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
 import scala.concurrent.{ExecutionContext, Future}
 
-case class BusinessKey(name: String,value: String)
+case class BusinessKey(name: String, value: String)
 
 object BusinessKey {
   implicit val format: Format[BusinessKey] = Json.format[BusinessKey]
@@ -46,12 +46,13 @@ object Relationship {
 case class RelationshipJson(relationship: Relationship, ttlSeconds: Int = RelationshipJson.defaultTtlInSeconds)
 
 object RelationshipJson {
-  val defaultTtlInSeconds = 1440
+  val defaultTtlInSeconds                       = 1440
   implicit val format: Format[RelationshipJson] = Json.format[RelationshipJson]
 }
 
-class RelationshipEstablishmentConnector @Inject()(val httpClient: HttpClientV2, config: FrontendAppConfig)
-                                                  (implicit val ec: ExecutionContext) {
+class RelationshipEstablishmentConnector @Inject() (val httpClient: HttpClientV2, config: FrontendAppConfig)(implicit
+  val ec: ExecutionContext
+) {
 
   private val relationshipEstablishmentPostUrl: String =
     s"${config.relationshipEstablishmentUrl}/relationship-establishment/relationship/"
@@ -66,7 +67,8 @@ class RelationshipEstablishmentConnector @Inject()(val httpClient: HttpClientV2,
     Relationship(config.relationshipName, Set(BusinessKey(config.relationshipIdentifier, utr)), credId)
 
   def createRelationship(credId: String, utr: String)(implicit headerCarrier: HeaderCarrier): Future[HttpResponse] =
-    httpClient.post(url"$relationshipEstablishmentPostUrl")
+    httpClient
+      .post(url"$relationshipEstablishmentPostUrl")
       .withBody(Json.toJson(RelationshipJson(newRelationship(credId, utr))))
       .execute[HttpResponse]
 
@@ -86,35 +88,36 @@ class RelationshipEstablishmentConnector @Inject()(val httpClient: HttpClientV2,
  * Test controller and connector to relationship-establishment to set a relationship for a given UTR.
  * This will then enable the service to "succeed" and "fail" an IV check without having to go into EstateIV.
  */
-class TestRelationshipEstablishmentController @Inject()(
-                                                         override val messagesApi: MessagesApi,
-                                                         val controllerComponents: MessagesControllerComponents,
-                                                         relationshipEstablishmentConnector: RelationshipEstablishmentConnector,
-                                                         identify: IdentifierAction
-                                                       )(implicit ec : ExecutionContext)
-  extends FrontendBaseController with Logging {
+class TestRelationshipEstablishmentController @Inject() (
+  override val messagesApi: MessagesApi,
+  val controllerComponents: MessagesControllerComponents,
+  relationshipEstablishmentConnector: RelationshipEstablishmentConnector,
+  identify: IdentifierAction
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with Logging {
 
-  def check(utr: String): Action[AnyContent] = identify.async {
-    implicit request =>
-
-      logger.warn("[TestRelationshipEstablishmentController] EstateIV is using a test route, you don't want this in production" +
+  def check(utr: String): Action[AnyContent] = identify.async { implicit request =>
+    logger.warn(
+      "[TestRelationshipEstablishmentController] EstateIV is using a test route, you don't want this in production" +
         "This stubs the IV process by always ensuring the relationship is created in relationship-establishment mongo collection. " +
-        "You will not be asked the questions and skips over the journey in estates-relationship-establishment-frontend.")
+        "You will not be asked the questions and skips over the journey in estates-relationship-establishment-frontend."
+    )
 
-      val succeedRegex = "(\\d{10})".r
+    val succeedRegex = "(\\d{10})".r
 
-      utr match {
-        case succeedRegex(_) =>
-          establishRelationshipForUtr(request, utr)
-        case _ =>
-          Future.successful(Redirect(controllers.routes.IvFailureController.onEstateIvFailure))
-      }
-  }
-
-  private def establishRelationshipForUtr(request: IdentifierRequest[AnyContent], utr: String)(implicit hc: HeaderCarrier) = {
-    relationshipEstablishmentConnector.createRelationship(request.credentials.providerId, utr) map {
-      _ =>
-        Redirect(controllers.routes.IvSuccessController.onPageLoad)
+    utr match {
+      case succeedRegex(_) =>
+        establishRelationshipForUtr(request, utr)
+      case _               =>
+        Future.successful(Redirect(controllers.routes.IvFailureController.onEstateIvFailure))
     }
   }
+
+  private def establishRelationshipForUtr(request: IdentifierRequest[AnyContent], utr: String)(implicit
+    hc: HeaderCarrier
+  ) =
+    relationshipEstablishmentConnector.createRelationship(request.credentials.providerId, utr) map { _ =>
+      Redirect(controllers.routes.IvSuccessController.onPageLoad)
+    }
+
 }

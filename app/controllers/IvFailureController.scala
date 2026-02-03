@@ -32,84 +32,79 @@ import views.html.{EstateLocked, EstateNotFound, EstateStillProcessing}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class IvFailureController @Inject()(
-                                     val controllerComponents: MessagesControllerComponents,
-                                     lockedView: EstateLocked,
-                                     stillProcessingView: EstateStillProcessing,
-                                     notFoundView: EstateNotFound,
-                                     identify: IdentifierAction,
-                                     getData: DataRetrievalAction,
-                                     requireData: DataRequiredAction,
-                                     relationshipEstablishmentConnector: RelationshipEstablishmentConnector,
-                                     connector: EstatesStoreConnector,
-                                     appConfig: FrontendAppConfig
-                                   )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport with Logging {
+class IvFailureController @Inject() (
+  val controllerComponents: MessagesControllerComponents,
+  lockedView: EstateLocked,
+  stillProcessingView: EstateStillProcessing,
+  notFoundView: EstateNotFound,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  relationshipEstablishmentConnector: RelationshipEstablishmentConnector,
+  connector: EstatesStoreConnector,
+  appConfig: FrontendAppConfig
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController with I18nSupport with Logging {
 
-  private def renderFailureReason(utr: String, journeyId: String)(implicit hc : HeaderCarrier): Future[Result] = {
+  private def renderFailureReason(utr: String, journeyId: String)(implicit hc: HeaderCarrier): Future[Result] =
     relationshipEstablishmentConnector.journeyId(journeyId) map {
-      case RelationshipEstablishmentStatus.Locked =>
+      case RelationshipEstablishmentStatus.Locked       =>
         logger.info(s"[IvFailure][status] $utr is locked")
         Redirect(routes.IvFailureController.estateLocked)
-      case RelationshipEstablishmentStatus.NotFound =>
+      case RelationshipEstablishmentStatus.NotFound     =>
         logger.info(s"[IvFailure][status] $utr was not found")
         Redirect(routes.IvFailureController.estateNotFound)
       case RelationshipEstablishmentStatus.InProcessing =>
         logger.info(s"[IvFailure][status] $utr is processing")
         Redirect(routes.IvFailureController.estateStillProcessing)
-      case UnsupportedRelationshipStatus(reason) =>
+      case UnsupportedRelationshipStatus(reason)        =>
         logger.warn(s"[IvFailure][status] Unsupported IV failure reason: $reason")
         Redirect(controllers.routes.FallbackFailureController.onPageLoad)
-      case UpstreamRelationshipError(response) =>
+      case UpstreamRelationshipError(response)          =>
         logger.warn(s"[IvFailure][status] HTTP response: $response")
         Redirect(controllers.routes.FallbackFailureController.onPageLoad)
     }
-  }
 
   def onEstateIvFailure(): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-
       request.userAnswers.get(UtrPage) match {
         case Some(utr) =>
           val queryString = request.getQueryString("journeyId")
 
-          queryString.fold{
-            logger.warn(s"[IVFailureController][onEstateIvFailure] unable to retrieve a journeyId to determine the reason")
+          queryString.fold {
+            logger.warn(
+              s"[IVFailureController][onEstateIvFailure] unable to retrieve a journeyId to determine the reason"
+            )
             Future.successful(Redirect(controllers.routes.FallbackFailureController.onPageLoad))
-          }{
-            journeyId =>
-              renderFailureReason(utr, journeyId)
+          } { journeyId =>
+            renderFailureReason(utr, journeyId)
           }
-        case None =>
+        case None      =>
           logger.warn(s"[IVFailureController][onEstateIvFailure] unable to retrieve a UTR")
           Future.successful(Redirect(controllers.routes.FallbackFailureController.onPageLoad))
       }
   }
 
-  def estateLocked() : Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
-      (for {
-        utr <- request.userAnswers.get(UtrPage)
-        isManagedByAgent <- request.userAnswers.get(IsAgentManagingEstatePage)
-      } yield {
-        connector.lock(EstatesStoreRequest(request.internalId, utr, isManagedByAgent, estateLocked = true)) map { _ =>
-          Ok(lockedView(utr))
-        }
-      }) getOrElse Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad))
+  def estateLocked(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    (for {
+      utr              <- request.userAnswers.get(UtrPage)
+      isManagedByAgent <- request.userAnswers.get(IsAgentManagingEstatePage)
+    } yield connector.lock(EstatesStoreRequest(request.internalId, utr, isManagedByAgent, estateLocked = true)) map {
+      _ =>
+        Ok(lockedView(utr))
+    }) getOrElse Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad))
   }
 
-  def estateNotFound() : Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
-      request.userAnswers.get(UtrPage) map {
-        utr =>
-          Future.successful(Ok(notFoundView(utr)))
-      } getOrElse Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad))
+  def estateNotFound(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
+    request.userAnswers.get(UtrPage) map { utr =>
+      Future.successful(Ok(notFoundView(utr)))
+    } getOrElse Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad))
   }
 
-  def estateStillProcessing() : Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def estateStillProcessing(): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      request.userAnswers.get(UtrPage) map {
-        utr =>
-          Future.successful(Ok(stillProcessingView(utr)))
+      request.userAnswers.get(UtrPage) map { utr =>
+        Future.successful(Ok(stillProcessingView(utr)))
       } getOrElse Future.successful(Redirect(controllers.routes.SessionExpiredController.onPageLoad))
   }
 

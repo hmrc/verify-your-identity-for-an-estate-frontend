@@ -33,34 +33,33 @@ class TaxEnrolmentsConnectorSpec extends AsyncWordSpec with Matchers with WireMo
 
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
 
-  lazy val config: FrontendAppConfig = app.injector.instanceOf[FrontendAppConfig]
+  lazy val config: FrontendAppConfig         = app.injector.instanceOf[FrontendAppConfig]
   lazy val connector: TaxEnrolmentsConnector = app.injector.instanceOf[TaxEnrolmentsConnector]
 
   lazy val app: Application = new GuiceApplicationBuilder()
-    .configure(Seq(
-      "microservice.services.tax-enrolments.port" -> server.port(),
-      "auditing.enabled" -> false): _*
-    )
+    .configure(Seq("microservice.services.tax-enrolments.port" -> server.port(), "auditing.enabled" -> false): _*)
     .build()
 
   lazy val url: String = s"/tax-enrolments/service/${config.serviceName}/enrolment"
 
   val utr = "1234567890"
 
-  val request: String = Json.stringify(Json.obj(
-    "identifiers" -> Json.arr(
-      Json.obj(
-        "key" -> "SAUTR",
-        "value" -> utr
-      )),
-    "verifiers" -> Json.arr(
-      Json.obj(
-        "key" -> "SAUTR1",
-        "value" -> utr
+  val request: String = Json.stringify(
+    Json.obj(
+      "identifiers" -> Json.arr(
+        Json.obj(
+          "key"   -> "SAUTR",
+          "value" -> utr
+        )
+      ),
+      "verifiers"   -> Json.arr(
+        Json.obj(
+          "key"   -> "SAUTR1",
+          "value" -> utr
+        )
       )
     )
-  ))
-
+  )
 
   private def wiremock(payload: String, expectedStatus: Int): Any =
     server.stubFor(

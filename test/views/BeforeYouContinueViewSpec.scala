@@ -29,11 +29,9 @@ class BeforeYouContinueViewSpec extends ViewBehaviours {
 
     val applyView = view(utr)(fakeRequest, messages)
 
-    behave like normalPageTitleWithCaption(applyView,
-      "beforeYouContinue",
-      "utr",
-      utr)
+    behave like normalPageTitleWithCaption(applyView, "beforeYouContinue", "utr", utr)
 
     behave like pageWithBackLink(applyView)
   }
+
 }

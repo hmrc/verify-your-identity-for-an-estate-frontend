@@ -23,25 +23,29 @@ import views.html.ErrorTemplate
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.DurationInt
+
 class ErrorHandlerSpec extends SpecBase {
 
-  private val messageApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  private val messageApi: MessagesApi      = app.injector.instanceOf[MessagesApi]
   private val errorTemplate: ErrorTemplate = app.injector.instanceOf[ErrorTemplate]
-  private val errorHandler: ErrorHandler = new ErrorHandler(messageApi, errorTemplate)
+  private val errorHandler: ErrorHandler   = new ErrorHandler(messageApi, errorTemplate)
 
   "ErrorHandler" must {
 
     "return an error page" in {
-      val result = Await.result(errorHandler.standardErrorTemplate(
-        pageTitle = "pageTitle",
-        heading = "heading",
-        message = "message"
-      )(fakeRequest), 1.seconds)
+      val result = Await.result(
+        errorHandler.standardErrorTemplate(
+          pageTitle = "pageTitle",
+          heading = "heading",
+          message = "message"
+        )(fakeRequest),
+        1.seconds
+      )
 
       result.body must include("pageTitle")
       result.body must include("message")
     }
 
-
   }
+
 }

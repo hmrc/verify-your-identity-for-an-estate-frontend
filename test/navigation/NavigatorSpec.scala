@@ -28,13 +28,17 @@ class NavigatorSpec extends SpecBase {
 
     "in Normal mode" must {
 
-
       "go to BeforeYouContinue from IsAgentManagingEstate" in {
 
-        navigator.nextPage(IsAgentManagingEstatePage, NormalMode, UserAnswers("id")) mustBe controllers.routes.BeforeYouContinueController.onPageLoad
+        navigator.nextPage(
+          IsAgentManagingEstatePage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe controllers.routes.BeforeYouContinueController.onPageLoad
 
       }
     }
 
   }
+
 }

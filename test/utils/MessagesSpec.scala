@@ -24,15 +24,15 @@ import scala.util.matching.Regex
 
 class MessagesSpec extends SpecBase with Logging {
 
-  override implicit lazy val messages: Messages = messagesApi.preferred(Seq(Lang("en"), Lang("cy")))
+  implicit override lazy val messages: Messages = messagesApi.preferred(Seq(Lang("en"), Lang("cy")))
 
-  val MatchSingleQuoteOnly: Regex = """\w+'{1}\w+""".r
+  val MatchSingleQuoteOnly: Regex   = """\w+'{1}\w+""".r
   val MatchBacktickQuoteOnly: Regex = """`+""".r
 
   "Application" should {
     "have the correct message configs" in {
       messagesApi.messages.size mustBe 4
-      messagesApi.messages.keys must contain theSameElementsAs Vector("en", "cy", "default", "default.play")
+      messagesApi.messages.keys   must contain theSameElementsAs Vector("en", "cy", "default", "default.play")
     }
 
     "have messages for default and cy only" in {
@@ -44,16 +44,16 @@ class MessagesSpec extends SpecBase with Logging {
   }
 
   "All message files" should {
-    "have the same set of keys" in {
+    "have the same set of keys" in
       withClue(mismatchingKeys(defaultMessages.keySet, welshMessages.keySet)) {
         assert(welshMessages.keySet equals defaultMessages.keySet)
       }
-    }
     "not have the same messages" in {
-      val same = defaultMessages.keys.collect({
-        case messageKey if defaultMessages.get(messageKey) == welshMessages.get(messageKey) && !messageKey.contains(".url") =>
+      val same = defaultMessages.keys.collect {
+        case messageKey
+            if defaultMessages.get(messageKey) == welshMessages.get(messageKey) && !messageKey.contains(".url") =>
           (messageKey, defaultMessages.get(messageKey))
-      })
+      }
 
       // 94% of app needs to be translated into Welsh. 94% allows for:
       //   - Messages which just can't be different from English
@@ -70,10 +70,14 @@ class MessagesSpec extends SpecBase with Logging {
       assertCorrectUseOfQuotesForWelshMessages()
     }
     "have a resolvable message for keys which take args" in {
-      val englishWithArgsMsgKeys = defaultMessages collect { case (messageKey, messageValue) if countArgs(messageValue) > 0 => messageKey }
-      val welshWithArgsMsgKeys = welshMessages collect { case (messageKey, messageValue) if countArgs(messageValue) > 0     => messageKey }
-      val missingFromEnglish = englishWithArgsMsgKeys.toList diff welshWithArgsMsgKeys.toList
-      val missingFromWelsh = welshWithArgsMsgKeys.toList diff englishWithArgsMsgKeys.toList
+      val englishWithArgsMsgKeys = defaultMessages collect {
+        case (messageKey, messageValue) if countArgs(messageValue) > 0 => messageKey
+      }
+      val welshWithArgsMsgKeys   = welshMessages collect {
+        case (messageKey, messageValue) if countArgs(messageValue) > 0 => messageKey
+      }
+      val missingFromEnglish     = englishWithArgsMsgKeys.toList diff welshWithArgsMsgKeys.toList
+      val missingFromWelsh       = welshWithArgsMsgKeys.toList diff englishWithArgsMsgKeys.toList
 
       withClue(mismatchingKeys(missingFromEnglish.toSet, missingFromWelsh.toSet)) {
         assert(missingFromEnglish equals missingFromWelsh)
@@ -85,18 +89,21 @@ class MessagesSpec extends SpecBase with Logging {
       val englishWithArgsMsgKeysAndArgList = defaultMessages collect {
         case (messageKey, messageValue) if countArgs(messageValue) > 0 => (messageKey, listArgs(messageValue))
       }
-      val welshWithArgsMsgKeysAndArgList = welshMessages collect {
+      val welshWithArgsMsgKeysAndArgList   = welshMessages collect {
         case (messageKey, messageValue) if countArgs(messageValue) > 0 => (messageKey, listArgs(messageValue))
       }
-      val mismatchedArgSequences = englishWithArgsMsgKeysAndArgList collect {
+      val mismatchedArgSequences           = englishWithArgsMsgKeysAndArgList collect {
         case (messageKey, engArgSeq) if engArgSeq != welshWithArgsMsgKeysAndArgList(messageKey) =>
           (messageKey, engArgSeq, welshWithArgsMsgKeysAndArgList(messageKey))
       }
 
-      withClue(mismatchedArgSequences.map {
-        case (messageKey, engArgSeq, welshArgSeq) =>
-          s"Keys with argument inconsistencies: $messageKey -- English arg seq=$engArgSeq and Welsh arg seq=$welshArgSeq"
-      }.mkString("\n")) {
+      withClue(
+        mismatchedArgSequences
+          .map { case (messageKey, engArgSeq, welshArgSeq) =>
+            s"Keys with argument inconsistencies: $messageKey -- English arg seq=$engArgSeq and Welsh arg seq=$welshArgSeq"
+          }
+          .mkString("\n")
+      ) {
         mismatchedArgSequences mustBe empty
       }
       mismatchedArgSequences.size mustBe 0
@@ -111,7 +118,8 @@ class MessagesSpec extends SpecBase with Logging {
 
   private def listArgs(msg: String): String = toArgArray(msg).mkString
 
-  private def assertNonEmptyValuesForDefaultMessages(): Unit = assertNonEmptyNonTemporaryValues("Default", defaultMessages)
+  private def assertNonEmptyValuesForDefaultMessages(): Unit =
+    assertNonEmptyNonTemporaryValues("Default", defaultMessages)
 
   private def assertNonEmptyValuesForWelshMessages(): Unit = assertNonEmptyNonTemporaryValues("Welsh", welshMessages)
 
@@ -129,7 +137,7 @@ class MessagesSpec extends SpecBase with Logging {
   private def assertCorrectUseOfQuotes(label: String, messages: Map[String, String]): Unit = messages.foreach {
     case (messageKey: String, messageValue: String) =>
       withClue(s"In $label, there is an unescaped or invalid quote:[$messageKey][$messageValue]") {
-        MatchSingleQuoteOnly.findFirstIn(messageValue).isDefined mustBe false
+        MatchSingleQuoteOnly.findFirstIn(messageValue).isDefined   mustBe false
         MatchBacktickQuoteOnly.findFirstIn(messageValue).isDefined mustBe false
       }
   }
@@ -151,7 +159,8 @@ class MessagesSpec extends SpecBase with Logging {
       listMissingMessageKeys("The following message keys are missing from Welsh Set:", defaultKeySet.diff(welshKeySet))
     val test2 = listMissingMessageKeys(
       "The following message keys are missing from English Set:",
-      welshKeySet.diff(defaultKeySet))
+      welshKeySet.diff(defaultKeySet)
+    )
 
     test1 ++ test2
   }

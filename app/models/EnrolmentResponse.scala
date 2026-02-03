@@ -22,19 +22,18 @@ sealed trait EnrolmentResponse
 
 case object EnrolmentCreated extends EnrolmentResponse
 
-final case class UpstreamTaxEnrolmentsError(message : String) extends Exception(message) with EnrolmentResponse
+final case class UpstreamTaxEnrolmentsError(message: String) extends Exception(message) with EnrolmentResponse
 
 object EnrolmentResponse {
 
   import play.api.http.Status._
 
-  implicit lazy val httpReads : HttpReads[EnrolmentResponse] = new HttpReads[EnrolmentResponse] {
-    override def read(method: String, url: String, response: HttpResponse): EnrolmentResponse = {
+  implicit lazy val httpReads: HttpReads[EnrolmentResponse] = new HttpReads[EnrolmentResponse] {
+    override def read(method: String, url: String, response: HttpResponse): EnrolmentResponse =
       response.status match {
         case NO_CONTENT => EnrolmentCreated
-        case _ => throw UpstreamTaxEnrolmentsError(s"HTTP response ${response.status} ${response.body}")
+        case _          => throw UpstreamTaxEnrolmentsError(s"HTTP response ${response.status} ${response.body}")
       }
-    }
   }
 
 }

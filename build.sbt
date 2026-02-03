@@ -1,5 +1,3 @@
-
-
 ThisBuild / scalaVersion := "2.13.16"
 ThisBuild / majorVersion := 0
 
@@ -7,7 +5,7 @@ lazy val appName: String = "verify-your-identity-for-an-estate-frontend"
 
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(PlayScala, SbtDistributablesPlugin)
-  .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
+  .disablePlugins(JUnitXmlReportPlugin) // Required to prevent https://github.com/scalatest/scalatest/issues/1427
   .settings(
     routesImport += "models._",
     TwirlKeys.templateImports ++= Seq(
@@ -28,5 +26,7 @@ lazy val microservice = Project(appName, file("."))
     ),
     libraryDependencies ++= AppDependencies(),
     pipelineStages := Seq(digest)
-  ).settings(CodeCoverageSettings())
+  )
+  .settings(CodeCoverageSettings())
 
+addCommandAlias("scalafmtAll", "all scalafmtSbt scalafmt Test/scalafmt")

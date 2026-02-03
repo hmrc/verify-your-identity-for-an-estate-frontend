@@ -3,8 +3,8 @@ import sbt.*
 object AppDependencies {
 
   private val boostrapVersion = "10.5.0"
-  
-  private val mongoVersion    = "2.11.0"
+
+  private val mongoVersion = "2.11.0"
 
   private lazy val compile = Seq(
     "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-30"                    % mongoVersion,
@@ -21,6 +21,6 @@ object AppDependencies {
     "io.github.wolfendale" %% "scalacheck-gen-regexp"   % "1.1.0"
   ).map(_ % Test)
 
-  def apply(): Seq[ModuleID]           = compile ++ test
+  def apply(): Seq[ModuleID] = compile ++ test
 
 }

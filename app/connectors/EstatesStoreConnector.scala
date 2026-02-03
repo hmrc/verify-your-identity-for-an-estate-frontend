@@ -19,7 +19,7 @@ package connectors
 import config.FrontendAppConfig
 
 import javax.inject.Inject
-import models.{EstatesStoreRequest}
+import models.EstatesStoreRequest
 import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.http.HttpReads.Implicits
 import uk.gov.hmrc.http.HttpReads.Implicits.{readEitherOf, throwOnFailure}
@@ -28,19 +28,19 @@ import uk.gov.hmrc.http.client.HttpClientV2
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class EstatesStoreConnector @Inject()(http: HttpClientV2, config : FrontendAppConfig) {
+class EstatesStoreConnector @Inject() (http: HttpClientV2, config: FrontendAppConfig) {
 
   val url: String = config.estatesStoreUrl + "/lock"
 
   implicit def httpResponse: HttpReads[HttpResponse] =
     throwOnFailure(readEitherOf[HttpResponse](Implicits.readRaw))
 
-  def lock(request: EstatesStoreRequest)(implicit hc : HeaderCarrier,
-                                         ec : ExecutionContext,
-                                         writes: Writes[EstatesStoreRequest]): Future[HttpResponse] = {
-    http.post(url"$url")
+  def lock(
+    request: EstatesStoreRequest
+  )(implicit hc: HeaderCarrier, ec: ExecutionContext, writes: Writes[EstatesStoreRequest]): Future[HttpResponse] =
+    http
+      .post(url"$url")
       .withBody(Json.toJson(request))
       .execute[HttpResponse]
-  }
 
 }

@@ -35,9 +35,10 @@ class SaveUTRControllerSpec extends SpecBase {
 
   "SaveUTRController" must {
 
-    val fakeEstablishmentServiceFailing: FakeRelationshipEstablishmentService = new FakeRelationshipEstablishmentService(
-      RelationshipNotFound
-    )
+    val fakeEstablishmentServiceFailing: FakeRelationshipEstablishmentService =
+      new FakeRelationshipEstablishmentService(
+        RelationshipNotFound
+      )
     "send UTR to session repo" when {
 
       "user answers does not exist" in {
@@ -110,9 +111,8 @@ class SaveUTRControllerSpec extends SpecBase {
 
       status(result) mustEqual SEE_OTHER
 
-      redirectLocation(result).value mustBe controllers.routes.IvSuccessController
-        .onPageLoad
-        .url
+      redirectLocation(result).value mustBe controllers.routes.IvSuccessController.onPageLoad.url
     }
   }
+
 }

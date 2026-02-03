@@ -21,7 +21,7 @@ import org.scalatestplus.play.PlaySpec
 
 class RelationshipJsonSpec extends PlaySpec with Matchers {
 
-  val relationship = Relationship("TestRelationship", Set(BusinessKey("TestIdentifier", "utr456")), "cred123")
+  val relationship     = Relationship("TestRelationship", Set(BusinessKey("TestIdentifier", "utr456")), "cred123")
   val relationshipJson = RelationshipJson(relationship)
 
   "RelationshipJson" should {

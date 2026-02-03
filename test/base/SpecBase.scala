@@ -67,4 +67,5 @@ trait SpecBase extends PlaySpec with GuiceOneAppPerSuite with TryValues with Sca
         bind[RelationshipEstablishment].toInstance(relationshipEstablishment)
       )
       .configure(defaultAppConfigurations)
+
 }
