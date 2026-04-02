@@ -186,6 +186,70 @@ class IsAgentManagingEstateControllerSpec extends SpecBase {
 
       application.stop()
     }
+
+    "redirect to Iv Success when relationship is already found on a GET" in {
+
+      val fakeEstablishmentService = new FakeRelationshipEstablishmentService()
+
+      val userAnswers = emptyUserAnswers
+        .set(UtrPage, utr)
+        .success
+        .value
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers), relationshipEstablishment = fakeEstablishmentService)
+          .build()
+
+      val request = FakeRequest(GET, isAgentManagingEstateRoute)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual controllers.routes.IvSuccessController.onPageLoad.url
+
+      application.stop()
+    }
+
+    "redirect to Session Expired for a GET when user answers have no UTR" in {
+
+      val application =
+        applicationBuilder(
+          userAnswers = Some(emptyUserAnswers),
+          relationshipEstablishment = fakeEstablishmentServiceFailing
+        )
+          .build()
+
+      val request = FakeRequest(GET, isAgentManagingEstateRoute)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual controllers.routes.SessionExpiredController.onPageLoad.url
+
+      application.stop()
+    }
+
+    "redirect to Session Expired for a POST with form errors when no UTR in user answers" in {
+
+      val application =
+        applicationBuilder(
+          userAnswers = Some(emptyUserAnswers),
+          relationshipEstablishment = fakeEstablishmentServiceFailing
+        )
+          .build()
+
+      val request = FakeRequest(POST, isAgentManagingEstateRoute).withFormUrlEncodedBody(("value", ""))
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual controllers.routes.SessionExpiredController.onPageLoad.url
+
+      application.stop()
+    }
   }
 
 }

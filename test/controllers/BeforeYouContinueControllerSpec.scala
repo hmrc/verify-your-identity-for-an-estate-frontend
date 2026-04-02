@@ -122,6 +122,63 @@ class BeforeYouContinueControllerSpec extends SpecBase {
       application.stop()
     }
 
+    "redirect to Session Expired for a GET when no UTR is in user answers" in {
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers), fakeEstablishmentServiceFailing).build()
+
+      val request = FakeRequest(GET, controllers.routes.BeforeYouContinueController.onPageLoad.url)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual controllers.routes.SessionExpiredController.onPageLoad.url
+
+      application.stop()
+    }
+
+    "redirect to Iv Success for a POST when relationship is already found" in {
+
+      val fakeEstablishmentService = new FakeRelationshipEstablishmentService(RelationshipFound)
+
+      val answers = emptyUserAnswers
+        .set(UtrPage, utr)
+        .success
+        .value
+        .set(IsAgentManagingEstatePage, managedByAgent)
+        .success
+        .value
+
+      val application = applicationBuilder(userAnswers = Some(answers), fakeEstablishmentService).build()
+
+      val request = FakeRequest(POST, controllers.routes.BeforeYouContinueController.onSubmit.url)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual controllers.routes.IvSuccessController.onPageLoad.url
+
+      application.stop()
+    }
+
+    "redirect to Session Expired for a POST when no UTR or agent data in user answers" in {
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers), fakeEstablishmentServiceFailing).build()
+
+      val request = FakeRequest(POST, controllers.routes.BeforeYouContinueController.onSubmit.url)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual controllers.routes.SessionExpiredController.onPageLoad.url
+
+      application.stop()
+    }
+
   }
 
 }

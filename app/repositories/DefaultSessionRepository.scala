@@ -24,10 +24,9 @@ import play.api.libs.json._
 import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 
-import java.time.LocalDateTime
+import java.time.Instant
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -48,7 +47,7 @@ class DefaultSessionRepository @Inject() (
             .expireAfter(config.cacheTtlSeconds, TimeUnit.SECONDS)
         )
       ),
-      replaceIndexes = config.dropIndexes
+      replaceIndexes = true
     )
     with SessionRepository {
 
@@ -59,7 +58,7 @@ class DefaultSessionRepository @Inject() (
     val selector      = Filters.eq("_id", userAnswers.id)
     val options       = new ReplaceOptions()
       .upsert(true)
-    val updatedObject = userAnswers.copy(lastUpdated = LocalDateTime.now)
+    val updatedObject = userAnswers.copy(lastUpdated = Instant.now)
 
     collection.replaceOne(selector, updatedObject, options).headOption().map(_.exists(_.wasAcknowledged()))
   }

@@ -297,6 +297,124 @@ class IvFailureControllerSpec extends SpecBase {
       }
 
     }
+
+    "redirect to FallbackFailure when an unsupported IV status is returned" in {
+
+      val answers = emptyUserAnswers
+        .set(UtrPage, "1234567890")
+        .success
+        .value
+        .set(IsAgentManagingEstatePage, true)
+        .success
+        .value
+
+      val application = applicationBuilder(userAnswers = Some(answers))
+        .overrides(bind[RelationshipEstablishmentConnector].toInstance(connector))
+        .build()
+
+      when(connector.journeyId(any[String])(any(), any()))
+        .thenReturn(Future.successful(RelationshipEstablishmentStatus.UnsupportedRelationshipStatus("unexpected")))
+
+      val request = FakeRequest(GET, s"${routes.IvFailureController.onEstateIvFailure.url}?journeyId=abc123")
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual routes.FallbackFailureController.onPageLoad.url
+
+      application.stop()
+    }
+
+    "redirect to FallbackFailure when an upstream relationship error is returned" in {
+
+      val answers = emptyUserAnswers
+        .set(UtrPage, "1234567890")
+        .success
+        .value
+        .set(IsAgentManagingEstatePage, true)
+        .success
+        .value
+
+      val application = applicationBuilder(userAnswers = Some(answers))
+        .overrides(bind[RelationshipEstablishmentConnector].toInstance(connector))
+        .build()
+
+      when(connector.journeyId(any[String])(any(), any()))
+        .thenReturn(Future.successful(RelationshipEstablishmentStatus.UpstreamRelationshipError("500")))
+
+      val request = FakeRequest(GET, s"${routes.IvFailureController.onEstateIvFailure.url}?journeyId=abc123")
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual routes.FallbackFailureController.onPageLoad.url
+
+      application.stop()
+    }
+
+    "redirect to FallbackFailure when no UTR is found in user answers for onEstateIvFailure" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(bind[RelationshipEstablishmentConnector].toInstance(connector))
+        .build()
+
+      val request = FakeRequest(GET, s"${routes.IvFailureController.onEstateIvFailure.url}?journeyId=abc123")
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual routes.FallbackFailureController.onPageLoad.url
+
+      application.stop()
+    }
+
+    "redirect to Session Expired for estateLocked when no UTR or agent data" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      val request = FakeRequest(GET, routes.IvFailureController.estateLocked.url)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad.url
+
+      application.stop()
+    }
+
+    "redirect to Session Expired for estateNotFound when no UTR in user answers" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      val request = FakeRequest(GET, routes.IvFailureController.estateNotFound.url)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad.url
+
+      application.stop()
+    }
+
+    "redirect to Session Expired for estateStillProcessing when no UTR in user answers" in {
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      val request = FakeRequest(GET, routes.IvFailureController.estateStillProcessing.url)
+
+      val result = route(application, request).value
+
+      status(result) mustEqual SEE_OTHER
+
+      redirectLocation(result).value mustEqual routes.SessionExpiredController.onPageLoad.url
+
+      application.stop()
+    }
   }
 
 }

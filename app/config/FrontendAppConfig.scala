@@ -91,7 +91,4 @@ class FrontendAppConfig @Inject() (
 
   val cacheTtlSeconds: Long = configuration.get[Long]("mongodb.timeToLiveInSeconds")
 
-  val dropIndexes: Boolean =
-    configuration.getOptional[Boolean]("microservice.services.features.mongo.dropIndexes").getOrElse(false)
-
 }
