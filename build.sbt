@@ -1,9 +1,7 @@
-ThisBuild / scalaVersion := "2.13.16"
+ThisBuild / scalaVersion := "2.13.18"
 ThisBuild / majorVersion := 0
 
-lazy val appName: String = "verify-your-identity-for-an-estate-frontend"
-
-lazy val microservice = Project(appName, file("."))
+lazy val microservice = Project("verify-your-identity-for-an-estate-frontend", file("."))
   .enablePlugins(PlayScala, SbtDistributablesPlugin)
   .disablePlugins(JUnitXmlReportPlugin) // Required to prevent https://github.com/scalatest/scalatest/issues/1427
   .settings(

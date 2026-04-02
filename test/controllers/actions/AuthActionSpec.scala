@@ -22,8 +22,10 @@ import controllers.routes
 import play.api.mvc.{Action, AnyContent, BodyParsers, Results}
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.auth.core.retrieve.{Credentials, ~}
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class AuthActionSpec extends SpecBase {
 
@@ -154,6 +156,60 @@ class AuthActionSpec extends SpecBase {
         status(result) mustBe SEE_OTHER
 
         redirectLocation(result) mustBe Some(routes.UnauthorisedController.onPageLoad.url)
+      }
+    }
+
+    "the user is fully authenticated" must {
+
+      "invoke the block and return OK" in {
+
+        val application = applicationBuilder(userAnswers = None).build()
+
+        val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+
+        val retrievalResult: Future[Option[String] ~ Option[Credentials] ~ Option[AffinityGroup]] =
+          Future.successful(
+            new ~(
+              new ~(Some("internalId"), Some(Credentials("providerId", "providerType"))),
+              Some(AffinityGroup.Individual)
+            )
+          )
+
+        val authAction = new AuthenticatedIdentifierAction(
+          new AuthPartialFunctions(new FakeAuthConnector(retrievalResult), appConfig),
+          bodyParsers
+        )
+        val controller = new Harness(authAction)
+        val result     = controller.onPageLoad(fakeRequest)
+
+        status(result) mustBe OK
+
+        application.stop()
+      }
+    }
+
+    "auth returns incomplete retrieval data" must {
+
+      "throw UnauthorizedException" in {
+
+        val application = applicationBuilder(userAnswers = None).build()
+
+        val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+
+        val retrievalResult: Future[Option[String] ~ Option[Credentials] ~ Option[AffinityGroup]] =
+          Future.successful(new ~(new ~(None, None), None))
+
+        val authAction = new AuthenticatedIdentifierAction(
+          new AuthPartialFunctions(new FakeAuthConnector(retrievalResult), appConfig),
+          bodyParsers
+        )
+        val controller = new Harness(authAction)
+
+        intercept[Exception] {
+          await(controller.onPageLoad(fakeRequest))
+        }
+
+        application.stop()
       }
     }
   }
