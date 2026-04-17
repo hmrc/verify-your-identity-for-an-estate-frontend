@@ -68,7 +68,7 @@ class SaveUTRControllerSpec extends SpecBase with LogCapturing with BeforeAndAft
 
     "send UTR to session repo" when {
 
-      "user answers does not exist" in {
+      "user answers do not exist" in {
         val captor: ArgumentCaptor[UserAnswers] = ArgumentCaptor.forClass(classOf[UserAnswers])
 
         when(mockSessionRepository.set(captor.capture())).thenReturn(Future.successful(true))
@@ -84,7 +84,7 @@ class SaveUTRControllerSpec extends SpecBase with LogCapturing with BeforeAndAft
 
       }
 
-      "user answers exists" in {
+      "user answers exist" in {
         val captor: ArgumentCaptor[UserAnswers] = ArgumentCaptor.forClass(classOf[UserAnswers])
 
         when(mockSessionRepository.set(captor.capture())).thenReturn(Future.successful(true))
