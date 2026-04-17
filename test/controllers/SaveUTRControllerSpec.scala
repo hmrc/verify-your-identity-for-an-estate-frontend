@@ -18,44 +18,62 @@ package controllers
 
 import base.SpecBase
 import models.{NormalMode, UserAnswers}
+import org.mockito.Mockito.{reset, when}
 import org.mockito.{ArgumentCaptor, Mockito}
-import org.mockito.Mockito.when
+import org.scalatest.BeforeAndAfterEach
+import org.scalatestplus.mockito.MockitoSugar.mock
 import pages.UtrPage
+import play.api.Logger
 import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
 import services.{FakeRelationshipEstablishmentService, RelationshipFound, RelationshipNotFound}
+import uk.gov.hmrc.play.bootstrap.tools.LogCapturing
 
 import scala.concurrent.Future
 
-class SaveUTRControllerSpec extends SpecBase {
+class SaveUTRControllerSpec extends SpecBase with LogCapturing with BeforeAndAfterEach {
 
   val utr = "0987654321"
 
+  val fakeEstablishmentServiceFailing = new FakeRelationshipEstablishmentService(RelationshipNotFound)
+  val fakeEstablishmentServicePassing = new FakeRelationshipEstablishmentService(RelationshipFound)
+
+  private val mockSessionRepository = mock[SessionRepository]
+
+  private val appWithFailingRelationship =
+    applicationBuilder(userAnswers = None, fakeEstablishmentServiceFailing)
+      .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
+      .build()
+
+  private val appWithPassingRelationship =
+    applicationBuilder(userAnswers = None, fakeEstablishmentServicePassing)
+      .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
+      .build()
+
+  private val appWithExistingAnswersAndFailingRelationship =
+    applicationBuilder(userAnswers = Some(emptyUserAnswers), fakeEstablishmentServiceFailing)
+      .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
+      .build()
+
+  override def beforeEach(): Unit = {
+    reset(mockSessionRepository)
+    super.beforeEach()
+  }
+
+  val request = FakeRequest(GET, controllers.routes.SaveUTRController.save(utr).url)
+
   "SaveUTRController" must {
 
-    val fakeEstablishmentServiceFailing: FakeRelationshipEstablishmentService =
-      new FakeRelationshipEstablishmentService(
-        RelationshipNotFound
-      )
     "send UTR to session repo" when {
 
       "user answers does not exist" in {
-
         val captor: ArgumentCaptor[UserAnswers] = ArgumentCaptor.forClass(classOf[UserAnswers])
-
-        val mockSessionRepository = Mockito.mock(classOf[SessionRepository])
 
         when(mockSessionRepository.set(captor.capture())).thenReturn(Future.successful(true))
 
-        val application = applicationBuilder(userAnswers = None, fakeEstablishmentServiceFailing)
-          .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
-          .build()
-
-        val request = FakeRequest(GET, controllers.routes.SaveUTRController.save(utr).url)
-
-        val result = route(application, request).value
+        val result = route(appWithFailingRelationship, request).value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustBe controllers.routes.IsAgentManagingEstateController
@@ -65,21 +83,13 @@ class SaveUTRControllerSpec extends SpecBase {
         captor.getValue.get(UtrPage).value mustBe utr
 
       }
+
       "user answers exists" in {
-
         val captor: ArgumentCaptor[UserAnswers] = ArgumentCaptor.forClass(classOf[UserAnswers])
-
-        val mockSessionRepository = Mockito.mock(classOf[SessionRepository])
 
         when(mockSessionRepository.set(captor.capture())).thenReturn(Future.successful(true))
 
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers), fakeEstablishmentServiceFailing)
-          .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
-          .build()
-
-        val request = FakeRequest(GET, controllers.routes.SaveUTRController.save(utr).url)
-
-        val result = route(application, request).value
+        val result = route(appWithExistingAnswersAndFailingRelationship, request).value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustBe controllers.routes.IsAgentManagingEstateController
@@ -87,32 +97,37 @@ class SaveUTRControllerSpec extends SpecBase {
           .url
 
         captor.getValue.get(UtrPage).value mustBe utr
-
       }
     }
-  }
 
-  "send UTR to IV success controller repo" when {
+    "send UTR to IV success controller repo" when {
 
-    val fakeEstablishmentService: FakeRelationshipEstablishmentService = new FakeRelationshipEstablishmentService(
-      RelationshipFound
-    )
+      "relationship check returns success" in {
+        val result = route(appWithPassingRelationship, request).value
 
-    "relationship check returns success" in {
-      val mockSessionRepository = Mockito.mock(classOf[SessionRepository])
+        status(result) mustEqual SEE_OTHER
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers), fakeEstablishmentService)
-        .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
-        .build()
-
-      val request = FakeRequest(GET, controllers.routes.SaveUTRController.save(utr).url)
-
-      val result = route(application, request).value
-
-      status(result) mustEqual SEE_OTHER
-
-      redirectLocation(result).value mustBe controllers.routes.IvSuccessController.onPageLoad.url
+        redirectLocation(result).value mustBe controllers.routes.IvSuccessController.onPageLoad.url
+      }
     }
+
+    "return an internal server error" when {
+
+      "UTR fails validation" in
+        withCaptureOfLoggingFrom(Logger(classOf[SaveUTRController])) { logs =>
+          val request = FakeRequest(GET, controllers.routes.SaveUTRController.save("<script>alert('xss')</script>").url)
+
+          val result = route(appWithPassingRelationship, request).value
+
+          status(result) mustEqual INTERNAL_SERVER_ERROR
+
+          logs.size mustEqual 1
+          logs.head.toString must include("Invalid UTR: <script>alert('xss')</script>")
+
+          Mockito.verifyNoInteractions(mockSessionRepository)
+        }
+    }
+
   }
 
 }
