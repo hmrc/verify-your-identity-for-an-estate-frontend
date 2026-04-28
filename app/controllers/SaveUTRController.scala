@@ -17,13 +17,17 @@
 package controllers
 
 import controllers.actions.{DataRetrievalAction, IdentifierAction}
+import handlers.ErrorHandler
+
 import javax.inject.Inject
 import models.{NormalMode, UserAnswers}
 import pages.UtrPage
+import play.api.Logging
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import services.{RelationshipEstablishment, RelationshipFound, RelationshipNotFound}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import utils.Session
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -32,28 +36,37 @@ class SaveUTRController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   getData: DataRetrievalAction,
   sessionRepository: SessionRepository,
-  relationship: RelationshipEstablishment
+  relationship: RelationshipEstablishment,
+  errorHandler: ErrorHandler
 )(implicit ec: ExecutionContext)
-    extends FrontendBaseController {
+    extends FrontendBaseController with Logging {
 
   def save(utr: String): Action[AnyContent] = (identify andThen getData).async { implicit request =>
-    lazy val body = {
-      val userAnswers = request.userAnswers match {
-        case Some(userAnswers) => userAnswers.set(UtrPage, utr)
-        case _                 =>
-          UserAnswers(request.internalId).set(UtrPage, utr)
-      }
-      for {
-        updatedAnswers <- Future.fromTry(userAnswers)
-        _              <- sessionRepository.set(updatedAnswers)
-      } yield Redirect(controllers.routes.IsAgentManagingEstateController.onPageLoad(NormalMode))
-    }
+    val utrPattern = """^\d{10}$""".r
 
-    relationship.check(request.internalId, utr) flatMap {
-      case RelationshipFound    =>
-        Future.successful(Redirect(controllers.routes.IvSuccessController.onPageLoad))
-      case RelationshipNotFound =>
-        body
+    utr match {
+      case utrPattern() =>
+        relationship.check(request.internalId, utr).flatMap {
+          case RelationshipFound =>
+            Future.successful(Redirect(controllers.routes.IvSuccessController.onPageLoad))
+
+          case RelationshipNotFound =>
+
+            val userAnswers = request.userAnswers match {
+              case Some(userAnswers) =>
+                userAnswers.set(UtrPage, utr)
+              case _                 =>
+                UserAnswers(request.internalId).set(UtrPage, utr)
+            }
+
+            for {
+              updatedAnswers <- Future.fromTry(userAnswers)
+              _              <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(controllers.routes.IsAgentManagingEstateController.onPageLoad(NormalMode))
+        }
+      case _            =>
+        logger.error(s"[SaveUTRController][save][Session ID: ${Session.id(hc)}] Invalid UTR: $utr")
+        errorHandler.internalServerErrorTemplate.map(html => InternalServerError(html))
     }
 
   }
