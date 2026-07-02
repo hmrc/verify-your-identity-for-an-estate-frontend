@@ -39,9 +39,9 @@
             captionParam = Some(utr)
         )
 
-        <p>@messages("ivSuccess.agent.paragraph1")</p>
-        <p>@messages("ivSuccess.agent.paragraph2") @link(s"${config.estatesContinueUrl}", "agent-continue", messages("ivSuccess.agent.continueLink")) @messages("ivSuccess.agent.paragraph3")</p>
-        <p>@messages("ivSuccess.agent.paragraph4") @link("https://www.gov.uk/government/organisations/hm-revenue-customs/contact/bereavement-and-deceased-estate", "estate-contact", messages("ivSuccess.contactLink"), openInNewWindow = true).</p>
+        <p class="govuk-body">@messages("ivSuccess.agent.paragraph1")</p>
+        <p class="govuk-body">@messages("ivSuccess.agent.paragraph2") @link(s"${config.estatesContinueUrl}", "agent-continue", messages("ivSuccess.agent.continueLink")) @messages("ivSuccess.agent.paragraph3")</p>
+        <p class="govuk-body">@messages("ivSuccess.agent.paragraph4") @link("https://www.gov.uk/government/organisations/hm-revenue-customs/contact/bereavement-and-deceased-estate", "estate-contact", messages("ivSuccess.contactLink"), openInNewWindow = true).</p>
     } else {
         @headingWithCaption(
             headingPrefix = "ivSuccess.no.agent",
@@ -49,8 +49,8 @@
             captionParam = Some(utr)
         )
 
-        <p>@messages("ivSuccess.no.agent.paragraph1")</p>
-        <p>@messages("ivSuccess.no.agent.paragraph2") @link("https://www.gov.uk/government/organisations/hm-revenue-customs/contact/bereavement-and-deceased-estate", "estate-contact", messages("ivSuccess.contactLink"), openInNewWindow = true).</p>
+        <p class="govuk-body">@messages("ivSuccess.no.agent.paragraph1")</p>
+        <p class="govuk-body">@messages("ivSuccess.no.agent.paragraph2") @link("https://www.gov.uk/government/organisations/hm-revenue-customs/contact/bereavement-and-deceased-estate", "estate-contact", messages("ivSuccess.contactLink"), openInNewWindow = true).</p>
 
         @formHelper(action = controllers.routes.IvSuccessController.onSubmit, Symbol("autoComplete") -> "off") {
             @submitButton()
