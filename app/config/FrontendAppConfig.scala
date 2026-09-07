@@ -29,9 +29,6 @@ class FrontendAppConfig @Inject() (
 
   lazy val serviceName: String = configuration.get[String]("serviceName")
 
-  lazy val locationCanonicalList: String      = configuration.get[String]("location.canonical.list.all")
-  lazy val locationCanonicalListNonUK: String = configuration.get[String]("location.canonical.list.nonUK")
-
   lazy val estatesRegistration: String = configuration.get[String]("urls.estatesRegistration")
 
   lazy val authUrl: String          = servicesConfig.baseUrl("auth")
