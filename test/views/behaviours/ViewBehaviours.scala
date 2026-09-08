@@ -24,6 +24,35 @@ trait ViewBehaviours extends ViewSpecBase {
   private def findBannerTitle(view: HtmlFormat.Appendable): String =
     asDocument(view).getElementsByClass("govuk-service-navigation__service-name").text().trim
 
+  private val sharedPagePaths: Seq[String] = Seq(
+    "/accessibility-statement",
+    "/contact/report-technical-problem",
+    "/help/cookies",
+    "/help/privacy",
+    "/help/terms-and-conditions"
+  )
+
+  private def serviceNavigation(view: HtmlFormat.Appendable): Unit = {
+
+    "display the service navigation component" in {
+
+      val doc = asDocument(view)
+      assertRenderedByClass(doc, "govuk-service-navigation")
+    }
+
+    "display language toggles" in {
+
+      val doc = asDocument(view)
+      assertRenderedByCssSelector(doc, "a[lang=cy]")
+    }
+
+    "link to shared HMRC pages with the useServiceNavigation parameter" in {
+
+      val doc = asDocument(view)
+      sharedPagePaths.foreach(assertSharedPageLinkUsesServiceNavigation(doc, _))
+    }
+  }
+
   def normalPage(view: HtmlFormat.Appendable, messageKeyPrefix: String, expectedGuidanceKeys: String*): Unit =
 
     "behave like a normal page" when {
@@ -53,14 +82,7 @@ trait ViewBehaviours extends ViewSpecBase {
           for (key <- expectedGuidanceKeys) assertContainsText(doc, messages(s"$messageKeyPrefix.$key"))
         }
 
-        if (frontendAppConfig.languageTranslationEnabled) {
-          "display language toggles" in {
-
-            val doc = asDocument(view)
-            assertRenderedByCssSelector(doc, "a[lang=cy]")
-          }
-        }
-
+        serviceNavigation(view)
       }
     }
 
@@ -105,11 +127,7 @@ trait ViewBehaviours extends ViewSpecBase {
           for (key <- expectedGuidanceKeys) assertContainsText(doc, messages(s"$messageKeyPrefix.$key"))
         }
 
-        "display language toggles" in {
-
-          val doc = asDocument(view)
-          assertRenderedByCssSelector(doc, "a[lang=cy]")
-        }
+        serviceNavigation(view)
       }
     }
 

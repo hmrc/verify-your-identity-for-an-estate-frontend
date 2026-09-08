@@ -23,6 +23,7 @@ import org.jsoup.nodes.Document
 import org.scalatest.Assertion
 import play.twirl.api.Html
 
+import scala.jdk.CollectionConverters._
 import scala.reflect.ClassTag
 
 trait ViewSpecBase extends SpecBase {
@@ -77,6 +78,19 @@ trait ViewSpecBase extends SpecBase {
 
   def assertNotRenderedByCssSelector(doc: Document, cssSelector: String): Assertion =
     assert(doc.select(cssSelector).isEmpty, "\n\nElement " + cssSelector + " was rendered on the page.\n")
+
+  def assertSharedPageLinkUsesServiceNavigation(doc: Document, path: String): Unit = {
+    val hrefs = doc.select(s"a[href*=\"$path\"]").asScala.map(_.attr("href")).toSeq
+
+    assert(hrefs.nonEmpty, s"\n\nNo link to the shared page $path was rendered on the page.\n")
+
+    hrefs.foreach { href =>
+      assert(
+        href.contains("useServiceNavigation"),
+        s"\n\nLink to the shared page $path is missing the useServiceNavigation parameter: $href\n"
+      )
+    }
+  }
 
   def assertContainsLabel(
     doc: Document,

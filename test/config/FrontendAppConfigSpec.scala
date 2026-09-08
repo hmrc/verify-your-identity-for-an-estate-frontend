@@ -22,6 +22,10 @@ class FrontendAppConfigSpec extends SpecBase {
 
   "FrontendAppConfig" must {
 
+    "ask the feedback frontend to render with the service navigation component" in {
+      frontendAppConfig.feedbackFrontendUrl mustBe "http://localhost:9514/feedback/estates?useServiceNavigation"
+    }
+
     "return the stubbed estatesIV URL when stubRelationshipEstablishment is true" in {
       val utr = "1234567890"
 
